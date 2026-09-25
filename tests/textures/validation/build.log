@@ -1,0 +1,6 @@
+
+> escape-your-boss@1.2.0 build:win
+> electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore="^/(dist|node_modules|tests|art|tools|\\.git|electron-cache|extraits-son)"
+
+Packaging app for platform win32 x64 using electron v33.4.11
+Wrote new app to: dist/EscapeYourBoss-win32-x64

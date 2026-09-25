@@ -1,0 +1,8 @@
+{
+  "src/personnage-glb.js": "dfc1673ca8ef5cb23893695ecd7d056fb7c0b7cf227a7b00cbc66111acb1b648",
+  "electron/main.cjs": "c4949e04845538e17f6e4b58e02d3ec76f358b2026b33636d55bb6f9f94a4046",
+  "electron/blender-test.cjs": "0bbc8b3dee853932fa237789dbd56c47488f3b560991e0a73ad0e46186a1afb6",
+  "electron/blender-visuel-test.cjs": "60b0c481d8c683d4bff1e4bd010c7ea147cb2a05aa4ed87ea9c7e3065a673e85",
+  "assets/lao-d-test.glb": "0752ceccf4c3a78e85d4434c7e9c3d97a981a5b24527475db261a5c7a510cd21",
+  "assets/lao-d-v01.glb": "9dd01f0c87098e596da82a04ccf60f2febc1e31c9943970f11862d5d012af194"
+}

@@ -1,0 +1,23 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "jalon": "B proposition à valider",
+  "objetsSkinnes": 11,
+  "triangles": 29248,
+  "materiaux": 11,
+  "glbOctets": 1260612,
+  "textures": 0,
+  "bretelles": [
+    {
+      "cote": -1,
+      "echantillonsEpaule": 844,
+      "margeMinMetres": 0.0050866384408436716
+    },
+    {
+      "cote": 1,
+      "echantillonsEpaule": 847,
+      "margeMinMetres": 0.005412745755165815
+    }
+  ],
+  "expressions": "regard, clignements, doigts indépendants non finalisés — jalon C",
+  "source": "géométrie originale créée dans Blender, aucun asset tiers"
+}

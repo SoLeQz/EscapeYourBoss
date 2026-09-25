@@ -1,0 +1,35 @@
+{
+  "name": "escape-your-boss",
+  "productName": "EscapeYourBoss",
+  "version": "1.6.0",
+  "description": "Escape your boss — jeu d'infiltration de bureau (Electron + Three.js)",
+  "main": "electron/main.cjs",
+  "author": "nicleena",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test:personnages": "node --import ./tests/personnages/resolveur.mjs tests/personnages/verifier.mjs && node --import ./tests/personnages/resolveur.mjs tests/personnages/refonte.mjs",
+    "test:appels": "node --import ./tests/personnages/resolveur.mjs tests/personnages/appels-de-dessin.mjs",
+    "build:win": "electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=\"^/(dist|node_modules|tests|art|tools|\\\\.git|electron-cache|extraits-son|Ela_ke_Leitada_drop_emote\\\\.mp3)\"",
+    "build:linux": "electron-packager . --platform=linux --arch=x64 --out=dist --overwrite --ignore=\"^/(dist|node_modules|tests|art|tools|\\\\.git|electron-cache|extraits-son|Ela_ke_Leitada_drop_emote\\\\.mp3)\"",
+    "test:confort": "node --import ./tests/personnages/resolveur.mjs tests/confort/verifier.mjs",
+    "test:sauvegarde": "node tests/confort/sauvegarde.cjs",
+    "test:environnement": "node --import ./tests/personnages/resolveur.mjs tests/environnement/verifier.mjs && node --import ./tests/personnages/resolveur.mjs tests/environnement/reperes.mjs",
+    "test:transitions": "node --import ./tests/personnages/resolveur.mjs tests/transitions/ressources.mjs",
+    "test:gameplay": "node --import ./tests/personnages/resolveur.mjs tests/gameplay/verifier.mjs && node --import ./tests/personnages/resolveur.mjs tests/gameplay/navigation.mjs",
+    "test:blender": "node --import ./tests/personnages/resolveur.mjs tests/blender/preparation.mjs",
+    "test:animations": "node --import ./tests/personnages/resolveur.mjs tests/animations/verifier.mjs",
+    "test:decor-blender": "node --import ./tests/personnages/resolveur.mjs tests/environnement/blender.mjs",
+    "test:textures": "node --import ./tests/personnages/resolveur.mjs tests/textures/verifier.mjs",
+    "test:humour": "node --import ./tests/personnages/resolveur.mjs tests/humour/verifier.mjs",
+    "test:anatomie": "node --import ./tests/personnages/resolveur.mjs tests/anatomie/verifier.mjs",
+    "test:tendances": "node --import ./tests/personnages/resolveur.mjs tests/tendances/verifier.mjs",
+    "test:multijoueur": "node tests/multijoueur/reseau.mjs",
+    "paquet:win": "npm run build:win && python3 -c \"import shutil;shutil.make_archive('dist/EscapeYourBoss-win64','zip','dist','EscapeYourBoss-win32-x64')\""
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "@electron/packager": "^18.3.6"
+  }
+}

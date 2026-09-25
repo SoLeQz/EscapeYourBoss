@@ -1,0 +1,184 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":3113,\"premierNiveau\":7604,\"rendu\":11,\"total\":12640},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "menu",
+      "result": "{\"menuVisible\":true,\"panneau\":\"menu-principal\",\"niveaux\":\"Game\"}"
+    },
+    {
+      "name": "menu-niveaux",
+      "result": "{\"cartes\":6,\"verrouilles\":5}"
+    },
+    {
+      "name": "menu-touches",
+      "result": "13 actions remappables"
+    },
+    {
+      "name": "menu-options",
+      "result": "7 options"
+    },
+    {
+      "name": "ux-menus",
+      "result": "Navigation, verrouillage, remappage et raccourcis : OK"
+    },
+    {
+      "name": "demarrage",
+      "result": "play"
+    },
+    {
+      "name": "marche",
+      "result": "{\"depart\":[-15.2,5.4],\"arrivee\":[-15.2,3.94],\"camYaw\":3.14,\"avance\":1.46,\"fps_reel\":110,\"images\":564,\"triangles\":1}"
+    },
+    {
+      "name": "portrait",
+      "result": "ok"
+    },
+    {
+      "name": "portrait-visage",
+      "result": "{\"yaw\":3.14,\"cam\":0}"
+    },
+    {
+      "name": "profil",
+      "result": "{\"yaw\":1.57,\"cam\":0}"
+    },
+    {
+      "name": "dos",
+      "result": "{\"yaw\":0,\"cam\":0}"
+    },
+    {
+      "name": "trois-quarts",
+      "result": "{\"yaw\":2.26,\"cam\":0}"
+    },
+    {
+      "name": "gros-plan",
+      "result": "{\"yaw\":3.14,\"cam\":0}"
+    },
+    {
+      "name": "gros-plan-torse",
+      "result": "{\"yaw\":3.14,\"cam\":0}"
+    },
+    {
+      "name": "sac-remis",
+      "result": "ok"
+    },
+    {
+      "name": "emote-take-l",
+      "result": "{\"yaw\":3.14,\"cam\":0}"
+    },
+    {
+      "name": "emote-take-l-id",
+      "result": "takeL"
+    },
+    {
+      "name": "emote-take-l-profil",
+      "result": "{\"yaw\":1.57,\"cam\":0}"
+    },
+    {
+      "name": "roue",
+      "result": "{\"ouverte\":true,\"cases\":8,\"avant\":0,\"apres\":3,\"selection\":\"Peinard\",\"cameraFigee\":true}"
+    },
+    {
+      "name": "roue-execution",
+      "result": "{\"fermee\":true,\"emoteEnCours\":\"arrogance\",\"temoins\":1}"
+    },
+    {
+      "name": "emotes",
+      "result": "{\"tirages\":[\"tchao/sifflet+anim\",\"danse/fanfare+anim\",\"celebration/tada+anim\",\"arrogance/trompette+FIGÉ\",\"moulin/boing+anim\",\"troll/pizz+anim\",\"robot/bips+anim\"],\"temoins\":1}"
+    },
+    {
+      "name": "emote-interrompue",
+      "result": "{\"lancee\":true,\"coupee\":true,\"disparue\":true}"
+    },
+    {
+      "name": "portrait2",
+      "result": "ok"
+    },
+    {
+      "name": "portrait3",
+      "result": "ok"
+    },
+    {
+      "name": "equite",
+      "result": "{\n \"etage5\": {\n  \"survie_immobile\": 16.7,\n  \"suspicion_max\": 1,\n  \"etat\": \"over\",\n  \"ecranEchec\": true,\n  \"ecranSuite\": false,\n  \"niveauCharge\": 5,\n  \"suspicions\": \"Xiao Wang:0.00 Xiao Li:0.00 Xiao Ma:0.00 Zhou Min:0.00 Zhang Jie:1.00 Lao Liu:0.00 Directeur Wang:0.00\",\n  \"limite\": 160\n },\n \"etage6\": {\n  \"survie_immobile\": 16,\n  \"suspicion_max\": 1,\n  \"etat\": \"over\",\n  \"ecranEchec\": true,\n  \"ecranSuite\": false,\n  \"niveauCharge\": 6,\n  \"suspicions\": \"Xiao Wang:0.00 Xiao Li:0.00 Xiao Ma:0.00 Zhou Min:0.00 Zhang Jie:1.00 Lao Liu:0.00 Directeur Wang:0.00\",\n  \"limite\": 62\n }\n}"
+    },
+    {
+      "name": "ciel",
+      "result": "{\"ciel_trouve\":true,\"ciel_a_map\":true,\"ciel_map_taille\":\"1024x512\",\"ciel_colorSpace\":\"\\\"\\\"\",\"ciel_color\":[3,3,3],\"ciel_visible\":true,\"vitres_baie\":1,\"toneMapping\":4,\"expo\":0.95}"
+    },
+    {
+      "name": "isoler",
+      "result": "vitres masquées: 1"
+    },
+    {
+      "name": "isoler2",
+      "result": "plans ville masqués: 8"
+    },
+    {
+      "name": "restaurer",
+      "result": "ok"
+    },
+    {
+      "name": "goulot",
+      "result": "{\n \"fusion\": {\n  \"fusionnes\": 53,\n  \"restants\": 30\n },\n \"maillages_scene\": 428,\n \"maillages_pnj\": 232,\n \"sprites\": 23,\n \"reference\": 78,\n \"sans_personnages\": 102,\n \"sans_ombres\": 0,\n \"demi_resolution\": 76,\n \"sans_post\": 133\n}"
+    },
+    {
+      "name": "banc",
+      "result": "{\n \"gpu\": \"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x00002\",\n \"auto\": \"haut\",\n \"bas\": \"0 fps @ 1424x821\",\n \"moyen\": \"148 fps @ 1424x821\",\n \"haut\": \"109 fps @ 1424x821\",\n \"ultra\": \"56 fps @ 1780x1026\"\n}"
+    },
+    {
+      "name": "strafe",
+      "result": "{\"D_vers_la_droite\":1.84,\"A_vers_la_gauche\":-1.38,\"correct\":true}"
+    },
+    {
+      "name": "accroupi",
+      "result": "{\"crouch\":1,\"touche_vue\":true,\"wantCrouch\":true,\"frames_pendant_attente\":2360,\"etat\":\"Accroupi\"}"
+    },
+    {
+      "name": "escaliers",
+      "result": "{\"invite\":\"E Prendre les escaliers\",\"etat\":\"over\",\"victoire\":true}"
+    },
+    {
+      "name": "echec",
+      "result": "{\"secondes_avant_reperage\":1.9,\"suspicion_boss\":1,\"etat\":\"over\",\"ecran_echec\":true,\"replique\":\"« Tu pars déjà ? Faut avoir la niaque, à ton âge. »\"}"
+    },
+    {
+      "name": "enchainement",
+      "result": "{\"suiteVisible\":true,\"debloques\":[1],\"niveauCourant\":2,\"titre\":\"Étage 23 — 18:20\",\"etat\":\"play\",\"pnj\":5,\"obstacles\":53}"
+    },
+    {
+      "name": "speedrun",
+      "result": "{\"chronoAffiche\":true,\"mode\":\"speedrun\",\"niveauCourant\":2,\"splits\":1,\"cumul\":0}"
+    },
+    {
+      "name": "dernier-etage",
+      "result": "{\"titre\":\"Étage 12 — 21:00\",\"pnj\":7,\"objets\":2,\"sorties\":2,\"obstacles\":58,\"fps\":74}"
+    },
+    {
+      "name": "collegue",
+      "result": "{\"nom\":\"Xiao Wang\",\"veste\":false}"
+    },
+    {
+      "name": "bruitage-alerte",
+      "result": "{\"charge\":true,\"duree\":31.81,\"bruitages\":11,\"retenu\":{\"debut\":0.06,\"duree\":1.56},\"joue\":true,\"liste\":[[0.06,1.56,1,0.2,2001],[1.78,2.76,0.98,0.01,1163],[4.66,0.88,0.87,0.76,1637],[5.78,0.36,0.52,0,348],[6.32,3.08,0.93,0.03,2187],[9.58,0.5,0.87,0.22,2195],[10.5,1.9,0.91,0.17,2119],[12.58,4.68,0.96,0.55,1399],[17.48,0.78,0.97,0.05,1492],[18.7,0.66,0.81,0.32,1990],[19.46,11.36,0.94,0.59,1274]],\"large\":6,\"fin\":[[0.06,1.56,1,2001],[1.78,1.66,0.98,1115],[3.48,1.04,0.84,1239],[4.66,0.52,0.81,1566],[5.26,0.26,0.87,1857],[5.78,0.34,0.52,349],[6.32,2.5,0.93,2127],[8.9,0.4,0.83,2560],[9.58,0.48,0.87,2194],[10.52,1.86,0.91,2118],[12.58,1.34,0.93,1594],[14.12,2.48,0.96,1201],[16.64,0.6,0.82,2005],[17.48,0.7,0.97,1497],[18.72,0.64,0.81,1989],[19.46,1.52,0.58,1001],[21.04,0.98,0.34,1476],[23.14,1.04,0.35,1563],[24.34,0.64,0.83,1223],[25.02,0.48,0.82,1220],[25.54,2.62,0.94,1274],[28.2,2.62,0.86,1317]]}"
+    },
+    {
+      "name": "alerte-en-jeu",
+      "result": "{\"etat\":\"observation\",\"avant\":4,\"apres\":5,\"declenche\":true}"
+    },
+    {
+      "name": "ux-pause-reprise",
+      "result": "Pause, options, chrono gelé, reprise et restart : OK"
+    },
+    {
+      "name": "ux-hud-compact",
+      "result": "Chrono distinct de la détection : OK"
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

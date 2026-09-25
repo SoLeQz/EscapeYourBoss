@@ -1,0 +1,15 @@
+{
+  "version": "1.4.0",
+  "fichiersVerifies": 195,
+  "fichiersModifies": 17,
+  "nouveaux": [
+    "resources/app/electron/anatomie-test.cjs",
+    "resources/app/assets/tete-securite-v01.glb",
+    "resources/app/assets/tete-chignon-v01.glb",
+    "resources/app/assets/mains-v01.glb",
+    "resources/app/assets/tete-direction-v01.glb",
+    "resources/app/assets/tete-employe-v01.glb",
+    "resources/app/src/anatomie-blender.js"
+  ],
+  "sauvegarde": "/mnt/c/Users/nicol/AppData/Local/Temp/EscapeBlenderWork/installation-avant-1.4.0"
+}

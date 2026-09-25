@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2040,\"premierNiveau\":8334,\"rendu\":11,\"total\":12266},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "instrumentation",
+      "result": "Campagne, transitions par bouton, vsync normale"
+    },
+    {
+      "name": "commandes-guide-et-roue",
+      "result": "Sélection 1–8, annulation Échap et guide facultatif : OK"
+    },
+    {
+      "name": "speedrun-six-etages",
+      "result": [
+        {
+          "niveau": 0,
+          "textures": 91,
+          "geometries": 215
+        },
+        {
+          "niveau": 1,
+          "textures": 97,
+          "geometries": 240
+        },
+        {
+          "niveau": 2,
+          "textures": 97,
+          "geometries": 261
+        },
+        {
+          "niveau": 3,
+          "textures": 100,
+          "geometries": 258
+        },
+        {
+          "niveau": 4,
+          "textures": 98,
+          "geometries": 231
+        },
+        {
+          "niveau": 5,
+          "textures": 102,
+          "geometries": 246
+        }
+      ]
+    },
+    {
+      "name": "erreur-recuperable",
+      "result": "Erreur affichée, chrono suspendu, retry et progression conservée : OK"
+    },
+    {
+      "name": "annuler-transition-speedrun",
+      "result": "Recommencer annule la transition différée : OK"
+    },
+    {
+      "name": "fin",
+      "result": []
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[error] Chargement du niveau 1 Error: TEST_CHARGEMENT_INJECTE"
+  ],
+  "erreursPage": []
+}

@@ -1,0 +1,9 @@
+{
+  "electron/main.cjs": "ff49725d9bf7929a27669e96c9a95e22e13ef6faee820464e6a784138c8add91",
+  "electron/blender-collegues-test.cjs": "e6cdf482cd062005547e361b1a5beab1c1315397c9c86ba5e88d1d375a10b589",
+  "src/personnage-glb.js": "4c2d3d9eb986a6686d98e3958ec60cb7f1324f82bd2accb4aa0c8f955024aa12",
+  "assets/directeur-v01.glb": "ff4bf349a7619f2b92bbdfe13b60ff62cfe4466c837700cb0cd3d57f3ccf7522",
+  "assets/zhang-v01.glb": "52b9768cc856551d27208ae2e2e5f72e36eaa8cf7d3db92112ae771e01f00a76",
+  "assets/liu-v01.glb": "fbf170e6aa0b4a132eec1faf2320e9e541463daf820c7c32f457d81ce79b473a",
+  "assets/lao-d-v03.glb": "8823f116721325e86f1a88dad4b954645a01d9b91e0072f1a5dd29963f79d40a"
+}

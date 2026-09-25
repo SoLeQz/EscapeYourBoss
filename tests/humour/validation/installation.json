@@ -1,0 +1,16 @@
+{
+  "version": "1.3.0",
+  "fichiersVerifies": 188,
+  "fichiersModifies": 16,
+  "nouveaux": [
+    "resources/app/electron/humour-test.cjs",
+    "resources/app/assets/tampon-sortie-v01.glb",
+    "resources/app/assets/cone-chef-v01.glb",
+    "resources/app/assets/cascade-papier-v01.glb",
+    "resources/app/assets/tour-dossiers-v01.glb",
+    "resources/app/assets/sablier-reunion-v01.glb",
+    "resources/app/assets/trophee-cafe-v01.glb",
+    "resources/app/src/humour.js"
+  ],
+  "sauvegarde": "/mnt/c/Users/nicol/AppData/Local/Temp/EscapeBlenderWork/installation-avant-1.3.0"
+}

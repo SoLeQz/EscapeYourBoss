@@ -1,0 +1,14 @@
+[
+  {
+    "source": "67-v01.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 4.8
+  },
+  {
+    "source": "passinho-jamal-v01.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 6.4
+  }
+]

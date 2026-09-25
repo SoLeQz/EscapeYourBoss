@@ -1,0 +1,14 @@
+{
+  "version": "1.1.1",
+  "installation": "/mnt/c/Users/nicol/EscapeYourBoss/resources/app",
+  "backup": "/mnt/c/Users/nicol/AppData/Local/Temp/EscapeBlenderWork/installation-avant-1.1.1",
+  "actifAuProchainLancement": true,
+  "fichiersIdentiquesProjetPaquetInstallation": {
+    "src/architecture.js": "7da1c9666e40d01d0a9f7c0318483723a9a1494d798b0cc539cfa2ca71483e1f",
+    "src/level.js": "ae926127a904c25a3b9444a808a5bc214bf4928975e10e2cfed69bf915f430d6",
+    "electron/decor-test.cjs": "59976c587fdbceaabecef56a7298c614932505b576c9c79702bcaf949e3ca1ac",
+    "package.json": "dc99f6352302e604978288f85399e1189adfb348113e2dc111c7505ac66bcbbf",
+    "README.md": "41595487bd6aeb6ecaf303350049a36bffc57095d7768ee628accab409c3d067",
+    "PROJECT_STATE.md": "a880a7358e865a18e4e867f3866836138d6dd831ae863e6bcfc7ada865ca8570"
+  }
+}

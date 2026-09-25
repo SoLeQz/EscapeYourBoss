@@ -1,0 +1,99 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2068,\"premierNiveau\":8371,\"rendu\":12,\"total\":12377},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "preparer",
+      "result": {
+        "actions": [
+          {
+            "id": "imprimante",
+            "x": -18.4,
+            "z": -13.2
+          },
+          {
+            "id": "travail-3",
+            "x": -15.25,
+            "z": 4.05
+          },
+          {
+            "id": "travail-4",
+            "x": -9.25,
+            "z": 4.05
+          }
+        ],
+        "etat": "play"
+      }
+    },
+    {
+      "name": "poste-face-aux-observateurs",
+      "result": {
+        "restant": 10.99999999999995,
+        "observateurs": [
+          {
+            "nom": "Zhang Jie",
+            "visible": true,
+            "etat": "travail",
+            "suspicion": 0.47999999999999965
+          },
+          {
+            "nom": "Directeur Wang",
+            "visible": true,
+            "etat": "travail",
+            "suspicion": 0.5999999999999998
+          }
+        ],
+        "autres": [
+          12
+        ]
+      }
+    },
+    {
+      "name": "pause-conserve-credit",
+      "result": {
+        "avant": 10.99999999999995,
+        "apres": 10.99999999999995
+      }
+    },
+    {
+      "name": "quitter-et-reprendre",
+      "result": {
+        "avant": 10.99999999999995,
+        "apres": 10.949999999999948
+      }
+    },
+    {
+      "name": "avertissement",
+      "result": {
+        "restant": 2.7499999999998206,
+        "message": "Protection : encore 3 s · prépare ta sortie"
+      }
+    },
+    {
+      "name": "expiration-et-poste-epuise",
+      "result": {
+        "restant": 0,
+        "autre": 12,
+        "suspicion": [
+          0.09578477199299051,
+          0.1766817028398836
+        ],
+        "etat": "play"
+      }
+    },
+    {
+      "name": "nouvel-essai",
+      "result": {
+        "etat": "play",
+        "preparation": true,
+        "erreurs": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

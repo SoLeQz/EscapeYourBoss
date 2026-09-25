@@ -1,0 +1,35 @@
+
+> escape-your-boss@1.1.1 test:personnages
+> node --import ./tests/personnages/resolveur.mjs tests/personnages/verifier.mjs && node --import ./tests/personnages/resolveur.mjs tests/personnages/refonte.mjs
+
+(node:812480) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/src/body.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+haut     sommets  2392 tris  4272 NaN 0  y 0.872..1.508  x ±0.269  z -0.113..0.115
+bas      sommets  1328 tris  2500 NaN 0  y 0.101..0.985  x ±0.203  z -0.116..0.118
+peau     sommets  2803 tris  5348 NaN 0  y 0.771..1.776  x ±0.254  z -0.098..0.123
+veste    sommets  2370 tris  4136 NaN 0  y 0.790..1.508  x ±0.278  z -0.129..0.135
+cheveux  sommets  1495 tris  2816 NaN 0  y 1.599..1.790  x ±0.097  z -0.109..0.085
+hautHabille sommets  2392 tris  1190 NaN 0  y 0.872..1.508  x ±0.269  z -0.113..0.115
+sangles/chemise sommets 128 NaN 0
+sangles/veste sommets 128 NaN 0
+cordon/chemise sommets 72 NaN 0
+cordon/veste sommets 72 NaN 0
+
+surface visage (locale tête) y=0.006 x=0.037 → [ '0.0370', '0.0060', '0.0738' ]
+surface torse (locale buste) y=0.45 x=0 → [ '0.0000', '0.4500', '0.1116' ]
+surface veste (locale buste) y=0.45 x=0 → [ '0.0000', '0.4500', '0.1116' ]
+
+Lao D : 5 maillages skinnés, 36 rigides, 31018 triangles
+regard 3 maillages · paupieres 1 · scale.y 1.000
+respiration torso.scale [ '1.000', '0.993', '0.988' ]  teteMicro [ '0.015', '0.065', '-0.008' ]
+clone nœuds 66 66 ok
+collègue sans veste : 32 maillages
+
+TOUT OK
+(node:812504) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/vendor/three.module.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Refonte : orientation, clignement, couches, appui au sol et perception OK. 41 appels, 31018 triangles.

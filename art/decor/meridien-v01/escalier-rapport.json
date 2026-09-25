@@ -1,0 +1,14 @@
+{
+  "blender": "5.2.2 LTS",
+  "objet": "escalier",
+  "triangles": 12012,
+  "piecesEditables": 141,
+  "materiaux": [
+    "DECOR_alu",
+    "DECOR_aluSombre",
+    "DECOR_beton",
+    "DECOR_pierre",
+    "DECOR_plastiqueBlanc"
+  ],
+  "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."
+}

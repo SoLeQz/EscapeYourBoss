@@ -1,0 +1,10 @@
+{
+  "test": "Échec explicite du véritable harnais Electron en l’absence du GLB",
+  "codeSortieObserve": 1,
+  "resultat": "attendu",
+  "etapesEnErreur": [
+    "blender-import-strict"
+  ],
+  "avertissementsPilote": 4,
+  "jalonAValide": false
+}

@@ -1,0 +1,140 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":1993,\"premierNiveau\":1042,\"rendu\":12,\"total\":4937},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "roue-4",
+      "result": {
+        "indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "selection": [
+          "tchao",
+          "arrogance",
+          "moulin",
+          "takeL"
+        ],
+        "note": "Souris ou 1–4 · Relâche pour jouer · Centre ou Échap pour annuler"
+      }
+    },
+    {
+      "name": "atelier",
+      "result": {
+        "emotes": [
+          {
+            "id": "tchao",
+            "duree": 3.6,
+            "apercu": 2.45
+          },
+          {
+            "id": "arrogance",
+            "duree": 3.8,
+            "apercu": 2.15
+          },
+          {
+            "id": "moulin",
+            "duree": 4.4,
+            "apercu": 2.65
+          },
+          {
+            "id": "takeL",
+            "duree": 4.2,
+            "apercu": 1.22
+          }
+        ],
+        "sourceComparaison": "lao-d-v03.glb",
+        "limitesBlender": "V03 : transfert du corps seulement ; doigts et expressions non pilotés, poids extrêmes à finaliser."
+      }
+    },
+    {
+      "name": "video-tchao",
+      "result": {
+        "id": "tchao",
+        "temps": 0,
+        "hauteur": 0.8499999991059304,
+        "blender": null
+      }
+    },
+    {
+      "name": "blender-tchao",
+      "result": {
+        "id": "tchao",
+        "temps": 2.45,
+        "hauteur": 0.8466364385704769,
+        "blender": "lao-d-v03.glb"
+      }
+    },
+    {
+      "name": "video-arrogance",
+      "result": {
+        "id": "arrogance",
+        "temps": 0,
+        "hauteur": 0.8499999991059304,
+        "blender": null
+      }
+    },
+    {
+      "name": "blender-arrogance",
+      "result": {
+        "id": "arrogance",
+        "temps": 2.15,
+        "hauteur": 0.8459533729811313,
+        "blender": "lao-d-v03.glb"
+      }
+    },
+    {
+      "name": "video-moulin",
+      "result": {
+        "id": "moulin",
+        "temps": 0,
+        "hauteur": 0.8499999991059304,
+        "blender": null
+      }
+    },
+    {
+      "name": "blender-moulin",
+      "result": {
+        "id": "moulin",
+        "temps": 2.65,
+        "hauteur": 0.8369133902643087,
+        "blender": "lao-d-v03.glb"
+      }
+    },
+    {
+      "name": "video-takeL",
+      "result": {
+        "id": "takeL",
+        "temps": 0,
+        "hauteur": 0.8499999991059304,
+        "blender": null
+      }
+    },
+    {
+      "name": "blender-takeL",
+      "result": {
+        "id": "takeL",
+        "temps": 1.22,
+        "hauteur": 0.847409381211052,
+        "blender": "lao-d-v03.glb"
+      }
+    },
+    {
+      "name": "fin",
+      "result": {
+        "fini": true
+      }
+    }
+  ],
+  "logs": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(229,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ]
+}

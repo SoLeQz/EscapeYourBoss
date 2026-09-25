@@ -1,0 +1,81 @@
+[
+  {
+    "nom": "tete-employe",
+    "blender": "5.2.2 LTS",
+    "triangles": 15756,
+    "piecesEditables": 38,
+    "controles": [
+      "bouche",
+      "head",
+      "paupiere",
+      "regard"
+    ],
+    "morphs": [
+      "Clignement"
+    ]
+  },
+  {
+    "nom": "tete-direction",
+    "blender": "5.2.2 LTS",
+    "triangles": 15756,
+    "piecesEditables": 38,
+    "controles": [
+      "bouche",
+      "head",
+      "paupiere",
+      "regard"
+    ],
+    "morphs": [
+      "Clignement"
+    ]
+  },
+  {
+    "nom": "tete-chignon",
+    "blender": "5.2.2 LTS",
+    "triangles": 16780,
+    "piecesEditables": 39,
+    "controles": [
+      "bouche",
+      "head",
+      "paupiere",
+      "regard"
+    ],
+    "morphs": [
+      "Clignement"
+    ]
+  },
+  {
+    "nom": "tete-securite",
+    "blender": "5.2.2 LTS",
+    "triangles": 14972,
+    "piecesEditables": 37,
+    "controles": [
+      "bouche",
+      "head",
+      "paupiere",
+      "regard"
+    ],
+    "morphs": [
+      "Clignement"
+    ]
+  },
+  {
+    "nom": "mains",
+    "blender": "5.2.2 LTS",
+    "triangles": 4880,
+    "piecesEditables": 8,
+    "controles": [
+      "doigtsL",
+      "doigtsR",
+      "mainL",
+      "mainR",
+      "pouceL",
+      "pouceR"
+    ],
+    "morphs": [
+      "Index",
+      "Ouvert",
+      "Poing"
+    ]
+  }
+]

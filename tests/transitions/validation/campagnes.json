@@ -1,0 +1,358 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":1982,\"premierNiveau\":7554,\"rendu\":12,\"total\":11355},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "instrumentation",
+      "result": "Campagne, transitions par bouton, vsync normale"
+    },
+    {
+      "name": "campagne-1-etage-1",
+      "result": {
+        "niveau": 0,
+        "chargeMs": 36.29999999701977,
+        "textures": 91,
+        "geometries": 215,
+        "programmes": 47,
+        "gaps": [
+          219.20000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-2",
+      "result": {
+        "niveau": 1,
+        "chargeMs": 4193.199999988079,
+        "construction": {
+          "index": 1,
+          "constructionMs": 916.9000000059605
+        },
+        "textures": 92,
+        "geometries": 226,
+        "programmes": 78,
+        "gaps": [
+          933.7999999970198,
+          176.40000000596046
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-3",
+      "result": {
+        "niveau": 2,
+        "chargeMs": 1301.7000000029802,
+        "construction": {
+          "index": 2,
+          "constructionMs": 893
+        },
+        "textures": 96,
+        "geometries": 261,
+        "programmes": 78,
+        "gaps": [
+          919.5,
+          294.5,
+          121
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-4",
+      "result": {
+        "niveau": 3,
+        "chargeMs": 1247.7000000029802,
+        "construction": {
+          "index": 3,
+          "constructionMs": 950
+        },
+        "textures": 97,
+        "geometries": 258,
+        "programmes": 79,
+        "gaps": [
+          968.8999999910593,
+          148.19999998807907
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-5",
+      "result": {
+        "niveau": 4,
+        "chargeMs": 1343.7000000029802,
+        "construction": {
+          "index": 4,
+          "constructionMs": 1082.7000000029802
+        },
+        "textures": 97,
+        "geometries": 231,
+        "programmes": 78,
+        "gaps": [
+          1090.7000000029802,
+          180.70000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-6",
+      "result": {
+        "niveau": 5,
+        "chargeMs": 1543.7000000029802,
+        "construction": {
+          "index": 5,
+          "constructionMs": 1228.300000011921
+        },
+        "textures": 100,
+        "geometries": 247,
+        "programmes": 79,
+        "gaps": [
+          1249.9000000059605,
+          211.5
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-1",
+      "result": {
+        "niveau": 0,
+        "chargeMs": 1057.6000000089407,
+        "construction": {
+          "index": 0,
+          "constructionMs": 762.3999999910593
+        },
+        "textures": 95,
+        "geometries": 217,
+        "programmes": 78,
+        "gaps": [
+          779.7000000029802,
+          196.09999999403954
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-2",
+      "result": {
+        "niveau": 1,
+        "chargeMs": 1068.1000000089407,
+        "construction": {
+          "index": 1,
+          "constructionMs": 783.8999999910593
+        },
+        "textures": 97,
+        "geometries": 241,
+        "programmes": 79,
+        "gaps": [
+          793.3999999910593,
+          111.29999999701977
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-3",
+      "result": {
+        "niveau": 2,
+        "chargeMs": 856.1000000089407,
+        "construction": {
+          "index": 2,
+          "constructionMs": 625.2000000029802
+        },
+        "textures": 99,
+        "geometries": 262,
+        "programmes": 78,
+        "gaps": [
+          649.1000000089407,
+          156.70000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-4",
+      "result": {
+        "niveau": 3,
+        "chargeMs": 1158,
+        "construction": {
+          "index": 3,
+          "constructionMs": 628.5
+        },
+        "textures": 99,
+        "geometries": 258,
+        "programmes": 79,
+        "gaps": [
+          636.9000000059605,
+          265.70000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-5",
+      "result": {
+        "niveau": 4,
+        "chargeMs": 1052.9000000059605,
+        "construction": {
+          "index": 4,
+          "constructionMs": 650.5999999940395
+        },
+        "textures": 98,
+        "geometries": 231,
+        "programmes": 78,
+        "gaps": [
+          655.6000000089407,
+          317.6000000089407
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-2-etage-6",
+      "result": {
+        "niveau": 5,
+        "chargeMs": 1147.5,
+        "construction": {
+          "index": 5,
+          "constructionMs": 697.2000000029802
+        },
+        "textures": 100,
+        "geometries": 246,
+        "programmes": 79,
+        "gaps": [
+          702.5999999940395,
+          157
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-1",
+      "result": {
+        "niveau": 0,
+        "chargeMs": 710.6000000089407,
+        "construction": {
+          "index": 0,
+          "constructionMs": 523.2000000029802
+        },
+        "textures": 96,
+        "geometries": 217,
+        "programmes": 78,
+        "gaps": [
+          531.1999999880791,
+          118
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-2",
+      "result": {
+        "niveau": 1,
+        "chargeMs": 1005.6999999880791,
+        "construction": {
+          "index": 1,
+          "constructionMs": 560.5
+        },
+        "textures": 97,
+        "geometries": 241,
+        "programmes": 79,
+        "gaps": [
+          582.7999999970198,
+          250.59999999403954
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-3",
+      "result": {
+        "niveau": 2,
+        "chargeMs": 819.3000000119209,
+        "construction": {
+          "index": 2,
+          "constructionMs": 610.4000000059605
+        },
+        "textures": 99,
+        "geometries": 262,
+        "programmes": 78,
+        "gaps": [
+          620.7999999970198,
+          133.90000000596046
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-4",
+      "result": {
+        "niveau": 3,
+        "chargeMs": 818.5,
+        "construction": {
+          "index": 3,
+          "constructionMs": 606.7000000029802
+        },
+        "textures": 99,
+        "geometries": 258,
+        "programmes": 79,
+        "gaps": [
+          620.2000000029802,
+          134.29999999701977
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-5",
+      "result": {
+        "niveau": 4,
+        "chargeMs": 1167.9000000059605,
+        "construction": {
+          "index": 4,
+          "constructionMs": 668.6000000089407
+        },
+        "textures": 98,
+        "geometries": 231,
+        "programmes": 78,
+        "gaps": [
+          681.3999999910593,
+          250.79999999701977
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-3-etage-6",
+      "result": {
+        "niveau": 5,
+        "chargeMs": 889,
+        "construction": {
+          "index": 5,
+          "constructionMs": 644.7999999970198
+        },
+        "textures": 100,
+        "geometries": 247,
+        "programmes": 79,
+        "gaps": [
+          658.4000000059605,
+          141.5
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "fin",
+      "result": []
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

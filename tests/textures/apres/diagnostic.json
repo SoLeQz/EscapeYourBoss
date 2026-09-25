@@ -1,0 +1,1883 @@
+{
+  "version": "1.2.0",
+  "bibliotheque": [
+    {
+      "famille": "decor",
+      "nom": "moquette",
+      "couleur": "ffffff",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.9607843137254902,
+      "relief": [
+        0.45,
+        0.45
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-moquette-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.3810163909313726,
+          "min": 93,
+          "max": 102
+        },
+        "normalMap": {
+          "nom": "mat-moquette-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5005821078431373,
+          "min": 125,
+          "max": 131
+        },
+        "roughnessMap": {
+          "nom": "mat-moquette-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.9607843137254902,
+          "min": 245,
+          "max": 245
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "pierre",
+      "couleur": "ffffff",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.6903626685049019,
+      "relief": [
+        0.18,
+        0.18
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-pierre-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.7588445925245098,
+          "min": 177,
+          "max": 200
+        },
+        "normalMap": {
+          "nom": "mat-pierre-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5007831648284313,
+          "min": 127,
+          "max": 128
+        },
+        "roughnessMap": {
+          "nom": "mat-pierre-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.6903626685049019,
+          "min": 171,
+          "max": 181
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "beton",
+      "couleur": "ffffff",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.8504930683210784,
+      "relief": [
+        0.16,
+        0.16
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-beton-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.7169720818014705,
+          "min": 171,
+          "max": 190
+        },
+        "normalMap": {
+          "nom": "mat-beton-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5006117876838235,
+          "min": 127,
+          "max": 129
+        },
+        "roughnessMap": {
+          "nom": "mat-beton-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8504930683210784,
+          "min": 211,
+          "max": 222
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "eau",
+      "couleur": "71a7b9",
+      "roughness": 0.19,
+      "metalness": 0,
+      "rugositeEffective": 0.19,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "diffuseur",
+      "couleur": "ffedd0",
+      "rugositeEffective": null,
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "bois",
+      "couleur": "ffffff",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.5508884803921569,
+      "relief": [
+        0.45,
+        0.45
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-bois-v01-color.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.6292604932598039,
+          "min": 134,
+          "max": 179
+        },
+        "normalMap": {
+          "nom": "mat-bois-v01-normal.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5007869944852941,
+          "min": 126,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-bois-v01-rough.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5508884803921569,
+          "min": 134,
+          "max": 147
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "boisFonce",
+      "couleur": "9e7657",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.5508884803921569,
+      "relief": [
+        0.45,
+        0.45
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-bois-v01-color.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.6292604932598039,
+          "min": 134,
+          "max": 179
+        },
+        "normalMap": {
+          "nom": "mat-bois-v01-normal.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5007869944852941,
+          "min": 126,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-bois-v01-rough.png",
+          "resolution": [
+            1024,
+            1024
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5508884803921569,
+          "min": 134,
+          "max": 147
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "mur",
+      "couleur": "e2e5db",
+      "roughness": 0.92,
+      "metalness": 0,
+      "rugositeEffective": 0.8185082720588235,
+      "relief": [
+        0.25,
+        0.25
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4995557598039216,
+          "min": 117,
+          "max": 140
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8896829044117647,
+          "min": 214,
+          "max": 242
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "murAccent",
+      "couleur": "3c6561",
+      "roughness": 0.9,
+      "metalness": 0,
+      "rugositeEffective": 0.8007146139705882,
+      "relief": [
+        0.25,
+        0.25
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4995557598039216,
+          "min": 117,
+          "max": 140
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8896829044117647,
+          "min": 214,
+          "max": 242
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "plafond",
+      "couleur": "ffffff",
+      "roughness": 0.97,
+      "metalness": 0,
+      "rugositeEffective": 0.97,
+      "relief": [
+        0.07,
+        0.07
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            1.6666666666666667,
+            1.6666666666666667
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.896597349877451,
+          "min": 228,
+          "max": 229
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            1.6666666666666667,
+            1.6666666666666667
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49935853247549017,
+          "min": 126,
+          "max": 129
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "cloison",
+      "couleur": "819c90",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.9205078125,
+      "relief": [
+        0.28,
+        0.28
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-textile-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.7604999617034314,
+          "min": 174,
+          "max": 210
+        },
+        "normalMap": {
+          "nom": "mat-textile-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5004049862132353,
+          "min": 125,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-textile-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.9205078125,
+          "min": 230,
+          "max": 240
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "tissuChaise",
+      "couleur": "444e49",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.9205078125,
+      "relief": [
+        0.5,
+        0.5
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-textile-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.7604999617034314,
+          "min": 174,
+          "max": 210
+        },
+        "normalMap": {
+          "nom": "mat-textile-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5004049862132353,
+          "min": 125,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-textile-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.9205078125,
+          "min": 230,
+          "max": 240
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "tissuCanape",
+      "couleur": "bb7658",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.9205078125,
+      "relief": [
+        0.5,
+        0.5
+      ],
+      "cartes": {
+        "map": {
+          "nom": "mat-textile-v01-color.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.7604999617034314,
+          "min": 174,
+          "max": 210
+        },
+        "normalMap": {
+          "nom": "mat-textile-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5004049862132353,
+          "min": 125,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-textile-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.9205078125,
+          "min": 230,
+          "max": 240
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "alu",
+      "couleur": "b9bec0",
+      "roughness": 1,
+      "metalness": 1,
+      "rugositeEffective": 0.5109930300245098,
+      "relief": [
+        0.045,
+        0.045
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "mat-metal-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5010139016544117,
+          "min": 127,
+          "max": 128
+        },
+        "roughnessMap": {
+          "nom": "mat-metal-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5109930300245098,
+          "min": 124,
+          "max": 137
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "aluSombre",
+      "couleur": "434d49",
+      "roughness": 1,
+      "metalness": 0.65,
+      "rugositeEffective": 0.5109930300245098,
+      "relief": [
+        0.15,
+        0.15
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "mat-metal-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5010139016544117,
+          "min": 127,
+          "max": 128
+        },
+        "roughnessMap": {
+          "nom": "mat-metal-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            2,
+            2
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5109930300245098,
+          "min": 124,
+          "max": 137
+        }
+      }
+    },
+    {
+      "famille": "decor",
+      "nom": "laiton",
+      "couleur": "a79d7f",
+      "roughness": 0.4,
+      "metalness": 0.85,
+      "rugositeEffective": 0.4,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "plastiqueNoir",
+      "couleur": "1b1d21",
+      "roughness": 0.48,
+      "metalness": 0,
+      "rugositeEffective": 0.48,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "plastiqueBlanc",
+      "couleur": "e9e9e6",
+      "roughness": 0.52,
+      "metalness": 0,
+      "rugositeEffective": 0.52,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "verre",
+      "couleur": "cfe3ea",
+      "roughness": 0.03,
+      "metalness": 0,
+      "rugositeEffective": 0.03,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "verreFenetre",
+      "couleur": "ffe9c9",
+      "roughness": 0.02,
+      "metalness": 0,
+      "rugositeEffective": 0.02,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "papier",
+      "couleur": "f3efe4",
+      "roughness": 0.88,
+      "metalness": 0,
+      "rugositeEffective": 0.88,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "feuillage",
+      "couleur": "3e7a42",
+      "roughness": 0.72,
+      "metalness": 0,
+      "rugositeEffective": 0.72,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "terreCuite",
+      "couleur": "a2643c",
+      "roughness": 0.85,
+      "metalness": 0,
+      "rugositeEffective": 0.85,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "carton",
+      "couleur": "bf9463",
+      "roughness": 0.94,
+      "metalness": 0,
+      "rugositeEffective": 0.94,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "decor",
+      "nom": "cableNoir",
+      "couleur": "15171a",
+      "roughness": 0.65,
+      "metalness": 0,
+      "rugositeEffective": 0.65,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "peau",
+      "couleur": "f3c49f",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.569387637867647,
+      "relief": [
+        0.32,
+        0.32
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            768,
+            768
+          ],
+          "repeat": [
+            9,
+            9
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.9293591069240196,
+          "min": 233,
+          "max": 242
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            768,
+            768
+          ],
+          "repeat": [
+            9,
+            9
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49890184589460784,
+          "min": 103,
+          "max": 149
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            768,
+            768
+          ],
+          "repeat": [
+            9,
+            9
+          ],
+          "couleur": "",
+          "moyenneVert": 0.569387637867647,
+          "min": 123,
+          "max": 169
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "cheveux",
+      "couleur": "1a1512",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.7637484681372549,
+      "relief": [
+        0.18,
+        0.18
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.8825453814338236,
+          "min": 196,
+          "max": 249
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49934129901960783,
+          "min": 119,
+          "max": 138
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.7637484681372549,
+          "min": 175,
+          "max": 211
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "chemise",
+      "couleur": "f3e9d6",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.619320618872549,
+      "relief": [
+        0.16,
+        0.16
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.8452435661764706,
+          "min": 198,
+          "max": 235
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4994992723651961,
+          "min": 112,
+          "max": 143
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.619320618872549,
+          "min": 145,
+          "max": 171
+        },
+        "aoMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8380227481617647,
+          "min": 191,
+          "max": 238
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "pantalon",
+      "couleur": "6a6e78",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.8994236366421569,
+      "relief": [
+        0.2,
+        0.2
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.8468682981004902,
+          "min": 194,
+          "max": 244
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4993997012867647,
+          "min": 87,
+          "max": 168
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8994236366421569,
+          "min": 214,
+          "max": 245
+        },
+        "aoMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.840725528492647,
+          "min": 183,
+          "max": 246
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "veste",
+      "couleur": "4a5261",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.8365894990808823,
+      "relief": [
+        0.18,
+        0.18
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.8290929457720588,
+          "min": 193,
+          "max": 231
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.6185518152573529,
+          "min": 131,
+          "max": 178
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8365894990808823,
+          "min": 203,
+          "max": 223
+        },
+        "aoMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            3,
+            3
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8200607000612745,
+          "min": 187,
+          "max": 234
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "sac",
+      "couleur": "23252b",
+      "roughness": 0.7,
+      "metalness": 0,
+      "rugositeEffective": 0.5985493259803921,
+      "relief": [
+        0.2,
+        0.2
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.835998774509804,
+          "min": 191,
+          "max": 236
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49938916973039216,
+          "min": 113,
+          "max": 142
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.8550704656862745,
+          "min": 206,
+          "max": 228
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "chaussure",
+      "couleur": "24222a",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.4705575980392157,
+      "relief": [
+        0.28,
+        0.28
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "mat-cuir-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5005476409313725,
+          "min": 126,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-cuir-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4705575980392157,
+          "min": 111,
+          "max": 129
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "semelle",
+      "couleur": "2c2b30",
+      "roughness": 0.95,
+      "metalness": 0,
+      "rugositeEffective": 0.95,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "monture",
+      "couleur": "2a2d33",
+      "roughness": 0.28,
+      "metalness": 0.85,
+      "rugositeEffective": 0.28,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "lentille",
+      "couleur": "dff0fb",
+      "roughness": 0.04,
+      "metalness": 0.1,
+      "rugositeEffective": 0.04,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "blancOeil",
+      "couleur": "f1ede6",
+      "roughness": 0.3,
+      "metalness": 0,
+      "rugositeEffective": 0.3,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "iris",
+      "couleur": "3b2417",
+      "roughness": 0.25,
+      "metalness": 0,
+      "rugositeEffective": 0.25,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "pupille",
+      "couleur": "07060a",
+      "roughness": 0.3,
+      "metalness": 0,
+      "rugositeEffective": 0.3,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "reflet",
+      "couleur": "ffffff",
+      "rugositeEffective": null,
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "bouche",
+      "couleur": "6e3a3c",
+      "roughness": 0.55,
+      "metalness": 0,
+      "rugositeEffective": 0.55,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "levre",
+      "couleur": "d08a7c",
+      "roughness": 0.5,
+      "metalness": 0,
+      "rugositeEffective": 0.5,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "sangle",
+      "couleur": "1a1c20",
+      "roughness": 0.85,
+      "metalness": 0,
+      "rugositeEffective": 0.85,
+      "relief": [
+        0.6,
+        0.6
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49938916973039216,
+          "min": 113,
+          "max": 142
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "boucle",
+      "couleur": "8b8f96",
+      "roughness": 0.35,
+      "metalness": 0.9,
+      "rugositeEffective": 0.35,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "cordon",
+      "couleur": "27344f",
+      "roughness": 0.88,
+      "metalness": 0,
+      "rugositeEffective": 0.88,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "badge",
+      "couleur": "f5f3ec",
+      "roughness": 0.45,
+      "metalness": 0,
+      "rugositeEffective": 0.45,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "badgeBande",
+      "couleur": "2f6fb5",
+      "roughness": 0.5,
+      "metalness": 0,
+      "rugositeEffective": 0.5,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "badgePhoto",
+      "couleur": "b9bcc2",
+      "roughness": 0.6,
+      "metalness": 0,
+      "rugositeEffective": 0.6,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "ceinture",
+      "couleur": "241f1c",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.4705575980392157,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {
+        "normalMap": {
+          "nom": "mat-cuir-v01-normal.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.5005476409313725,
+          "min": 126,
+          "max": 130
+        },
+        "roughnessMap": {
+          "nom": "mat-cuir-v01-rough.png",
+          "resolution": [
+            512,
+            512
+          ],
+          "repeat": [
+            4,
+            4
+          ],
+          "couleur": "",
+          "moyenneVert": 0.4705575980392157,
+          "min": 111,
+          "max": 129
+        }
+      }
+    },
+    {
+      "famille": "personnages",
+      "nom": "boutonNacre",
+      "couleur": "f2ece0",
+      "roughness": 0.25,
+      "metalness": 0,
+      "rugositeEffective": 0.25,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "boutonCorne",
+      "couleur": "2c2622",
+      "roughness": 0.35,
+      "metalness": 0,
+      "rugositeEffective": 0.35,
+      "relief": [
+        1,
+        1
+      ],
+      "cartes": {}
+    },
+    {
+      "famille": "personnages",
+      "nom": "soie",
+      "couleur": "6e2b33",
+      "roughness": 1,
+      "metalness": 0,
+      "rugositeEffective": 0.3247079886642157,
+      "relief": [
+        0.6,
+        0.6
+      ],
+      "cartes": {
+        "map": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            6,
+            6
+          ],
+          "couleur": "srgb",
+          "moyenneVert": 0.8665900735294118,
+          "min": 179,
+          "max": 241
+        },
+        "normalMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            6,
+            6
+          ],
+          "couleur": "",
+          "moyenneVert": 0.49974724264705883,
+          "min": 85,
+          "max": 171
+        },
+        "roughnessMap": {
+          "nom": "",
+          "resolution": [
+            384,
+            384
+          ],
+          "repeat": [
+            6,
+            6
+          ],
+          "couleur": "",
+          "moyenneVert": 0.3247079886642157,
+          "min": 70,
+          "max": 100
+        }
+      }
+    }
+  ],
+  "texturesBibliotheque": 47,
+  "autresCartesDansLaScene": [
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        1024,
+        512
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        512,
+        512
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        512,
+        320
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        512,
+        320
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        320,
+        96
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        320,
+        96
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        512,
+        512
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        512,
+        320
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        2048,
+        1280
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        512,
+        512
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        512,
+        320
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        512,
+        320
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "resolution": [
+        128,
+        256
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        512,
+        512
+      ],
+      "transparent": false
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        768,
+        768
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshStandardMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "MeshPhysicalMaterial",
+      "resolution": [
+        384,
+        384
+      ],
+      "transparent": false
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        128,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        128,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    },
+    {
+      "type": "SpriteMaterial",
+      "resolution": [
+        512,
+        128
+      ],
+      "transparent": true
+    }
+  ]
+}

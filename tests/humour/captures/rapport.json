@@ -1,0 +1,306 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":888,\"premierNiveau\":957,\"rendu\":10,\"total\":3753},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "version-livree",
+      "result": {
+        "version": "1.3.0",
+        "emotes": [
+          "Démission",
+          "Encore un mail",
+          "Réunion KO",
+          "Take the L"
+        ],
+        "decor": {
+          "bureau": {
+            "fichier": "bureau-v01.glb",
+            "pieces": 6,
+            "triangles": 2704
+          },
+          "chaise": {
+            "fichier": "chaise-v01.glb",
+            "pieces": 4,
+            "triangles": 3068
+          },
+          "escalier": {
+            "fichier": "escalier-v01.glb",
+            "pieces": 5,
+            "triangles": 12012
+          },
+          "porte": {
+            "fichier": "porte-escalier-v01.glb",
+            "pieces": 3,
+            "triangles": 1212
+          },
+          "tropheeCafe": {
+            "fichier": "trophee-cafe-v01.glb",
+            "pieces": 4,
+            "triangles": 427
+          },
+          "cascadePapier": {
+            "fichier": "cascade-papier-v01.glb",
+            "pieces": 2,
+            "triangles": 200
+          },
+          "coneChef": {
+            "fichier": "cone-chef-v01.glb",
+            "pieces": 5,
+            "triangles": 251
+          },
+          "sablierReunion": {
+            "fichier": "sablier-reunion-v01.glb",
+            "pieces": 4,
+            "triangles": 752
+          },
+          "tourDossiers": {
+            "fichier": "tour-dossiers-v01.glb",
+            "pieces": 4,
+            "triangles": 564
+          },
+          "tamponSortie": {
+            "fichier": "tampon-sortie-v01.glb",
+            "pieces": 4,
+            "triangles": 316
+          }
+        }
+      }
+    },
+    {
+      "name": "preparer-revue",
+      "result": {
+        "etat": "play",
+        "obstacles": 55,
+        "objets": {
+          "bureau-v01.glb": 6,
+          "chaise-v01.glb": 13,
+          "trophee-cafe-v01.glb": 1,
+          "escalier-v01.glb": 1,
+          "porte-escalier-v01.glb": 1
+        }
+      }
+    },
+    {
+      "name": "humour-niveau-1",
+      "result": {
+        "niveau": 1,
+        "humour": {
+          "id": "humour-cafe",
+          "modele": "tropheeCafe",
+          "charge": true,
+          "panneaux": 1,
+          "limites": {
+            "min": [
+              18.412000006437303,
+              1.405,
+              -1.484018337726593
+            ],
+            "max": [
+              18.78000000715256,
+              1.8950000095367432,
+              -0.9159816622734069
+            ]
+          }
+        },
+        "lots": 91,
+        "triangles": 229547,
+        "textures": 90,
+        "geometries": 190
+      }
+    },
+    {
+      "name": "humour-niveau-2",
+      "result": {
+        "niveau": 2,
+        "humour": {
+          "id": "humour-papier",
+          "modele": "cascadePapier",
+          "charge": true,
+          "panneaux": 1,
+          "limites": {
+            "min": [
+              -19.260000009536743,
+              0.10957942008972177,
+              -14.270066113471986
+            ],
+            "max": [
+              -18.775999997258186,
+              1.2740000098943711,
+              -13.299729646444321
+            ]
+          }
+        },
+        "lots": 95,
+        "triangles": 229516,
+        "textures": 90,
+        "geometries": 143,
+        "transition": {
+          "index": 1,
+          "ms": 4160.5
+        }
+      }
+    },
+    {
+      "name": "humour-niveau-3",
+      "result": {
+        "niveau": 3,
+        "humour": {
+          "id": "humour-travaux",
+          "modele": "coneChef",
+          "charge": true,
+          "panneaux": 1,
+          "limites": {
+            "min": [
+              7.760000005364418,
+              0,
+              12.780000005364418
+            ],
+            "max": [
+              8.239999994635582,
+              0.6899999976158142,
+              13.259999994635582
+            ]
+          }
+        },
+        "lots": 94,
+        "triangles": 252599,
+        "textures": 93,
+        "geometries": 127,
+        "transition": {
+          "index": 2,
+          "ms": 973
+        }
+      }
+    },
+    {
+      "name": "humour-niveau-4",
+      "result": {
+        "niveau": 4,
+        "humour": {
+          "id": "humour-reunion",
+          "modele": "sablierReunion",
+          "charge": true,
+          "panneaux": 2,
+          "limites": {
+            "min": [
+              17.015000000596046,
+              0.8049999997764826,
+              -10.054999999403954
+            ],
+            "max": [
+              17.484999999403954,
+              1.535000009536743,
+              -9.585000000596047
+            ]
+          }
+        },
+        "lots": 96,
+        "triangles": 252240,
+        "textures": 94,
+        "geometries": 125,
+        "transition": {
+          "index": 3,
+          "ms": 806
+        }
+      }
+    },
+    {
+      "name": "humour-niveau-5",
+      "result": {
+        "niveau": 5,
+        "humour": {
+          "id": "humour-dossiers",
+          "modele": "tourDossiers",
+          "charge": true,
+          "panneaux": 1,
+          "limites": {
+            "min": [
+              2.939113167524338,
+              1.8534260037308559,
+              1.1914704549312591
+            ],
+            "max": [
+              3.557249811887741,
+              2.9379999446868896,
+              1.774279247522354
+            ]
+          }
+        },
+        "lots": 92,
+        "triangles": 259420,
+        "textures": 97,
+        "geometries": 171,
+        "transition": {
+          "index": 4,
+          "ms": 1141.5999999998603
+        }
+      }
+    },
+    {
+      "name": "humour-niveau-6",
+      "result": {
+        "niveau": 6,
+        "humour": {
+          "id": "humour-sortie",
+          "modele": "tamponSortie",
+          "charge": true,
+          "panneaux": 2,
+          "limites": {
+            "min": [
+              14.27,
+              0.795,
+              10.875
+            ],
+            "max": [
+              14.77,
+              1.3450000119209289,
+              11.65200001001358
+            ]
+          }
+        },
+        "lots": 99,
+        "triangles": 259708,
+        "textures": 98,
+        "geometries": 174,
+        "transition": {
+          "index": 5,
+          "ms": 1180
+        }
+      }
+    },
+    {
+      "name": "retour-et-camera-jouable",
+      "result": {
+        "etat": "play",
+        "erreurs": [],
+        "humour": {
+          "id": "humour-cafe",
+          "modele": "tropheeCafe",
+          "charge": true,
+          "panneaux": 1,
+          "limites": {
+            "min": [
+              18.412000006437303,
+              1.405,
+              -1.484018337726593
+            ],
+            "max": [
+              18.78000000715256,
+              1.8950000095367432,
+              -0.9159816622734069
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

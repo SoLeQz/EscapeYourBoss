@@ -1,0 +1,8 @@
+{
+  "GLTFLoader.js": {
+    "source": "https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/jsm/loaders/GLTFLoader.js",
+    "version": "r169",
+    "licence": "MIT (Three.js)",
+    "sha256": "6f1719dcc6a179d30273dfb0de07a8c898a7981f7b08e600b446387f5967371f"
+  }
+}

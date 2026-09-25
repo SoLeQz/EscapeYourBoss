@@ -1,0 +1,187 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":1826,\"premierNiveau\":1130,\"rendu\":12,\"total\":4875},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "preparer-revue",
+      "result": {
+        "etat": "play",
+        "obstacles": 55
+      }
+    },
+    {
+      "name": "open-space",
+      "result": "OK"
+    },
+    {
+      "name": "poste",
+      "result": "OK"
+    },
+    {
+      "name": "hall",
+      "result": "OK"
+    },
+    {
+      "name": "cafe",
+      "result": "OK"
+    },
+    {
+      "name": "reunion",
+      "result": "OK"
+    },
+    {
+      "name": "direction",
+      "result": "OK"
+    },
+    {
+      "name": "escalier-acces",
+      "result": "OK"
+    },
+    {
+      "name": "escalier-volume",
+      "result": "OK"
+    },
+    {
+      "name": "baie",
+      "result": "OK"
+    },
+    {
+      "name": "etage-1",
+      "result": {
+        "lots": 91,
+        "triangles": 220376,
+        "obstacles": 55,
+        "msMedian": 7.899999999994179,
+        "msP95": 26.400000000001455,
+        "textures": 96,
+        "geometries": 220,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-2",
+      "result": {
+        "lots": 94,
+        "triangles": 220572,
+        "obstacles": 55,
+        "transition": {
+          "index": 1,
+          "ms": 4254.5
+        },
+        "msMedian": 12.30000000000291,
+        "msP95": 16,
+        "textures": 94,
+        "geometries": 188,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-3",
+      "result": {
+        "lots": 93,
+        "triangles": 245050,
+        "obstacles": 58,
+        "transition": {
+          "index": 2,
+          "ms": 1138.2000000029802
+        },
+        "msMedian": 11.80000000000291,
+        "msP95": 16.80000000000291,
+        "textures": 97,
+        "geometries": 206,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-4",
+      "result": {
+        "lots": 96,
+        "triangles": 244154,
+        "obstacles": 57,
+        "transition": {
+          "index": 3,
+          "ms": 1411
+        },
+        "msMedian": 11.400000000001455,
+        "msP95": 15.5,
+        "textures": 98,
+        "geometries": 202,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-5",
+      "result": {
+        "lots": 92,
+        "triangles": 251534,
+        "obstacles": 60,
+        "transition": {
+          "index": 4,
+          "ms": 1401.5
+        },
+        "msMedian": 13.19999999999709,
+        "msP95": 28.30000000000291,
+        "textures": 101,
+        "geometries": 206,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-6",
+      "result": {
+        "lots": 99,
+        "triangles": 252034,
+        "obstacles": 60,
+        "transition": {
+          "index": 5,
+          "ms": 1305.300000011921
+        },
+        "msMedian": 13,
+        "msP95": 30.19999999999709,
+        "textures": 102,
+        "geometries": 208,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "camera-jouable",
+      "result": {
+        "etat": "play",
+        "erreurs": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

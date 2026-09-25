@@ -1,0 +1,9 @@
+# Dépendances et builds : régénérés par npm install / npm run build:win
+node_modules/
+dist/
+electron-cache/
+*.zip
+__pycache__/
+*.pyc
+# Blender : sauvegardes automatiques
+*.blend1

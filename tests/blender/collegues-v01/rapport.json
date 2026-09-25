@@ -1,0 +1,137 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":1933,\"premierNiveau\":1031,\"rendu\":10,\"total\":4823},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "collegues-imports",
+      "result": {
+        "couts": [
+          {
+            "source": "directeur-v01.glb",
+            "triangles": 27196,
+            "appels": 13,
+            "skins": 13,
+            "materiaux": 13
+          },
+          {
+            "source": "zhang-v01.glb",
+            "triangles": 26780,
+            "appels": 11,
+            "skins": 11,
+            "materiaux": 11
+          },
+          {
+            "source": "liu-v01.glb",
+            "triangles": 26376,
+            "appels": 11,
+            "skins": 11,
+            "materiaux": 11
+          },
+          {
+            "source": "lao-d-v03.glb",
+            "triangles": 29248,
+            "appels": 11,
+            "skins": 11,
+            "materiaux": 11
+          }
+        ],
+        "limites": "Atelier artistique. Expressions, doigts, contour et intégration des PNJ en partie restent à finaliser."
+      }
+    },
+    {
+      "name": "collegues-poses",
+      "result": [
+        {
+          "source": "directeur-v01.glb",
+          "repos": {
+            "echantillons": 1109,
+            "taille": [
+              0.6758645763268014,
+              1.7978194006718695,
+              0.29677771031856537
+            ]
+          },
+          "assis": {
+            "echantillons": 1109,
+            "taille": [
+              0.6777751180841378,
+              1.3982363973889818,
+              0.7257005545583087
+            ]
+          },
+          "manches": {
+            "controles": 112,
+            "poidsBusteMax": 0
+          },
+          "imagesMarche": 121,
+          "retourRepos": true
+        },
+        {
+          "source": "zhang-v01.glb",
+          "repos": {
+            "echantillons": 1071,
+            "taille": [
+              0.5262407819145329,
+              1.7858194359578192,
+              0.33487077057361603
+            ]
+          },
+          "assis": {
+            "echantillons": 1071,
+            "taille": [
+              0.5262407819145329,
+              1.3862364326749315,
+              0.7637936148133594
+            ]
+          },
+          "manches": {
+            "controles": 58,
+            "poidsBusteMax": 0
+          },
+          "imagesMarche": 121,
+          "retourRepos": true
+        },
+        {
+          "source": "liu-v01.glb",
+          "repos": {
+            "echantillons": 1079,
+            "taille": [
+              0.6668072000575518,
+              1.7806294211186469,
+              0.3021990656852722
+            ]
+          },
+          "assis": {
+            "echantillons": 1079,
+            "taille": [
+              0.6668072000575518,
+              1.381046417835759,
+              0.7272408726897556
+            ]
+          },
+          "manches": {
+            "controles": 90,
+            "poidsBusteMax": 0
+          },
+          "imagesMarche": 121,
+          "retourRepos": true
+        }
+      ]
+    },
+    {
+      "name": "collegues-fin",
+      "result": {
+        "atelierFerme": true
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

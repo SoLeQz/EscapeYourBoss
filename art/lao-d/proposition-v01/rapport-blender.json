@@ -1,0 +1,11 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "jalon": "B proposition à valider",
+  "objetsSkinnes": 11,
+  "triangles": 27096,
+  "materiaux": 11,
+  "glbOctets": 1149456,
+  "textures": 0,
+  "expressions": "regard, clignements, doigts indépendants non finalisés — jalon C",
+  "source": "géométrie originale créée dans Blender, aucun asset tiers"
+}

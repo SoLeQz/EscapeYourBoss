@@ -1,0 +1,22 @@
+[
+  {
+    "nom": "mains",
+    "blender": "5.2.2 LTS",
+    "triangles": 5688,
+    "piecesEditables": 6,
+    "controles": [
+      "doigtsL",
+      "doigtsR",
+      "mainL",
+      "mainR",
+      "pouceL",
+      "pouceR"
+    ],
+    "morphs": [
+      "Index",
+      "Ouvert",
+      "Poing",
+      "Pouce"
+    ]
+  }
+]

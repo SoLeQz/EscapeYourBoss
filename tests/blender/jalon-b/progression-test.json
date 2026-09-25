@@ -1,0 +1,71 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":1878,\"premierNiveau\":1079,\"rendu\":11,\"total\":4827},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "blender-identite",
+      "result": {
+        "source": "lao-d-v01.glb",
+        "secours": false,
+        "couts": {
+          "avant": {
+            "appels": 41,
+            "triangles": 31018,
+            "skins": 5,
+            "materiaux": 26
+          },
+          "apres": {
+            "appels": 11,
+            "triangles": 27096,
+            "skins": 11,
+            "materiaux": 11
+          }
+        },
+        "limites": "Proposition artistique : doigts, expressions, contour et poses extrêmes à finaliser au jalon C. Pas de mesure FPS."
+      }
+    },
+    {
+      "name": "blender-pose-accroupi-0",
+      "result": {
+        "pose": "accroupi",
+        "phase": 0
+      }
+    },
+    {
+      "name": "blender-pose-travail-0",
+      "result": {
+        "pose": "travail",
+        "phase": 0
+      }
+    },
+    {
+      "name": "blender-pose-marche-0.8",
+      "result": {
+        "pose": "marche",
+        "phase": 0.9096666666666667
+      }
+    },
+    {
+      "name": "blender-pose-marche-2.8",
+      "result": {
+        "pose": "marche",
+        "phase": 2.9096666666666664
+      }
+    },
+    {
+      "name": "blender-fin",
+      "result": {
+        "atelierFerme": true
+      }
+    }
+  ],
+  "logs": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(229,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ]
+}

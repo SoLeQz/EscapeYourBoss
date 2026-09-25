@@ -1,0 +1,35 @@
+C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\creer_matieres.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  self.mat=bpy.data.materials.new('MERIDIEN_'+nom);self.mat.use_nodes=True;self.nodes=self.mat.node_tree.nodes;self.nodes.clear();self.links=self.mat.node_tree.links;self.i=0
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK bois
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK textile
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK moquette
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK pierre
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK beton
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK metal
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+Info: Baking map saved to internal image, save it externally or pack it
+CUISSON_OK cuir
+Info: Saved as "matieres-meridien-v01.blend"
+BIBLIOTHEQUE_TERMINEE
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

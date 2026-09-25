@@ -1,0 +1,1761 @@
+{
+  "schema": 1,
+  "revisionThree": "169",
+  "unite": "metre",
+  "haut": "+Y",
+  "avant": "+Z",
+  "look": {
+    "chemise": 15919832,
+    "pantalon": 5593702,
+    "cheveux": 1314829,
+    "peau": 15843478,
+    "veste": 5002340,
+    "cravate": 8532797,
+    "lunettes": true,
+    "sac": true,
+    "badge": true
+  },
+  "hauteurs": {
+    "hip": 0.85,
+    "eye": 1.63,
+    "chest": 1.3,
+    "seatOffset": -0.37
+  },
+  "stats": {
+    "appels": 41,
+    "surfacesSkinnees": 5,
+    "triangles": 31018,
+    "materiaux": 26
+  },
+  "boite": {
+    "min": [
+      -0.27756401896476746,
+      8.940696516468449e-10,
+      -0.28000000002607706
+    ],
+    "max": [
+      0.27756401896476746,
+      1.7899999618530273,
+      0.1770000010728836
+    ]
+  },
+  "os": [
+    {
+      "nom": "racine",
+      "parent": null,
+      "position": [
+        0,
+        0.85,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0,
+        0.85,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.85,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "buste",
+      "parent": "racine",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0,
+        0.85,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.85,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "teteBase",
+      "parent": "buste",
+      "position": [
+        0,
+        0.78,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0,
+        1.63,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1.63,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "tete",
+      "parent": "teteBase",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0,
+        1.63,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1.63,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "epauleL",
+      "parent": "buste",
+      "position": [
+        -0.215,
+        0.53,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.215,
+        1.38,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.215,
+        1.38,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "coudeL",
+      "parent": "epauleL",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.215,
+        1.1099999999999999,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.215,
+        1.1099999999999999,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "mainL",
+      "parent": "coudeL",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.215,
+        0.8399999999999999,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.215,
+        0.8399999999999999,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "epauleR",
+      "parent": "buste",
+      "position": [
+        0.215,
+        0.53,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.215,
+        1.38,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.215,
+        1.38,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "coudeR",
+      "parent": "epauleR",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.215,
+        1.1099999999999999,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.215,
+        1.1099999999999999,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "mainR",
+      "parent": "coudeR",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.215,
+        0.8399999999999999,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.215,
+        0.8399999999999999,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "hancheL",
+      "parent": "racine",
+      "position": [
+        -0.105,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.105,
+        0.85,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.105,
+        0.85,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "genouL",
+      "parent": "hancheL",
+      "position": [
+        0,
+        -0.43,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.105,
+        0.42,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.105,
+        0.42,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "chevilleL",
+      "parent": "genouL",
+      "position": [
+        0,
+        -0.38,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        -0.105,
+        0.03999999999999998,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.105,
+        0.03999999999999998,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "hancheR",
+      "parent": "racine",
+      "position": [
+        0.105,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.105,
+        0.85,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.105,
+        0.85,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "genouR",
+      "parent": "hancheR",
+      "position": [
+        0,
+        -0.43,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.105,
+        0.42,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.105,
+        0.42,
+        0,
+        1
+      ]
+    },
+    {
+      "nom": "chevilleR",
+      "parent": "genouR",
+      "position": [
+        0,
+        -0.38,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "ordreEuler": "XYZ",
+      "monde": [
+        0.105,
+        0.03999999999999998,
+        0
+      ],
+      "matriceMonde": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.105,
+        0.03999999999999998,
+        0,
+        1
+      ]
+    }
+  ],
+  "pivots": {
+    "root": {
+      "type": "Bone",
+      "os": "racine",
+      "parent": "group",
+      "position": [
+        0,
+        0.85,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0.85,
+        0
+      ]
+    },
+    "upper": {
+      "type": "Bone",
+      "os": "buste",
+      "parent": "racine",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0.85,
+        0
+      ]
+    },
+    "torso": {
+      "type": "Bone",
+      "os": "buste",
+      "parent": "racine",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0.85,
+        0
+      ]
+    },
+    "head": {
+      "type": "Bone",
+      "os": "teteBase",
+      "parent": "buste",
+      "position": [
+        0,
+        0.78,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "teteMicro": {
+      "type": "Bone",
+      "os": "tete",
+      "parent": "teteBase",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "armL": {
+      "type": "Bone",
+      "os": "epauleL",
+      "parent": "buste",
+      "position": [
+        -0.215,
+        0.53,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.215,
+        1.38,
+        0
+      ]
+    },
+    "elbowL": {
+      "type": "Bone",
+      "os": "coudeL",
+      "parent": "epauleL",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.215,
+        1.1099999999999999,
+        0
+      ]
+    },
+    "armR": {
+      "type": "Bone",
+      "os": "epauleR",
+      "parent": "buste",
+      "position": [
+        0.215,
+        0.53,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.215,
+        1.38,
+        0
+      ]
+    },
+    "elbowR": {
+      "type": "Bone",
+      "os": "coudeR",
+      "parent": "epauleR",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.215,
+        1.1099999999999999,
+        0
+      ]
+    },
+    "legL": {
+      "type": "Bone",
+      "os": "hancheL",
+      "parent": "racine",
+      "position": [
+        -0.105,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.105,
+        0.85,
+        0
+      ]
+    },
+    "kneeL": {
+      "type": "Bone",
+      "os": "genouL",
+      "parent": "hancheL",
+      "position": [
+        0,
+        -0.43,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.105,
+        0.42,
+        0
+      ]
+    },
+    "footL": {
+      "type": "Bone",
+      "os": "chevilleL",
+      "parent": "genouL",
+      "position": [
+        0,
+        -0.38,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.105,
+        0.03999999999999998,
+        0
+      ]
+    },
+    "legR": {
+      "type": "Bone",
+      "os": "hancheR",
+      "parent": "racine",
+      "position": [
+        0.105,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.105,
+        0.85,
+        0
+      ]
+    },
+    "kneeR": {
+      "type": "Bone",
+      "os": "genouR",
+      "parent": "hancheR",
+      "position": [
+        0,
+        -0.43,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.105,
+        0.42,
+        0
+      ]
+    },
+    "footR": {
+      "type": "Bone",
+      "os": "chevilleR",
+      "parent": "genouR",
+      "position": [
+        0,
+        -0.38,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.105,
+        0.03999999999999998,
+        0
+      ]
+    },
+    "corpsHaut": {
+      "type": "SkinnedMesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corpsBas": {
+      "type": "SkinnedMesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corpsPeau": {
+      "type": "SkinnedMesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corpsCheveux": {
+      "type": "SkinnedMesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corpsVeste": {
+      "type": "SkinnedMesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "ceinture": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "racine",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0.85,
+        0
+      ]
+    },
+    "cravate": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    },
+    "mainL": {
+      "type": "Bone",
+      "os": "mainL",
+      "parent": "coudeL",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "mainR": {
+      "type": "Bone",
+      "os": "mainR",
+      "parent": "coudeR",
+      "position": [
+        0,
+        -0.27,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "doigtsL": {
+      "type": "Group",
+      "os": null,
+      "parent": "mainL",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "pouceL": {
+      "type": "Group",
+      "os": null,
+      "parent": "mainL",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        -0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "doigtsR": {
+      "type": "Group",
+      "os": null,
+      "parent": "mainR",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "pouceR": {
+      "type": "Group",
+      "os": null,
+      "parent": "mainR",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0.215,
+        0.8399999999999999,
+        0
+      ]
+    },
+    "visage": {
+      "type": "Group",
+      "os": null,
+      "parent": "tete",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "clignement": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "paupiere",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "regard": {
+      "type": "Group",
+      "os": null,
+      "parent": "visage",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "paupiere": {
+      "type": "Group",
+      "os": null,
+      "parent": "visage",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.63,
+        0
+      ]
+    },
+    "bouche": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "visage",
+      "position": [
+        7.260946186499365e-8,
+        -0.050000000000000044,
+        0.08039348955118289
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        7.260946186499365e-8,
+        1.5799999999999998,
+        0.08039348955118289
+      ]
+    },
+    "sac": {
+      "type": "Group",
+      "os": null,
+      "parent": "buste",
+      "position": [
+        0,
+        0.37,
+        -0.179
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        1.22,
+        -0.179
+      ]
+    },
+    "sangles": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "buste",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0.85,
+        0
+      ]
+    },
+    "cordon": {
+      "type": "Mesh",
+      "os": null,
+      "parent": "group",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "monde": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "maillages": [
+    {
+      "type": "Mesh",
+      "triangles": 704,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 336,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 160,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 240,
+      "parent": "Group",
+      "morphs": 1
+    },
+    {
+      "type": "Mesh",
+      "triangles": 160,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 140,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 1032,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 600,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 40,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 320,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 1240,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 864,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 216,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 120,
+      "parent": "coudeL",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 864,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 216,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 120,
+      "parent": "coudeR",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 48,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 108,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 1272,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 376,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 360,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 248,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 300,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 300,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 300,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 900,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 416,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 436,
+      "parent": "buste",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 432,
+      "parent": "chevilleL",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 432,
+      "parent": "chevilleL",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 240,
+      "parent": "chevilleL",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 432,
+      "parent": "chevilleR",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 432,
+      "parent": "chevilleR",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 240,
+      "parent": "chevilleR",
+      "morphs": 0
+    },
+    {
+      "type": "Mesh",
+      "triangles": 384,
+      "parent": "racine",
+      "morphs": 0
+    },
+    {
+      "type": "SkinnedMesh",
+      "triangles": 1190,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "SkinnedMesh",
+      "triangles": 2500,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "SkinnedMesh",
+      "triangles": 5348,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "SkinnedMesh",
+      "triangles": 2816,
+      "parent": "Group",
+      "morphs": 0
+    },
+    {
+      "type": "SkinnedMesh",
+      "triangles": 4136,
+      "parent": "Group",
+      "morphs": 0
+    }
+  ],
+  "sources": {
+    "src/body.js": "81432d4d2a79b3532bec9597a817507188ba38e6765d92e02102069308d114e5",
+    "src/characters.js": "efd53cc3eb05eac9213f2f6b4a4cc3534add2dde18ffb616b730b034cae3c804",
+    "src/player.js": "1002fd672082071b0d3f717bda876daf8f68d36539842f4909ecd7b112547a85",
+    "src/emotes.js": "d1c1924370088562e8d9b24453d70ffc91e1932d3dbb731d52a5c699fdacdd94",
+    "src/resources.js": "c254475dafd2c948051758b00d1f8c3963e2c0717d001b3fea94a92439ac354b"
+  }
+}

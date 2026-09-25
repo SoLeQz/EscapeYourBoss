@@ -1,0 +1,25 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "jalon": "B proposition à valider",
+  "objetsSkinnes": 11,
+  "triangles": 26780,
+  "materiaux": 11,
+  "glbOctets": 1118324,
+  "textures": 0,
+  "profil": {
+    "nom": "Zhang Jie",
+    "role": "chef d’équipe",
+    "palette": {
+      "skin": "E9B58E",
+      "jacket": "5E4B5A",
+      "shirt": "E3DCC6",
+      "trousers": "5F4757",
+      "hair": "1D1512",
+      "red": "925F76"
+    },
+    "description": "Blazer prune cintré, visage plus fin, chignon et mèches aux tempes, sans lunettes ni cravate."
+  },
+  "bretelles": [],
+  "expressions": "regard, clignements, doigts indépendants non finalisés — jalon C",
+  "source": "géométrie originale créée dans Blender, aucun asset tiers"
+}

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escape your boss</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏃</text></svg>">
+<style>
+  :root{
+    --gold:#f5b869; --amber:#ffd24a; --red:#ff4b3a; --green:#4ade80;
+    --ink:#14121a; --paper:#f6f2e8;
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#12101a;font-family:var(--font);color:#fff;
+            -webkit-font-smoothing:antialiased}
+  canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+  body.modal canvas#game{cursor:default}
+
+  /* ---------------- HUD ---------------- */
+  #hud{position:fixed;inset:0;pointer-events:none;user-select:none;transition:opacity .22s}
+  body.modal #hud{opacity:0}
+  .panel{background:rgba(16,14,22,.62);backdrop-filter:blur(10px);
+         border:1px solid rgba(255,255,255,.12);border-radius:12px}
+
+  #top{position:absolute;top:14px;left:50%;transform:translateX(-50%);
+       display:flex;gap:10px;align-items:stretch}
+  #mission{padding:8px 14px;display:flex;flex-direction:column;gap:1px}
+  #mission .cn{font-size:15px;font-weight:700;letter-spacing:.5px}
+  #mission .fr{font-size:10.5px;opacity:.72;letter-spacing:.3px}
+  #clock{padding:8px 14px;display:flex;align-items:center;font-variant-numeric:tabular-nums;
+         font-size:20px;font-weight:700;color:var(--gold);letter-spacing:1px}
+  #timer-wrap{padding:8px 14px;display:flex;flex-direction:column;justify-content:center;min-width:132px}
+  #timer-wrap .lbl{font-size:9.5px;opacity:.7;letter-spacing:.4px;white-space:nowrap}
+  #timer{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+  #timer-wrap.danger{border-color:rgba(255,75,58,.75);box-shadow:0 0 18px rgba(255,75,58,.3)}
+  #timer-wrap.danger #timer{color:var(--red)}
+
+  #det-wrap{position:absolute;top:96px;left:50%;transform:translateX(-50%);
+            width:min(420px,52vw);padding:8px 12px 10px}
+  #det-txt{font-size:11px;letter-spacing:.6px;opacity:.9;margin-bottom:5px;text-align:center}
+  #det-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+  #det-fill{height:100%;width:0%;border-radius:99px;background:var(--amber);
+            transition:width .08s linear}
+  #det-wrap.pulse{animation:pulse .55s ease-in-out infinite alternate}
+  #det-wrap.observe{border-color:rgba(255,75,58,.8);
+    box-shadow:0 0 34px rgba(255,75,58,.42), inset 0 0 22px rgba(255,75,58,.12)}
+  #det-wrap.observe #det-txt{color:#ffb3aa;font-weight:700;letter-spacing:.8px}
+  @keyframes pulse{to{box-shadow:0 0 26px rgba(255,75,58,.55);border-color:rgba(255,75,58,.6)}}
+
+  #left{position:absolute;left:14px;top:14px;padding:11px 13px;width:222px;
+        display:flex;flex-direction:column;gap:9px}
+  .meter .row{display:flex;justify-content:space-between;font-size:10px;opacity:.78;margin-bottom:4px;
+              letter-spacing:.3px}
+  .meter .bar{height:7px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+  .meter .bar i{display:block;height:100%;border-radius:99px;transition:width .1s linear}
+  #stress-fill{background:linear-gradient(90deg,#8ab4ff,#c084fc)}
+  #stress-fill.hot{background:linear-gradient(90deg,#ff9a3d,#ff4b3a)}
+  #stam-fill{background:linear-gradient(90deg,#4ade80,#a3e635)}
+  .chip{align-self:flex-start;font-size:11px;padding:3px 9px;border-radius:99px;
+        background:rgba(255,255,255,.14);letter-spacing:.4px}
+  .chip.ok{background:rgba(96,200,240,.25);color:#9fe0ff}
+  .chip.good{background:rgba(74,222,128,.22);color:#9cf5bd}
+  .chip.warning{background:rgba(245,184,105,.22);color:#ffd795}
+  #det-wrap.protege{border-color:#8acdb380}
+  #det-wrap.protege #det-txt{color:#b5e9cc}
+  #det-wrap.protection-fin{border-color:#f5b869b0}
+  #det-wrap.protection-fin #det-txt{color:#ffd795}
+  .chip.bad{background:rgba(255,75,58,.24);color:#ffb3aa}
+
+  #map-wrap{position:absolute;left:14px;bottom:14px;padding:8px}
+  #minimap{width:214px;height:174px;display:block;border-radius:7px}
+  #map-legend{display:flex;gap:10px;font-size:9px;opacity:.7;margin-top:6px;justify-content:center}
+  #map-legend i{display:inline-block;width:7px;height:7px;border-radius:99px;margin-right:3px;
+                vertical-align:middle}
+
+  #keys{position:absolute;right:14px;bottom:14px;padding:9px 12px;font-size:10.5px;line-height:1.8;
+        opacity:.85;width:262px}
+  #keys b{color:var(--gold)}
+  kbd{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-bottom-width:2px;
+      border-radius:4px;padding:0 5px;font:inherit;font-size:10px;font-weight:700}
+
+  #prompt{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);
+          background:rgba(16,14,22,.78);border:1px solid rgba(255,210,74,.5);border-radius:10px;
+          padding:9px 16px;font-size:14px;opacity:0;transition:opacity .16s;white-space:nowrap}
+  #subtitle{position:absolute;bottom:176px;left:50%;transform:translateX(-50%);text-align:center;
+            opacity:0;transition:opacity .3s;max-width:70vw}
+  #subtitle b{display:block;font-size:22px;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.9)}
+  #subtitle span{display:block;font-size:13px;opacity:.85;margin-top:3px;text-shadow:0 2px 10px #000}
+  #toast{position:absolute;top:150px;left:50%;transform:translateX(-50%);opacity:0;
+         transition:opacity .3s;background:rgba(255,75,58,.9);padding:7px 15px;border-radius:99px;
+         font-size:13px;white-space:nowrap}
+  #toast span{opacity:.85;font-size:11.5px}
+
+  #vignette{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .15s;
+    background:radial-gradient(ellipse at center,transparent 38%,rgba(190,20,10,.62) 100%)}
+  #flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:rgba(255,40,25,.85)}
+
+  /* ---------------- écrans ---------------- */
+  .screen{position:fixed;inset:0;display:grid;place-items:center;z-index:10;
+          opacity:0;visibility:hidden;pointer-events:none;
+          transition:opacity .3s ease, visibility 0s .3s;
+          background:radial-gradient(ellipse at 50% 40%,rgba(30,20,40,.84),rgba(8,6,12,.97))}
+  .screen.on{opacity:1;visibility:visible;pointer-events:auto;
+             transition:opacity .3s ease}
+  .screen .card,.screen .menu-pile{transform:translateY(14px) scale(.985);
+             transition:transform .34s cubic-bezier(.22,1,.36,1)}
+  .screen.on .card,.screen.on .menu-pile{transform:none}
+  .card{width:min(640px,92vw);padding:30px 34px;border-radius:18px;text-align:center;
+        background:rgba(22,18,28,.92);border:1px solid rgba(255,255,255,.14);
+        box-shadow:0 30px 90px rgba(0,0,0,.6)}
+  .card h1{font-size:34px;letter-spacing:2px;margin-bottom:2px}
+  .card h2{font-size:14px;font-weight:500;opacity:.72;letter-spacing:1px;margin-bottom:18px}
+  .card p{font-size:13.5px;line-height:1.7;opacity:.88}
+  .btn{pointer-events:auto;margin-top:20px;padding:12px 30px;border:0;border-radius:99px;
+       font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:1px;
+       background:linear-gradient(135deg,var(--gold),var(--amber));color:#231a0b;
+       transition:transform .12s, box-shadow .12s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(245,184,105,.35)}
+  .btn.ghost{background:rgba(255,255,255,.13);color:#fff;margin-left:8px}
+
+  .howto{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;text-align:left;
+         margin:16px 0 6px;font-size:12.5px}
+  .howto div{display:flex;gap:8px;align-items:baseline;opacity:.9}
+  .howto em{font-style:normal;opacity:.66;font-size:11px}
+  .tips{text-align:left;font-size:12px;line-height:1.8;opacity:.82;
+        background:rgba(255,255,255,.05);border-radius:10px;padding:12px 15px;margin-top:14px}
+  .tips b{color:var(--gold)}
+
+  #screen-fail .card{border-color:rgba(255,75,58,.45)}
+  #screen-fail h1{color:var(--red)}
+  #fail-who{font-size:12px;opacity:.7;letter-spacing:1px;margin-bottom:14px}
+  #fail-line{background:rgba(255,75,58,.12);border-left:3px solid var(--red);border-radius:8px;
+             padding:14px 18px;text-align:left}
+  #fail-line b{font-size:19px;display:block;line-height:1.5}
+  #fail-line span{font-size:12.5px;opacity:.75;display:block;margin-top:5px;font-style:italic}
+  #screen-win .card{border-color:rgba(245,184,105,.5)}
+  #screen-win h1{color:var(--gold)}
+  #win-stats{margin-top:16px;font-size:13px}
+  #win-stats div{display:flex;justify-content:space-between;padding:7px 4px;
+                 border-bottom:1px dashed rgba(255,255,255,.12)}
+  #win-stats span{opacity:.7}
+  #win-stats b.grade{color:var(--gold);font-size:15px}
+  /* ---------------- menus ---------------- */
+  .menu-pile{width:min(820px,94vw)}
+  .menu-titre{font-size:44px;letter-spacing:3px;text-align:center;margin-bottom:2px}
+  .menu-sous{font-size:12.5px;opacity:.65;letter-spacing:2px;text-align:center;
+             text-transform:uppercase;margin-bottom:26px}
+  .menu-liste{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .menu-btn{pointer-events:auto;width:340px;padding:14px 22px;border:1px solid rgba(255,255,255,.16);
+            border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-family:inherit;
+            font-size:15px;font-weight:600;cursor:pointer;text-align:left;letter-spacing:.5px;
+            transition:background .13s,border-color .13s,transform .13s;display:flex;
+            justify-content:space-between;align-items:center;gap:14px}
+  .menu-btn:hover{background:rgba(245,184,105,.18);border-color:rgba(245,184,105,.6);
+                  transform:translateX(3px)}
+  .menu-btn em{font-style:normal;font-size:11px;opacity:.6;font-weight:400;text-align:right}
+  .menu-btn.primaire{background:linear-gradient(135deg,var(--gold),var(--amber));color:#231a0b;
+                     border-color:transparent}
+  .menu-btn.primaire em{opacity:.75;color:#4a3410}
+  .menu-retour{margin-top:20px;width:180px;justify-content:center}
+
+  .grille-niveaux{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:12px;
+                  margin-bottom:8px}
+  .carte-niveau{pointer-events:auto;text-align:left;padding:14px 16px;border-radius:12px;
+                border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);
+                color:#fff;font-family:inherit;cursor:pointer;transition:all .14s}
+  .carte-niveau:hover:not(.verrou){border-color:rgba(245,184,105,.65);background:rgba(245,184,105,.14)}
+  .carte-niveau .num{font-size:10.5px;letter-spacing:2px;opacity:.55;text-transform:uppercase}
+  .carte-niveau .nom{font-size:15px;font-weight:700;margin:3px 0 5px}
+  .carte-niveau .desc{font-size:11.5px;opacity:.68;line-height:1.5;min-height:34px}
+  .carte-niveau .pied{display:flex;justify-content:space-between;font-size:10.5px;margin-top:8px;
+                      padding-top:7px;border-top:1px dashed rgba(255,255,255,.14);opacity:.75}
+  .carte-niveau .pied b{color:var(--gold)}
+  .carte-niveau.verrou{opacity:.42;cursor:not-allowed;filter:grayscale(.6)}
+  .carte-niveau.fini{border-color:rgba(74,222,128,.45)}
+  .carte-niveau.fini .num{color:#7ee6a0}
+
+  .table-touches{max-height:56vh;overflow-y:auto;padding-right:6px}
+  .ligne-touche{display:grid;grid-template-columns:1fr 112px 112px;gap:8px;align-items:center;
+                padding:7px 4px;border-bottom:1px dashed rgba(255,255,255,.1);font-size:13px}
+  .ligne-touche span{opacity:.88}
+  .btn-touche{pointer-events:auto;padding:7px 4px;border-radius:7px;cursor:pointer;
+              border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;
+              font-family:inherit;font-size:12px;font-weight:700}
+  .btn-touche:hover{border-color:var(--gold)}
+  .btn-touche.ecoute{background:var(--amber);color:#2a1d05;animation:clign .7s infinite alternate}
+  @keyframes clign{to{opacity:.55}}
+  .aide-touche{font-size:11.5px;opacity:.6;text-align:center;margin-top:12px}
+
+  .ligne-option{display:flex;justify-content:space-between;align-items:center;gap:16px;
+                padding:11px 4px;border-bottom:1px dashed rgba(255,255,255,.1);font-size:13.5px}
+  .ligne-option em{display:block;font-style:normal;font-size:11px;opacity:.55;margin-top:2px}
+  .ligne-option select,.ligne-option button{pointer-events:auto;padding:7px 12px;border-radius:8px;
+    border:1px solid rgba(255,255,255,.2);background:rgba(20,18,26,.9);color:#fff;
+    font-family:inherit;font-size:12.5px;cursor:pointer;min-width:150px}
+
+  #screen-suite .card{border-color:rgba(74,222,128,.45)}
+  #screen-suite h1{color:#7ee6a0}
+  .splits{margin:14px 0;font-size:12.5px;max-height:34vh;overflow-y:auto}
+  .splits div{display:flex;justify-content:space-between;padding:5px 4px;
+              border-bottom:1px dashed rgba(255,255,255,.12)}
+  .splits b{color:var(--gold)}
+
+  #objectifs{position:absolute;left:14px;top:132px;padding:9px 13px;max-width:260px;
+             font-size:12px;line-height:1.7;display:none}
+  #objectifs.on{display:block}
+  #objectifs .t{font-size:10px;letter-spacing:1.5px;opacity:.6;text-transform:uppercase;
+                margin-bottom:4px}
+  #objectifs li{list-style:none;display:flex;gap:7px;align-items:baseline}
+  #objectifs li.ok{opacity:.5;text-decoration:line-through}
+  #objectifs li i{font-style:normal;color:var(--gold)}
+  #objectifs li.ok i{color:#7ee6a0}
+
+  #chrono-sr{position:absolute;top:96px;left:50%;transform:translateX(-50%);
+             font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--gold);
+             text-shadow:0 2px 16px #000;display:none}
+  #chrono-sr.on{display:block}
+
+  /* ---------------- roue d'emotes ---------------- */
+  #roue{position:fixed;inset:0;display:grid;place-items:center;z-index:30;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .15s ease, visibility 0s .15s;
+    background:radial-gradient(ellipse at center,rgba(8,6,12,.35),rgba(8,6,12,.7))}
+  #roue.on{opacity:1;visibility:visible;transition:opacity .15s ease}
+  #roue-disque{position:relative;width:430px;height:430px;
+    transform:scale(.84) rotate(-5deg);
+    transition:transform .24s cubic-bezier(.2,1.2,.4,1)}
+  #roue.on #roue-disque{transform:none}
+  .roue-case{position:absolute;width:104px;height:104px;margin:-52px 0 0 -52px;
+    border-radius:20px;display:grid;place-items:center;align-content:center;
+    background:rgba(20,18,26,.84);border:1px solid rgba(255,255,255,.14);
+    transition:transform .13s cubic-bezier(.2,1.4,.4,1),background .13s,border-color .13s,
+               box-shadow .13s}
+  .roue-case .ic{font-size:36px;line-height:1;filter:grayscale(.35) opacity(.8);
+    transition:filter .13s}
+  .roue-case .nm{font-size:11px;letter-spacing:.5px;margin-top:4px;opacity:.6;
+    text-transform:uppercase;font-weight:700}
+  .roue-case.sel{background:rgba(245,184,105,.2);border-color:var(--gold);
+    transform:scale(1.2);box-shadow:0 0 30px rgba(245,184,105,.35)}
+  .roue-case .nm{max-width:92px;padding:0 5px;text-align:center;line-height:1.2}
+  .roue-case.sel .ic{filter:none}
+  .roue-case.sel .nm{opacity:1;color:var(--gold)}
+  #roue-centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    text-align:center;width:190px;pointer-events:none}
+  #roue-centre .t{font-size:16px;font-weight:700;letter-spacing:.5px}
+  #roue-centre .a{font-size:11.5px;opacity:.6;margin-top:5px;line-height:1.45}
+  #roue-centre .h{font-size:10px;opacity:.4;margin-top:10px;letter-spacing:1px;
+    text-transform:uppercase}
+
+  /* Briefing, guide jouable et menaces : information sans signal sonore. */
+  #guide{position:absolute;left:20px;top:252px;width:290px;padding:16px 18px;
+    border-left:3px solid #8fcbc2;background:rgba(15,31,34,.94);border-radius:4px 12px 12px 4px;
+    box-shadow:0 8px 30px #0003;line-height:1.45;pointer-events:auto}
+  #guide[hidden]{display:none}
+  #guide-titre{display:block;color:#b5e1d4;font-size:13px;letter-spacing:.6px}
+  #guide-detail{font-size:13px;margin:8px 0;color:#f3eee2}
+  #guide-hint{display:block;font-size:11px;color:#c1c6bd}
+  #menaces{position:absolute;inset:0;pointer-events:none}
+  .menace{position:absolute;transform:translate(-50%,-50%);text-align:center;color:#ffd47d;
+    text-shadow:0 2px 5px #000;white-space:nowrap}
+  .menace i{display:block;font-style:normal;font-size:24px}
+  .menace span{font-size:11px;background:#162127eb;padding:5px 9px;border-radius:6px}
+  .menace.fort{color:#ff9078}
+  #roue-disque{border:1px solid #bccfc32c;border-radius:50%;background:#122b2c55}
+  .roue-case{background:#152d30ed;border-radius:50%;border-color:#98b7b544}
+  .roue-case.sel{transform:scale(1.1);background:#41615cf5;box-shadow:0 0 0 3px #f5b86922}
+  #roue-centre{width:176px}
+  .roue-case .raccourci{position:absolute;top:6px;font-size:9px;color:#a5b8b2}
+  .roue-active #subtitle,.roue-active #toast,.roue-active #guide{visibility:hidden}
+  #roue-pointeur{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;
+    background:#f5c98f;margin:-3px;box-shadow:0 0 10px #fff9;pointer-events:none}
+  #roue-note{position:absolute;top:calc(50% + 234px);left:50%;transform:translateX(-50%);
+    text-align:center;font-size:12px;color:#d0d5ca;white-space:nowrap}
+  @media(max-height:740px){#guide{top:242px;width:250px;padding:10px 14px}
+    #roue-disque{scale:.88}#roue-note{top:calc(50% + 210px)}}
+
+  /* ---------------- écran d'attente ---------------- */
+  #chargement{position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+    background:radial-gradient(ellipse at 50% 45%,#241a2e,#0c0a12 70%);
+    transition:opacity .45s ease;font-family:var(--font)}
+  #chargement.parti{opacity:0;pointer-events:none}
+  #chargement .bloc{text-align:center}
+  #chargement h1{font-size:40px;letter-spacing:3px;margin-bottom:6px;color:#f6efe2}
+  #chargement p{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.5;
+    margin-bottom:26px}
+  #chargement .jauge{width:280px;height:3px;border-radius:99px;background:rgba(255,255,255,.12);
+    overflow:hidden;margin:0 auto}
+  #chargement .jauge i{display:block;height:100%;width:40%;border-radius:99px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    animation:glisse 1.1s ease-in-out infinite}
+  @keyframes glisse{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+  #chargement .note{font-size:11px;opacity:.38;margin-top:18px}
+
+  #boot-error{position:fixed;inset:auto 0 0 0;padding:14px;background:#7f1d1d;font-size:13px;
+              display:none;z-index:99}
+  /* Lisibilité et confort, sans filtre plein écran sur le HUD. */
+  [hidden]{display:none !important}
+  button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+  .panel{background:rgba(19,22,27,.88);backdrop-filter:none;border-color:rgba(235,220,198,.17);box-shadow:0 4px 16px #0002}
+  #top{left:auto;right:20px;top:20px;transform:none}
+  #mission .fr{max-width:220px}
+  #left{top:20px;left:20px;width:222px;padding:13px 15px}
+  #det-wrap{top:98px;width:min(400px,42vw);padding:10px 14px}
+  #det-txt{font-size:12px;letter-spacing:0;min-height:16px}
+  #det-fill,.meter .bar i{width:100%;transform:scaleX(0);transform-origin:left;transition:transform .1s linear}
+  #stam-fill.low{background:#efbb72}
+  #objectifs{top:146px;left:20px;max-width:222px;font-size:12px}
+  #objectifs .t{opacity:.8;font-size:10px}
+  #chrono-sr{left:auto;right:24px;top:94px;transform:none;font-size:24px}
+  #map-wrap{left:20px;bottom:20px}
+  #keys{right:20px;bottom:20px;width:265px;font-size:11px;line-height:2;opacity:1;padding:12px 15px}
+  #keys kbd{margin-right:2px}
+  .keys-title{font-size:9px;letter-spacing:1.8px;color:#c6bcb0;margin-bottom:4px}
+  #toast{top:154px;max-width:48vw;white-space:normal;text-align:center;line-height:1.5;background:#272923;border:1px solid #bc9a59;color:#fff3dc;border-radius:10px}
+  #prompt{bottom:74px;font-size:14px;padding:12px 20px;max-width:46vw;white-space:normal;text-align:center}
+  #subtitle{bottom:140px;max-width:45vw}
+  #sortie-attente{position:absolute;bottom:68px;left:50%;transform:translateX(-50%);width:310px;padding:14px 18px;text-align:center;font-size:13px}
+  #sortie-attente small{display:block;color:#c9c1b6;margin:4px 0 10px}
+  #sortie-attente .bar{height:4px;background:#ffffff22;border-radius:4px;overflow:hidden}
+  #sortie-fill{display:block;height:100%;background:var(--gold);transform-origin:left;transition:transform .1s linear}
+  .screen{background:radial-gradient(ellipse at 50% 30%,rgba(33,35,39,.87),rgba(11,14,18,.96));overflow:auto;padding:24px}
+  .menu-pile{max-height:calc(100vh - 48px);overflow-y:auto;padding:10px 10px 20px;scrollbar-width:thin}
+  .menu-titre{letter-spacing:-1.5px;font-size:46px;font-weight:750}
+  .menu-sous{letter-spacing:1.7px;color:#d6caba;opacity:.85;font-size:11px;margin-bottom:22px}
+  .menu-heure{text-align:center;color:var(--gold);font-size:26px;font-variant-numeric:tabular-nums;margin-bottom:16px}
+  .menu-heure span{display:block;font-size:9px;letter-spacing:2.8px;margin-top:6px;color:#b6b0a7}
+  .menu-accroche{text-align:center;color:#c4bfb5;font-size:13px;margin:-6px 0 26px}
+  .menu-btn{width:380px;max-width:100%;border-radius:8px;min-height:46px}
+  .menu-retour{width:180px}
+  .card{background:#171b21ed;border-radius:12px}
+  .card h1{letter-spacing:-.6px}
+  .btn{border-radius:8px;letter-spacing:.2px}
+  #screen-fail .card{display:flex;flex-wrap:wrap;justify-content:center;gap:0 8px}
+  #screen-fail .card>*:not(button){width:100%}
+  #screen-fail #btn-retry{order:1}
+  #screen-fail #btn-fail-menu{order:2}
+  .mouvement-reduit *, .mouvement-reduit *::before{animation:none !important;transition:none !important}
+  .mouvement-reduit #flash{display:none}
+  @media (max-height:700px){
+    .menu-heure{margin-bottom:8px;font-size:22px}
+    .menu-titre{font-size:36px}.menu-sous{margin-bottom:16px}
+    .menu-accroche{margin-bottom:18px}.menu-btn{padding:11px 18px}.menu-liste{gap:8px}
+    .ligne-option{padding:9px 4px}.menu-retour{margin-top:12px}
+    #subtitle b{font-size:18px}#objectifs{font-size:11px}
+  }
+  @media (max-width:1100px){#mission .fr{display:none}#top{gap:6px}#mission{max-width:185px}#mission .cn{font-size:12px}#det-wrap{width:340px}#keys{width:230px;font-size:10px}}
+  #map-legend{flex-wrap:wrap;gap:5px 9px;opacity:.9;max-width:214px}
+  #map-legend .losange-objet{background:#ffd487;border-radius:1px;transform:rotate(45deg)}
+  #objectifs li.objet{color:#ffe2ae}
+  #reperes-objets{position:absolute;inset:0;pointer-events:none}
+  .repere-objet{position:absolute;display:flex;gap:8px;align-items:center;transform:translate(-50%,-100%);
+    padding:7px 10px;border:1px solid #ffd48780;border-radius:7px;background:#202622ed;
+    color:#ffe2ae;box-shadow:0 2px 8px #0003;white-space:nowrap;font-size:12px;line-height:1.35}
+  .repere-objet:not(.hors-champ)::after{content:'';position:absolute;left:50%;top:100%;height:16px;border-left:1px solid #ffd487}
+  .repere-objet strong{display:block;font-size:12px;font-weight:650}
+  .repere-objet small{display:block;color:#f5eddd;font-size:10px;font-variant-numeric:tabular-nums}
+  .repere-numero{display:grid;place-items:center;background:#ffd487;color:#242820;width:22px;height:22px;border-radius:4px;font-size:12px}
+  .repere-direction{display:none;font-style:normal;color:#ffd487;font-size:17px;width:18px;text-align:center}
+  .repere-objet.hors-champ .repere-direction{display:block}
+  /* ---------------- multijoueur ---------------- */
+  .multi-champ{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:13px;opacity:.9}
+  .multi-champ input,.multi-champ select,.multi-ip input{flex:1;min-width:0;padding:8px 10px;border-radius:8px;
+    border:1px solid #98b7b544;background:#122b2c;color:inherit;font:inherit}
+  .multi-ip{display:flex;gap:8px;align-items:stretch}.multi-ip .menu-btn{flex:0 0 auto}
+  #multi-parties .menu-btn{width:100%}
+  #multi-joueurs{font-size:14px;line-height:1.7;margin:6px 0}
+  #multi-statut{min-height:1.4em;margin-top:8px}
+  .menu-btn:disabled{opacity:.5;cursor:default}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="chargement">
+  <div class="bloc">
+    <h1>Escape your boss</h1>
+    <p id="chargement-etape">Préparation des matières</p>
+    <div class="jauge"><i></i></div>
+    <div class="note" id="chargement-note">Encore quelques instants avant de prendre la fuite.</div>
+    <button id="chargement-reessayer" hidden>Réessayer</button>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="top">
+    <div class="panel" id="mission">
+      <span class="cn">Escape your boss</span>
+      <span class="fr">Quitter l'étage sans écoper d'une nouvelle tâche</span>
+    </div>
+    <div class="panel" id="clock">18:00:00</div>
+    <div class="panel" id="timer-wrap">
+      <span class="lbl">Fin de la réunion du directeur</span>
+      <span id="timer">2:45</span>
+    </div>
+  </div>
+
+  <div class="panel" id="det-wrap">
+    <div id="det-txt">Discret</div>
+    <div id="det-bar"><div id="det-fill"></div></div>
+  </div>
+
+  <div class="panel" id="left">
+    <div class="meter">
+      <div class="row"><span>Stress</span><span>rythme cardiaque</span></div>
+      <div class="bar"><i id="stress-fill"></i></div>
+    </div>
+    <div class="meter">
+      <div class="row"><span>Endurance</span><span id="stam-label">course</span></div>
+      <div class="bar"><i id="stam-fill"></i></div>
+    </div>
+    <span class="chip" id="state-chip">Marche</span>
+  </div>
+
+  <div class="panel" id="map-wrap">
+    <canvas id="minimap"></canvas>
+    <div id="map-legend">
+      <span><i style="background:#5cf07a"></i>vous</span>
+      <span><i style="background:#ff5a4a"></i>boss</span>
+      <span><i style="background:#e9e6df"></i>collègues</span>
+      <span><i style="background:#4ade80"></i>asc.</span>
+      <span><i style="background:#60c8f0"></i>esc.</span>
+      <span id="legende-objets" hidden><i class="losange-objet"></i>objet</span>
+    </div>
+  </div>
+
+  <div class="panel" id="keys">
+    <div class="keys-title">COMMANDES</div>
+    <kbd data-touche="avancer">W</kbd><kbd data-touche="gauche">A</kbd><kbd data-touche="reculer">S</kbd><kbd data-touche="droite">D</kbd> se déplacer<br>
+    <kbd data-touche="courir">Maj</kbd> courir · <kbd data-touche="accroupirBascule">C</kbd> s’accroupir<br>
+    <kbd data-touche="interagir">E</kbd> interagir · <kbd data-touche="emote">T</kbd> emotes (maintenir)<br>
+    Souris : caméra · Molette : zoom · <kbd>Échap</kbd> pause
+  </div>
+
+  <div class="panel" id="objectifs">
+    <div class="t">Objectifs</div>
+    <ul id="objectifs-liste"></ul>
+  </div>
+
+  <div id="guide" hidden>
+    <b id="guide-titre"></b><p id="guide-detail"></p><small id="guide-hint"></small>
+  </div>
+  <div id="reperes-objets" aria-hidden="true"></div>
+  <div id="menaces" aria-label="Menaces hors champ"></div>
+  <div id="chrono-sr">0:00.0</div>
+
+  <div id="roue">
+    <div id="roue-note">Souris ou 1–6 · Relâche pour jouer · Centre ou Échap pour annuler</div>
+    <div id="roue-disque">
+      <div id="roue-pointeur"></div>
+      <div id="roue-centre">
+        <div class="t"></div><div class="a"></div>
+        <div class="h">relâche pour lancer</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="subtitle"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="prompt"></div>
+  <div id="sortie-attente" class="panel" hidden>
+    <span id="sortie-texte"></span><small>Reste près de la sortie</small>
+    <div class="bar"><i id="sortie-fill"></i></div>
+  </div>
+</div>
+
+<div id="vignette"></div>
+<div id="flash"></div>
+
+<!-- ------------------- menus ------------------- -->
+<div class="screen on" id="screen-start">
+  <div class="menu-pile">
+
+    <div class="panneau-menu" id="menu-principal">
+      <div class="menu-heure">18:00 <span>FIN DE JOURNÉE. EN THÉORIE.</span></div>
+      <h1 class="menu-titre">Escape your boss</h1>
+      <div class="menu-sous">La série Escape · Infiltration de bureau</div>
+      <p class="menu-accroche">Ton travail est fini. Leurs « petites questions », beaucoup moins.</p>
+      <div class="menu-liste">
+        <button class="menu-btn primaire" id="btn-campagne">
+          Jouer normalement <em>progression par étage</em></button>
+        <button class="menu-btn" id="btn-speedrun">
+          Speedrun <em>les 6 étages d'affilée, au chrono</em></button>
+        <button class="menu-btn" id="btn-multi">
+          Multijoueur <em>à deux, sur le même réseau</em></button>
+        <button class="menu-btn" id="btn-commandes">
+          Commandes <em>personnaliser les touches</em></button>
+        <button class="menu-btn" id="btn-options">
+          Options <em>caméra, confort et son</em></button>
+        <button class="menu-btn" id="btn-quitter">Quitter</button>
+        <small id="version-jeu" style="opacity:.65;font-size:11px"></small>
+      </div>
+    </div>
+
+    <div class="panneau-menu" id="menu-niveaux" hidden>
+      <h1 class="menu-titre">Choix de l'étage</h1>
+      <div class="menu-sous" id="niveaux-sous">Termine un étage pour débloquer le suivant</div>
+      <div class="grille-niveaux" id="grille-niveaux"></div>
+      <div class="menu-liste">
+        <button class="menu-btn menu-retour" data-retour>Retour</button>
+      </div>
+    </div>
+
+    <div class="panneau-menu" id="menu-multi" hidden>
+      <h1 class="menu-titre">Multijoueur</h1>
+      <div class="menu-sous">À deux, en coopération, sur le même réseau (Wi-Fi ou câble)</div>
+      <label class="multi-champ">Ton nom <input id="multi-nom" maxlength="24" value="Lao D"></label>
+      <div id="multi-connexion" class="menu-liste">
+        <button class="menu-btn primaire" id="btn-heberger">Héberger une partie <em>ton ami te rejoint</em></button>
+        <button class="menu-btn" id="btn-chercher">Rechercher une partie <em>sur ce réseau</em></button>
+        <div id="multi-parties"></div>
+        <div class="multi-ip"><input id="multi-ip" placeholder="IP de l’hôte, ex. 192.168.1.20">
+          <button class="menu-btn" id="btn-rejoindre-ip">Rejoindre</button></div>
+      </div>
+      <div id="multi-salon" class="menu-liste" hidden>
+        <div id="multi-joueurs"></div>
+        <label class="multi-champ" id="multi-choix-etage">Étage <select id="multi-etage"></select></label>
+        <button class="menu-btn primaire" id="btn-multi-lancer">Lancer la partie</button>
+      </div>
+      <div id="multi-statut" class="aide-touche"></div>
+      <div class="menu-liste">
+        <button class="menu-btn menu-retour" id="btn-multi-retour">Retour</button>
+      </div>
+    </div>
+
+    <div class="panneau-menu" id="menu-touches" hidden>
+      <h1 class="menu-titre">Commandes</h1>
+      <div class="menu-sous">Clique sur une touche, puis appuie sur la nouvelle</div>
+      <div class="table-touches" id="table-touches"></div>
+      <div class="aide-touche">Les touches sont repérées par leur <b>position physique</b> :
+        sur un clavier AZERTY, ZQSD tombe naturellement sur les mêmes touches que WASD.</div>
+      <div class="menu-liste">
+        <button class="menu-btn menu-retour" id="btn-touches-reset">Réinitialiser</button>
+        <button class="menu-btn menu-retour" data-retour>Retour</button>
+      </div>
+    </div>
+
+    <div class="panneau-menu" id="menu-options" hidden>
+      <h1 class="menu-titre">Options</h1>
+      <div class="menu-sous">Caméra, confort et son</div>
+      <div id="liste-options"></div>
+      <div class="menu-liste">
+        <button class="menu-btn menu-retour" data-retour>Retour</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ------------------- étage réussi ------------------- -->
+<div class="screen" id="screen-suite">
+  <div class="card">
+    <h1 id="suite-titre">Étage franchi</h1>
+    <h2 id="suite-sous">Les portes se referment derrière toi</h2>
+    <div id="suite-stats"></div>
+    <button class="btn" id="btn-suivant">Étage suivant</button>
+    <button class="btn ghost" id="btn-suite-menu">Menu</button>
+  </div>
+</div>
+
+<!-- ------------------- échec ------------------- -->
+<div class="screen" id="screen-fail">
+  <div class="card">
+    <h1>Mission échouée</h1>
+    <h2>Tu retournes à ton poste</h2>
+    <div id="fail-who"></div>
+    <div id="fail-line"></div>
+    <p style="margin-top:16px;opacity:.7;font-size:12px">
+      Fois rattrapé : <b id="fail-count">1</b>
+    </p>
+    <button class="btn" id="btn-retry">Réessayer <kbd data-touche="recommencer">R</kbd></button>
+    <button class="btn ghost" id="btn-fail-menu">Menu</button>
+  </div>
+</div>
+
+<!-- ------------------- victoire ------------------- -->
+<div class="screen" id="screen-win">
+  <div class="card">
+    <h1>Tu es sorti !</h1>
+    <h2>La soirée est à toi</h2>
+    <p>Les portes se referment. Personne ne t'a vu. Le téléphone vibrera peut-être
+       à 21 h, mais ça, c'est le problème du Lao D de ce soir.</p>
+    <div id="win-stats"></div>
+    <button class="btn" id="btn-again">Rejouer</button>
+  </div>
+</div>
+
+<!-- ------------------- pause ------------------- -->
+<div class="screen" id="screen-pause">
+  <div class="card">
+    <h1>Pause</h1>
+    <h2>Souffle un peu. Le bureau peut attendre.</h2>
+    <button class="btn" id="btn-resume">Reprendre</button>
+    <button class="btn ghost" id="btn-guide" hidden>Passer la prise en main</button>
+    <button class="btn ghost" id="btn-pause-options">Options</button>
+    <button class="btn ghost" id="btn-quit">Menu principal</button>
+  </div>
+</div>
+
+<div id="boot-error"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/jsm/"
+  }
+}
+</script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

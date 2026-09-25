@@ -1,0 +1,15 @@
+{
+  "blender": "5.2.2 LTS",
+  "objet": "bureau",
+  "triangles": 2704,
+  "piecesEditables": 32,
+  "materiaux": [
+    "DECOR_alu",
+    "DECOR_aluSombre",
+    "DECOR_bois",
+    "DECOR_boisFonce",
+    "DECOR_plastiqueBlanc",
+    "DECOR_plastiqueNoir"
+  ],
+  "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."
+}

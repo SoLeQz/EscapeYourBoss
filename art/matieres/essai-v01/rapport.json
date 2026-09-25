@@ -1,0 +1,209 @@
+{
+  "blender": "5.2.2 LTS",
+  "moteur": "Cycles EMIT + normales tangentes dérivées des hauteurs cuites",
+  "matieres": [
+    {
+      "matiere": "bois",
+      "resolution": 1024,
+      "tailleMetres": 1,
+      "reliefMetres": 0.00022,
+      "cartes": {
+        "color": "bois_color",
+        "rough": "bois_rough",
+        "normal": "bois_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          0.3701041042804718,
+          0.7860148549079895
+        ],
+        "rough": [
+          0.516668438911438,
+          0.5836755037307739
+        ],
+        "height": [
+          0.2812671661376953,
+          0.7288674116134644
+        ],
+        "normal": [
+          0.49062949419021606,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "textile",
+      "resolution": 512,
+      "tailleMetres": 0.5,
+      "reliefMetres": 0.00022,
+      "cartes": {
+        "color": "textile_color",
+        "rough": "textile_rough",
+        "normal": "textile_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          0.6509791612625122,
+          0.8227155804634094
+        ],
+        "rough": [
+          0.8856633901596069,
+          0.9542273879051208
+        ],
+        "height": [
+          0.20595617592334747,
+          0.7799519300460815
+        ],
+        "normal": [
+          0.47530826926231384,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "moquette",
+      "resolution": 512,
+      "tailleMetres": 1,
+      "reliefMetres": 0.0005,
+      "cartes": {
+        "color": "moquette_color",
+        "rough": "moquette_rough",
+        "normal": "moquette_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          0.25149235129356384,
+          0.4195690453052521
+        ],
+        "rough": [
+          0.9599999785423279,
+          0.9599999785423279
+        ],
+        "height": [
+          0.21832358837127686,
+          0.7945152521133423
+        ],
+        "normal": [
+          0.4712800681591034,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "pierre",
+      "resolution": 512,
+      "tailleMetres": 1,
+      "reliefMetres": 8e-05,
+      "cartes": {
+        "color": "pierre_color",
+        "rough": "pierre_rough",
+        "normal": "pierre_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          0.5644859075546265,
+          0.8705859184265137
+        ],
+        "rough": [
+          0.6580434441566467,
+          0.7196328639984131
+        ],
+        "height": [
+          0.4221199154853821,
+          0.528723418712616
+        ],
+        "normal": [
+          0.4992101192474365,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "beton",
+      "resolution": 512,
+      "tailleMetres": 1,
+      "reliefMetres": 0.00035,
+      "cartes": {
+        "color": "beton_color",
+        "rough": "beton_rough",
+        "normal": "beton_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          0.6188477873802185,
+          0.7552160024642944
+        ],
+        "rough": [
+          0.8131423592567444,
+          0.8872047066688538
+        ],
+        "height": [
+          0.07999999821186066,
+          0.550000011920929
+        ],
+        "normal": [
+          0.4795837998390198,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "metal",
+      "resolution": 512,
+      "tailleMetres": 0.5,
+      "reliefMetres": 1.2e-05,
+      "cartes": {
+        "color": "metal_color",
+        "rough": "metal_rough",
+        "normal": "metal_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          1.0000066757202148,
+          1.0000066757202148
+        ],
+        "rough": [
+          0.4701206386089325,
+          0.5528895258903503
+        ],
+        "height": [
+          0.2507539987564087,
+          0.7680593729019165
+        ],
+        "normal": [
+          0.49882256984710693,
+          1.0
+        ]
+      }
+    },
+    {
+      "matiere": "cuir",
+      "resolution": 512,
+      "tailleMetres": 0.25,
+      "reliefMetres": 9e-05,
+      "cartes": {
+        "color": "cuir_color",
+        "rough": "cuir_rough",
+        "normal": "cuir_height"
+      },
+      "plagesLineaires": {
+        "color": [
+          1.0000066757202148,
+          1.0000066757202148
+        ],
+        "rough": [
+          0.4189944863319397,
+          0.5187861919403076
+        ],
+        "height": [
+          0.15000000596046448,
+          0.5600000023841858
+        ],
+        "normal": [
+          0.48249974846839905,
+          1.0
+        ]
+      }
+    }
+  ]
+}

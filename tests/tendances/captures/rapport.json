@@ -1,0 +1,189 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":882,\"premierNiveau\":941,\"rendu\":11,\"total\":3956},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "roue-six",
+      "result": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "clavier": [
+          "tchao",
+          "arrogance",
+          "moulin",
+          "takeL",
+          "67",
+          "ela-ke-leitada"
+        ],
+        "note": "Souris ou 1–6 · Relâche pour jouer · Centre ou Échap pour annuler"
+      }
+    },
+    {
+      "name": "musique-leitada",
+      "result": {
+        "dureeSon": 11.294145833333333,
+        "canaux": 2,
+        "frequence": 48000,
+        "ecart": 0.06133333333333335,
+        "etatAudio": "running"
+      }
+    },
+    {
+      "name": "lisibilite-roue",
+      "result": {
+        "cases": [
+          {
+            "x": 661,
+            "y": 209.5,
+            "w": 104,
+            "h": 104
+          },
+          {
+            "x": 790.890625,
+            "y": 284.5,
+            "w": 104,
+            "h": 104
+          },
+          {
+            "x": 790.890625,
+            "y": 434.5,
+            "w": 104,
+            "h": 104
+          },
+          {
+            "x": 661,
+            "y": 509.5,
+            "w": 104,
+            "h": 104
+          },
+          {
+            "x": 531.09375,
+            "y": 434.5,
+            "w": 104,
+            "h": 104
+          },
+          {
+            "x": 525.8937377929688,
+            "y": 279.29998779296875,
+            "w": 114.4000244140625,
+            "h": 114.4000244140625
+          }
+        ]
+      }
+    },
+    {
+      "name": "atelier",
+      "result": {
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v02.glb"
+        },
+        "variantes": [
+          {
+            "tete": "tete-direction-v01.glb",
+            "mains": "mains-v02.glb"
+          },
+          {
+            "tete": "tete-chignon-v01.glb",
+            "mains": "mains-v02.glb"
+          },
+          {
+            "tete": "tete-securite-v01.glb",
+            "mains": "mains-v02.glb"
+          }
+        ]
+      }
+    },
+    {
+      "name": "clip-67",
+      "result": {
+        "emote": "67",
+        "source": "67-v04.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0.95,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0
+          ]
+        ],
+        "duree": 4.8
+      }
+    },
+    {
+      "name": "clip-ela-ke-leitada",
+      "result": {
+        "emote": "ela-ke-leitada",
+        "source": "ela-ke-leitada-v04.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 11.8
+      }
+    },
+    {
+      "name": "interruption",
+      "result": {
+        "tempsFige": 2,
+        "interruption": true
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(160,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(173,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

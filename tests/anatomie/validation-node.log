@@ -1,0 +1,20 @@
+
+> escape-your-boss@1.4.0 test:anatomie
+> node --import ./tests/personnages/resolveur.mjs tests/anatomie/verifier.mjs
+
+(node:157299) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/src/anatomie-blender.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Refonte : orientation, clignement, couches, appui au sol et perception OK. 39 appels, 36358 triangles.
+4 scènes, 72 interruptions marche/accroupi à 30/60/144 Hz, appui des vraies semelles ±0.0 mm, variation maximale 5.5° par image à 120 Hz. Retour du poste et index invalides OK.
+Collision : animation, bruit et sprint arrêtés contre le mur.
+Visibilité : hauteur, occlusion réelle, angle et témoin supplémentaire vérifiés.
+Sons : panorama lié à la caméra, atténuation et suppression des alertes/emotes.
+4 emotes : poses distinctes, fin et interruption sans résidu.
+Bureau : 2 postes libres accessibles par étage ; diversion limitée et alerte préservée.
+Protection : collègues et boss, de près/de loin, soupçons en baisse et aucune remise à zéro par spam.
+Crédit : 12 s cumulées, alerte à 3 s, expiration, déplacement, emote et accroupissement vérifiés.
+PNJ : 17 ressources libérées, joueur et second PNJ intacts, bulles nettoyées.
+Niveaux : portes indépendantes, ressources partagées préservées.
+Anatomie Blender : 4 visages, couleurs, clignements, doigts, cache atomique, poses et ressources OK.

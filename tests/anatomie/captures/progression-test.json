@@ -1,0 +1,368 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":923,\"premierNiveau\":1100,\"rendu\":12,\"total\":4175},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "anatomie-en-partie",
+      "result": [
+        {
+          "niveau": 1,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        },
+        {
+          "niveau": 2,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-securite-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        },
+        {
+          "niveau": 3,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-securite-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        },
+        {
+          "niveau": 4,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-securite-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        },
+        {
+          "niveau": 5,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-securite-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        },
+        {
+          "niveau": 6,
+          "personnages": [
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-employe-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-chignon-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-securite-v01.glb",
+              "mains": "mains-v01.glb"
+            },
+            {
+              "tete": "tete-direction-v01.glb",
+              "mains": "mains-v01.glb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "atelier",
+      "result": {
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "variantes": [
+          {
+            "tete": "tete-direction-v01.glb",
+            "mains": "mains-v01.glb"
+          },
+          {
+            "tete": "tete-chignon-v01.glb",
+            "mains": "mains-v01.glb"
+          },
+          {
+            "tete": "tete-securite-v01.glb",
+            "mains": "mains-v01.glb"
+          }
+        ]
+      }
+    },
+    {
+      "name": "emote-tchao",
+      "result": {
+        "emote": "tchao",
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "name": "emote-arrogance",
+      "result": {
+        "emote": "arrogance",
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0,
+            0,
+            0.7
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "emote-moulin",
+      "result": {
+        "emote": "moulin",
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0,
+            0,
+            0.9840909090909096
+          ],
+          [
+            0,
+            0,
+            0.9840909090909096
+          ]
+        ]
+      }
+    },
+    {
+      "name": "emote-takeL",
+      "result": {
+        "emote": "takeL",
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "accroupi",
+      "result": {
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "travail",
+      "result": {
+        "source": {
+          "tete": "tete-employe-v01.glb",
+          "mains": "mains-v01.glb"
+        },
+        "mains": [
+          [
+            0.11499691335235367,
+            0,
+            0
+          ],
+          [
+            0.07159609298121082,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "logs": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(160,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(173,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(156,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ]
+}

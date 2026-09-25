@@ -1,0 +1,17 @@
+
+> escape-your-boss@1.1.1 test:decor-blender
+> node --import ./tests/personnages/resolveur.mjs tests/environnement/blender.mjs
+
+(node:812321) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/src/decor-blender.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Modèles Blender chargés : {"bureau":{"fichier":"bureau-v01.glb","pieces":6,"triangles":2704},"chaise":{"fichier":"chaise-v01.glb","pieces":4,"triangles":3068},"escalier":{"fichier":"escalier-v01.glb","pieces":5,"triangles":12012},"porte":{"fichier":"porte-escalier-v01.glb","pieces":3,"triangles":1212}}
+Étage 1 : emprises conservées, trémie et sortie vérifiées, 91 lots, 229120 triangles, nettoyage OK
+Étage 2 : emprises conservées, trémie et sortie vérifiées, 94 lots, 229316 triangles, nettoyage OK
+Étage 3 : emprises conservées, trémie et sortie vérifiées, 93 lots, 252346 triangles, nettoyage OK
+Étage 4 : emprises conservées, trémie et sortie vérifiées, 96 lots, 251450 triangles, nettoyage OK
+Étage 5 : emprises conservées, trémie et sortie vérifiées, 92 lots, 258854 triangles, nettoyage OK
+Étage 6 : emprises conservées, trémie et sortie vérifiées, 99 lots, 259354 triangles, nettoyage OK
+PNJ : 33 ressources libérées, joueur et second PNJ intacts, bulles nettoyées.
+Niveaux : portes indépendantes, ressources partagées préservées.

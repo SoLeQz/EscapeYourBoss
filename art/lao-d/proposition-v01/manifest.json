@@ -1,0 +1,13 @@
+{
+  "blender": "5.2.2 LTS",
+  "statut": "B à valider, C non commencé",
+  "fichiers": {
+    "lao-d-v01.blend": "6c609d9be4224788147a21cc5bc19396d3612ebb6072883419e3d8e5131a33f2",
+    "blender-vue.png": "71acf976f96c02d31b42f66f47d72bcb330879f8b2c83be021c8d616d23cac91",
+    "exporter_lao_d.py": "f519f690b5a3cbe0fcf3a461f21d58cb518da768e8f84c103e88a2cd796a5365",
+    "contrat.json": "5a0d1bb82aff26748f9ce2144bc23f2588bb2e2fa16ce004d289223d0e987670",
+    "creer_lao_d.py": "d4e049d9099582ddfabde9842f42b044a781b1e8304bf8a8b04fd6c13fb7dede",
+    "lao-d-v01.glb": "9dd01f0c87098e596da82a04ccf60f2febc1e31c9943970f11862d5d012af194",
+    "rapport-blender.json": "cdb712dbec4ef60ccc7e4bee1d5907103d7e604dcc75c35fdfbc2dad8b63703b"
+  }
+}

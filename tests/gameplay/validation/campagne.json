@@ -1,0 +1,130 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2167,\"premierNiveau\":8743,\"rendu\":17,\"total\":12851},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "instrumentation",
+      "result": "Campagne, transitions par bouton, vsync normale"
+    },
+    {
+      "name": "campagne-1-etage-1",
+      "result": {
+        "niveau": 0,
+        "chargeMs": 27.80000001192093,
+        "textures": 92,
+        "geometries": 215,
+        "programmes": 47,
+        "gaps": [
+          204.79999999701977
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-2",
+      "result": {
+        "niveau": 1,
+        "chargeMs": 3981.699999988079,
+        "construction": {
+          "index": 1,
+          "constructionMs": 941.8000000119209
+        },
+        "textures": 97,
+        "geometries": 240,
+        "programmes": 78,
+        "gaps": [
+          963.5,
+          125
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-3",
+      "result": {
+        "niveau": 2,
+        "chargeMs": 1255.5999999940395,
+        "construction": {
+          "index": 2,
+          "constructionMs": 1009.5999999940395
+        },
+        "textures": 97,
+        "geometries": 261,
+        "programmes": 78,
+        "gaps": [
+          1029.199999988079,
+          142.20000000298023,
+          135.5
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-4",
+      "result": {
+        "niveau": 3,
+        "chargeMs": 1253,
+        "construction": {
+          "index": 3,
+          "constructionMs": 964
+        },
+        "textures": 99,
+        "geometries": 258,
+        "programmes": 79,
+        "gaps": [
+          979,
+          198.70000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-5",
+      "result": {
+        "niveau": 4,
+        "chargeMs": 1372,
+        "construction": {
+          "index": 4,
+          "constructionMs": 1168.0999999940395
+        },
+        "textures": 99,
+        "geometries": 231,
+        "programmes": 78,
+        "gaps": [
+          1175.2999999970198,
+          130.8999999910593
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "campagne-1-etage-6",
+      "result": {
+        "niveau": 5,
+        "chargeMs": 1495.4000000059605,
+        "construction": {
+          "index": 5,
+          "constructionMs": 1235.6000000089407
+        },
+        "textures": 104,
+        "geometries": 247,
+        "programmes": 79,
+        "gaps": [
+          1256.7999999970198,
+          163.70000000298023
+        ],
+        "contextLost": false
+      }
+    },
+    {
+      "name": "fin",
+      "result": []
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

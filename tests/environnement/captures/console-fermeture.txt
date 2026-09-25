@@ -1,0 +1,4 @@
+Dernière revue des finitions : captures terminées, dix étapes sans erreur, code de sortie 0.
+Le terminal Electron a émis en fin de session :
+[13280:0924/140537.878:ERROR:command_buffer_proxy_impl.cc(324)] GPU state invalid after WaitForGetOffsetInRange.
+Ce message GPU n’apparaît pas dans la liste des erreurs JavaScript de la page.

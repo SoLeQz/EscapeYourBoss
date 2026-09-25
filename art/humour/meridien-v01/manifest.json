@@ -1,0 +1,73 @@
+[
+  {
+    "objet": "trophee-cafe",
+    "blender": "5.2.2 LTS",
+    "triangles": 427,
+    "piecesEditables": 7,
+    "materiaux": [
+      "DECOR_alu",
+      "DECOR_boisFonce",
+      "DECOR_murAccent",
+      "DECOR_plastiqueBlanc"
+    ]
+  },
+  {
+    "objet": "cascade-papier",
+    "blender": "5.2.2 LTS",
+    "triangles": 200,
+    "piecesEditables": 30,
+    "materiaux": [
+      "DECOR_aluSombre",
+      "DECOR_papierRecyclage"
+    ]
+  },
+  {
+    "objet": "cone-chef",
+    "blender": "5.2.2 LTS",
+    "triangles": 251,
+    "piecesEditables": 8,
+    "materiaux": [
+      "DECOR_aluSombre",
+      "DECOR_murAccent",
+      "DECOR_plastiqueBlanc",
+      "DECOR_plastiqueNoir",
+      "DECOR_signalOrange"
+    ]
+  },
+  {
+    "objet": "sablier-reunion",
+    "blender": "5.2.2 LTS",
+    "triangles": 752,
+    "piecesEditables": 10,
+    "materiaux": [
+      "DECOR_alu",
+      "DECOR_bois",
+      "DECOR_boisFonce",
+      "DECOR_verre"
+    ]
+  },
+  {
+    "objet": "tour-dossiers",
+    "blender": "5.2.2 LTS",
+    "triangles": 564,
+    "piecesEditables": 47,
+    "materiaux": [
+      "DECOR_alu",
+      "DECOR_boisFonce",
+      "DECOR_murAccent",
+      "DECOR_papier"
+    ]
+  },
+  {
+    "objet": "tampon-sortie",
+    "blender": "5.2.2 LTS",
+    "triangles": 316,
+    "piecesEditables": 8,
+    "materiaux": [
+      "DECOR_boisFonce",
+      "DECOR_murAccent",
+      "DECOR_papier",
+      "DECOR_plastiqueNoir"
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "comparaison": "v01 → v03",
+  "seulLotGeometrieModifie": [
+    "Poche passepoilée"
+  ],
+  "changements": {
+    "Plastron chemise": {
+      "TEXCOORD_0": 1.1920928955078125e-07
+    },
+    "Poche passepoilée": {
+      "POSITION": "taille modifiée",
+      "NORMAL": "taille modifiée",
+      "TEXCOORD_0": "taille modifiée",
+      "JOINTS_0": "taille modifiée",
+      "WEIGHTS_0": "taille modifiée",
+      "indices": "taille modifiée"
+    }
+  },
+  "note": "Poche passepoilée est le nom exporté du lot Cuir et monture qui contient les bretelles. Les dix autres lots sont identiques sauf arrondi UV inférieur à 2e-7."
+}

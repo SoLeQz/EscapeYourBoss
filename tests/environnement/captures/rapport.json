@@ -1,0 +1,164 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2208,\"premierNiveau\":7971,\"rendu\":12,\"total\":12043},\"pnj\":4,\"obstacles\":53}"
+    },
+    {
+      "name": "preparer-revue",
+      "result": "Caméras fixes de revue"
+    },
+    {
+      "name": "etage-1",
+      "result": {
+        "lots": 92,
+        "triangles": 365650,
+        "obstacles": 53,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 9,
+        "msP95": 12.900000000001455,
+        "msMax": 25.299999999995634,
+        "textures": 93,
+        "geometries": 234
+      }
+    },
+    {
+      "name": "etage-2",
+      "result": {
+        "lots": 94,
+        "triangles": 366202,
+        "obstacles": 53,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 10.5,
+        "msP95": 14.80000000000291,
+        "msMax": 28.80000000000291,
+        "textures": 100,
+        "geometries": 293
+      }
+    },
+    {
+      "name": "etage-3",
+      "result": {
+        "lots": 94,
+        "triangles": 409796,
+        "obstacles": 56,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 9.900000000001455,
+        "msP95": 13.599999999998545,
+        "msMax": 15.799999999995634,
+        "textures": 107,
+        "geometries": 368
+      }
+    },
+    {
+      "name": "etage-4",
+      "result": {
+        "lots": 96,
+        "triangles": 409448,
+        "obstacles": 55,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 10.19999999999709,
+        "msP95": 16.200000000004366,
+        "msMax": 32.5,
+        "textures": 116,
+        "geometries": 441
+      }
+    },
+    {
+      "name": "etage-5",
+      "result": {
+        "lots": 93,
+        "triangles": 428952,
+        "obstacles": 58,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 12,
+        "msP95": 15.39999999999418,
+        "msMax": 32.30000000000291,
+        "textures": 124,
+        "geometries": 515
+      }
+    },
+    {
+      "name": "etage-6",
+      "result": {
+        "lots": 98,
+        "triangles": 430356,
+        "obstacles": 58,
+        "qualite": "haut",
+        "rendu": [
+          1424,
+          821
+        ],
+        "msMedian": 11.5,
+        "msP95": 27.40000000000873,
+        "msMax": 32.80000000000291,
+        "textures": 132,
+        "geometries": 593
+      }
+    },
+    {
+      "name": "retour-etage-23",
+      "result": "OK"
+    },
+    {
+      "name": "open-space",
+      "result": "OK"
+    },
+    {
+      "name": "baie",
+      "result": "OK"
+    },
+    {
+      "name": "hall",
+      "result": "OK"
+    },
+    {
+      "name": "direction",
+      "result": "OK"
+    },
+    {
+      "name": "identite",
+      "result": "OK"
+    },
+    {
+      "name": "poste",
+      "result": "OK"
+    },
+    {
+      "name": "camera-jouable",
+      "result": {
+        "etat": "play",
+        "camera": [
+          -14.679999999999874,
+          2.6443234278341987,
+          9.64859081255292
+        ],
+        "erreurs": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

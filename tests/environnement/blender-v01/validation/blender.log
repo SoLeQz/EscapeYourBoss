@@ -1,0 +1,467 @@
+C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\creer_decor.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes=True;n=m.node_tree.nodes['Principled BSDF'];n.inputs['Base Color'].default_value=m.diffuse_color
+INFO Draco is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+21:37:04 | INFO: Starting glTF 2.0 export
+21:37:04 | INFO: Extracting primitive: Cube.015
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.016
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.018
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.020
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.013
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.014
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.017
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.019
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.021
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.012
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Montant en acier plié
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Montant en acier plié.001
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Passe-câble
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Passe-câble.001
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.005
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.006
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.009
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.010
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.004
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.008
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.001
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Poignée rabattue
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Poignée rabattue.001
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Poignée rabattue.002
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Roulette caisson
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Roulette caisson.001
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Roulette caisson.002
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Roulette caisson.003
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.002
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.011
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.003
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Extracting primitive: Cube.007
+21:37:04 | INFO: Primitives created: 1
+21:37:04 | INFO: Finished glTF 2.0 export in 0.20427966117858887 s
+C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\creer_decor.py:169: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene=bpy.context.scene;world=bpy.data.worlds.new('Studio '+nom);scene.world=world;world.use_nodes=True;world.node_tree.nodes['Background'].inputs[0].default_value=(.23,.28,.26,1);world.node_tree.nodes['Background'].inputs[1].default_value=.7
+00:11.266  render           | Saved: 'C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\decor-v02\bureau.png'
+C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\creer_decor.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes=True;n=m.node_tree.nodes['Principled BSDF'];n.inputs['Base Color'].default_value=m.diffuse_color
+
+Info: Saved as "bureau-v01.blend"
+{"blender": "5.2.2 LTS", "objet": "bureau", "triangles": 2704, "piecesEditables": 32, "materiaux": ["DECOR_alu", "DECOR_aluSombre", "DECOR_bois", "DECOR_boisFonce", "DECOR_plastiqueBlanc", "DECOR_plastiqueNoir"], "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."}
+21:37:10 | INFO: Starting glTF 2.0 export
+21:37:10 | INFO: Extracting primitive: Accoudoir réglable
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Accoudoir réglable.001
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cube.023
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Assise creusée
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Branche moulée
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Branche moulée.001
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Branche moulée.002
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Branche moulée.003
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Branche moulée.004
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cadre continu du dossier
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Carter vérin
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cube.022
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Dossier ergonomique
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Levier de réglage
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cube.024
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cube.025
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Cube.026
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.001
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.002
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.003
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.004
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.005
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.006
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.007
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.008
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Roulette jumelée.009
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Support lombaire
+21:37:10 | INFO: Primitives created: 1
+21:37:10 | INFO: Extracting primitive: Vérin chromé
+21:37:10 | INFO: Primitives created: 1
+21:37:11 | INFO: Finished glTF 2.0 export in 0.07453036308288574 s
+00:17.281  render           | Saved: 'C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\decor-v02\chaise.png'
+
+Info: Saved as "chaise-v01.blend"
+{"blender": "5.2.2 LTS", "objet": "chaise", "triangles": 3068, "piecesEditables": 29, "materiaux": ["DECOR_alu", "DECOR_aluSombre", "DECOR_plastiqueNoir", "DECOR_tissuChaise"], "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."}
+21:37:19 | INFO: Starting glTF 2.0 export
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.001
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.002
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.003
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.004
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.005
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.006
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.007
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.008
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.009
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.010
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.011
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.012
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.013
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.014
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.015
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.016
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.017
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.018
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.019
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.020
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.021
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.022
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.023
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.024
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.025
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.026
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.027
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.028
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.029
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.030
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.031
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.032
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.033
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.034
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.035
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.036
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.037
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.038
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.039
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.040
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.041
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.042
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Barreau garde-corps.043
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.031
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.034
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.037
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.040
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.043
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.046
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.049
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.052
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.055
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.058
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.073
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.076
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.079
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.082
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.085
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.088
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.091
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.094
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.097
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.100
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Lisse basse
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Lisse basse.001
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Lisse basse.002
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Lisse basse.003
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Main courante retournée
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Main courante retournée.001
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Main courante retournée.002
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Main courante retournée.003
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.029
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.032
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.035
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.038
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.041
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.044
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.047
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.050
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.053
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.056
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.071
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.074
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.077
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.080
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.083
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.086
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.089
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.092
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.095
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.098
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.030
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.033
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.036
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.039
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.042
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.045
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.048
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.051
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.054
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.057
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.072
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.075
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.078
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.081
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.084
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.087
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.090
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.093
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.096
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.099
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.027
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.059
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.060
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.061
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.062
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.063
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.064
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.065
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.066
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.067
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.068
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.069
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.070
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.101
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.102
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.103
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.104
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.105
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.106
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.107
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.108
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.109
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.110
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.111
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.112
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Retour du palier
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Cube.028
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Volée béton continue
+21:37:19 | INFO: Primitives created: 1
+21:37:19 | INFO: Extracting primitive: Volée béton continue.001
+21:37:19 | INFO: Primitives created: 1
+21:37:20 | INFO: Finished glTF 2.0 export in 0.35351037979125977 s
+00:25.906  render           | Saved: 'C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\decor-v02\escalier.png'
+
+Info: Saved as "escalier-v01.blend"
+{"blender": "5.2.2 LTS", "objet": "escalier", "triangles": 12012, "piecesEditables": 141, "materiaux": ["DECOR_alu", "DECOR_aluSombre", "DECOR_beton", "DECOR_pierre", "DECOR_plastiqueBlanc"], "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."}
+21:37:25 | INFO: Starting glTF 2.0 export
+21:37:25 | INFO: Extracting primitive: Cube.119
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.120
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Barre anti-panique
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Bras du ferme-porte
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.121
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.113
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.114
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.116
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.118
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Paumelle
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Paumelle.001
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Paumelle.002
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.115
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Extracting primitive: Cube.117
+21:37:25 | INFO: Primitives created: 1
+21:37:25 | INFO: Finished glTF 2.0 export in 0.03987932205200195 s
+00:32.875  render           | Saved: 'C:\Users\nicol\AppData\Local\Temp\EscapeBlenderWork\decor-v02\porte-escalier.png'
+
+Info: Saved as "porte-escalier-v01.blend"
+{"blender": "5.2.2 LTS", "objet": "porte-escalier", "triangles": 1212, "piecesEditables": 14, "materiaux": ["DECOR_alu", "DECOR_murAccent", "DECOR_verre"], "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."}
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit

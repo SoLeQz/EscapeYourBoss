@@ -1,0 +1,19 @@
+{
+  "version": "v03 — sac corrigé",
+  "blender": "5.2.2 LTS",
+  "generation": {
+    "script": "creer_lao_d.py",
+    "nom": "lao-d-v03",
+    "contrat": "contrat.json",
+    "out": "dossier inexistant"
+  },
+  "fichiers": {
+    "lao-d-v03.blend": "6735ddfe1282106e19cf13aea9358ec59c8dbcdb5330fc4f900fb36e04222894",
+    "blender-vue.png": "032762927a16973dffa3b5ff5939e606a5a416f21c20ab229193187ec531c327",
+    "lao-d-v03.glb": "8823f116721325e86f1a88dad4b954645a01d9b91e0072f1a5dd29963f79d40a",
+    "exporter_lao_d.py": "f519f690b5a3cbe0fcf3a461f21d58cb518da768e8f84c103e88a2cd796a5365",
+    "contrat.json": "5a0d1bb82aff26748f9ce2144bc23f2588bb2e2fa16ce004d289223d0e987670",
+    "creer_lao_d.py": "a2f5aa02b655158140f8bd574fa23ccffd893552bf8e33d331e83c501760157e",
+    "rapport-blender.json": "7f31c30b7d9907168125e50d659e5fa75738438fe0da0a7d229b21259b45af23"
+  }
+}

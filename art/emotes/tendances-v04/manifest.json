@@ -1,0 +1,14 @@
+[
+  {
+    "source": "67-v04.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 4.8
+  },
+  {
+    "source": "ela-ke-leitada-v04.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 11.8
+  }
+]

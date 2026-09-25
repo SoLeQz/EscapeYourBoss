@@ -1,0 +1,10 @@
+{
+  "src/emotes.js": "1bd190aa0cc0a56797a3166c67ab2560a0a8037e81643fdb2a5ceccfcd5f4ee0",
+  "src/player.js": "1ddf009bafd46955377bee4ad5f8abcc6f85bbd632a7719ede7cd601d3275485",
+  "src/main.js": "45a926ab9ccaab9ec5dca1150e0f6dd87b3971d8aca47015ad36a450e0843942",
+  "index.html": "6d7c1a8306d4b0d31162032adac8fd0051fb7d73a3f7be2d78b6e00fe2078cd2",
+  "electron/main.cjs": "6a91e8fcbc6833e239c01bccd5f7172f6214a698dff1a999867f6a72d1199d9e",
+  "electron/gameplay-test.cjs": "c0e2fa6c947def52e2d704c9469500a36f9e1f3d401de902468ef2110cc31377",
+  "electron/animations-test.cjs": "b9940edd41ebdca9303d91df38a53f94bf1f3f15fe64c851a4bde78811c0f3de",
+  "package.json": "c8ecb7c879fa65b0ec71f6be3d8d8ab4b2386920d959a545b6f4daeaf268231b"
+}

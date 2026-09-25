@@ -1,0 +1,469 @@
+{
+  "version": "1.3.0",
+  "fichiers": [
+    {
+      "fichier": "PROJECT_STATE.md",
+      "sha256": "f6be1b7877efee68044c98b7972514335e171a7d07f8ad76a6face18364e1639"
+    },
+    {
+      "fichier": "README.md",
+      "sha256": "bfb56121a7a246c461f086732e6659e6fe2c5a59fc27cc88492f7292451f6a88"
+    },
+    {
+      "fichier": "assets/alerte.mp3",
+      "sha256": "005562b0283365f52427b799e484f8a46ff78104578ffc8b97208533a51394ed"
+    },
+    {
+      "fichier": "assets/bureau-v01.glb",
+      "sha256": "991055d0083a51615156cc3e5e5734caeced68f8755996a467f6235a27340ec6"
+    },
+    {
+      "fichier": "assets/cascade-papier-v01.glb",
+      "sha256": "0bcf145c56ea2c7b6d6dce54b07563be1d335d4e206dd43eb1fe2051a3003779"
+    },
+    {
+      "fichier": "assets/chaise-v01.glb",
+      "sha256": "94d1f9f9665ea3c4bb41a00f17916ce07749b10e17f970847db9b81f7cc752e1"
+    },
+    {
+      "fichier": "assets/cone-chef-v01.glb",
+      "sha256": "4a9ae8606b1269b7ae2e2b66e0dfa3c66eb77bd7985234fba5545aecdea6b5c8"
+    },
+    {
+      "fichier": "assets/directeur-v01.glb",
+      "sha256": "ff4bf349a7619f2b92bbdfe13b60ff62cfe4466c837700cb0cd3d57f3ccf7522"
+    },
+    {
+      "fichier": "assets/escalier-v01.glb",
+      "sha256": "2ce3bd45aea85ef80250541147b78d2260aaa50c9c92c15d54d7d94417adb7c4"
+    },
+    {
+      "fichier": "assets/lao-d-test.glb",
+      "sha256": "0752ceccf4c3a78e85d4434c7e9c3d97a981a5b24527475db261a5c7a510cd21"
+    },
+    {
+      "fichier": "assets/lao-d-v01.glb",
+      "sha256": "9dd01f0c87098e596da82a04ccf60f2febc1e31c9943970f11862d5d012af194"
+    },
+    {
+      "fichier": "assets/lao-d-v02.glb",
+      "sha256": "934e7611e8e8e4eabf354e1b0346dd5b2aba794afb0422bbcfb34d9e091145d2"
+    },
+    {
+      "fichier": "assets/lao-d-v03.glb",
+      "sha256": "8823f116721325e86f1a88dad4b954645a01d9b91e0072f1a5dd29963f79d40a"
+    },
+    {
+      "fichier": "assets/liu-v01.glb",
+      "sha256": "fbf170e6aa0b4a132eec1faf2320e9e541463daf820c7c32f457d81ce79b473a"
+    },
+    {
+      "fichier": "assets/mat-beton-v01-color.png",
+      "sha256": "50c7fe2c9a821dd955840daa742b346f1ca14608245673397606dffe7caf7d94"
+    },
+    {
+      "fichier": "assets/mat-beton-v01-normal.png",
+      "sha256": "a0b9ae1f7c0805b445e3117c6db297ec583a499aec80530571d77811b04a6804"
+    },
+    {
+      "fichier": "assets/mat-beton-v01-rough.png",
+      "sha256": "6ae74c50f79955f477d1bd3f9e85a790ac0ea755d0b368be6eaa344f2347dfaf"
+    },
+    {
+      "fichier": "assets/mat-bois-v01-color.png",
+      "sha256": "f74600c3194e59c238fe0b24937fe1be1915e370428344407bc4af01f5b6c78d"
+    },
+    {
+      "fichier": "assets/mat-bois-v01-normal.png",
+      "sha256": "139dea535b5a4e9167cdd19776d903ad41e4f7b740753a5b1da26182e050c0f4"
+    },
+    {
+      "fichier": "assets/mat-bois-v01-rough.png",
+      "sha256": "e4ed37504277cf0ddf643409a571d226eac8d5dc7c4aa890f95512e585d34136"
+    },
+    {
+      "fichier": "assets/mat-cuir-v01-color.png",
+      "sha256": "dcb06e132fed932839ad1943e3f2f0188c933370501982949c62a7d12390d121"
+    },
+    {
+      "fichier": "assets/mat-cuir-v01-normal.png",
+      "sha256": "619267341d31117a843a4853f2345e28eb598be71367160c1ba67b8b94426403"
+    },
+    {
+      "fichier": "assets/mat-cuir-v01-rough.png",
+      "sha256": "0ad7a7c2b68ada7a3229d62fadb966a85c2b152fb3c18d2cb10f02545b8bb4f1"
+    },
+    {
+      "fichier": "assets/mat-metal-v01-color.png",
+      "sha256": "dcb06e132fed932839ad1943e3f2f0188c933370501982949c62a7d12390d121"
+    },
+    {
+      "fichier": "assets/mat-metal-v01-normal.png",
+      "sha256": "7e6d11a5c124dfe000c476328a33b044fa09c52f51d71c61f6dddb93c39574b6"
+    },
+    {
+      "fichier": "assets/mat-metal-v01-rough.png",
+      "sha256": "fa753abec805255fc779430b0186ae0a88bc871e9152688a2b2385c87c4f2df4"
+    },
+    {
+      "fichier": "assets/mat-moquette-v01-color.png",
+      "sha256": "256ccf8aa2e8cf3df7110e16e8bf1f3d9733ab66caba9d99e57ff148c93183f9"
+    },
+    {
+      "fichier": "assets/mat-moquette-v01-normal.png",
+      "sha256": "f832eef2ddd35594279a744ace3192f78dac08a964609f1dd756f4dc2db73836"
+    },
+    {
+      "fichier": "assets/mat-moquette-v01-rough.png",
+      "sha256": "08c7e1041a0f68f39d320e5df4000290093fc4b0bd4847e35beb08c5073380f2"
+    },
+    {
+      "fichier": "assets/mat-pierre-v01-color.png",
+      "sha256": "681762cde036e5f9de199bb49fe8f6d5bb52ff2f9be08563804001ad92c1b041"
+    },
+    {
+      "fichier": "assets/mat-pierre-v01-normal.png",
+      "sha256": "c9d6eaab32c6e4770937e96b3d9e71594d43a873e8198a22b733547897e6f222"
+    },
+    {
+      "fichier": "assets/mat-pierre-v01-rough.png",
+      "sha256": "349fb7c566f0cb45331eb603485aaff7c4fe1f6035e210b58ae480a2c71e21e9"
+    },
+    {
+      "fichier": "assets/mat-textile-v01-color.png",
+      "sha256": "5d02a8ed65cd44309821e34fa18bb4c4c7a19aa62a701d2853754a8db1146d8d"
+    },
+    {
+      "fichier": "assets/mat-textile-v01-normal.png",
+      "sha256": "09670125b9cf1abc600f1395dcf1a0f980704272563e5efb273f0d11e4a70e34"
+    },
+    {
+      "fichier": "assets/mat-textile-v01-rough.png",
+      "sha256": "b1519a232cbe11536491b67ffc0d674036b650b438708ca771106ce729afbc35"
+    },
+    {
+      "fichier": "assets/porte-escalier-v01.glb",
+      "sha256": "729ea8366c2ed347dca7335b842e608d41d6254d93be05494d9bdb4c9cb08408"
+    },
+    {
+      "fichier": "assets/sablier-reunion-v01.glb",
+      "sha256": "71f42a4f6c05d87494b5902731fa0e25371f98637b1e8a5d93fd811cf754fc56"
+    },
+    {
+      "fichier": "assets/tampon-sortie-v01.glb",
+      "sha256": "6c7e78e0640301c186ae452c4588947f03094e82ea7fd08fb0ab30970bccc60d"
+    },
+    {
+      "fichier": "assets/tour-dossiers-v01.glb",
+      "sha256": "e13aa629e99fecfa926718d04509611b7fdddc2ed573cb29df0c96cb8e5d6569"
+    },
+    {
+      "fichier": "assets/trophee-cafe-v01.glb",
+      "sha256": "b7af0905594d19f546bcbef3ee44b952d4a13086014718f4b45dc366729c423a"
+    },
+    {
+      "fichier": "assets/zhang-v01.glb",
+      "sha256": "52b9768cc856551d27208ae2e2e5f72e36eaa8cf7d3db92112ae771e01f00a76"
+    },
+    {
+      "fichier": "docs/CREER_DES_PERSONNAGES.md",
+      "sha256": "1551466091ee3dcb06424d14ac0086c6e5ed36857300a89bacae47e86fac7595"
+    },
+    {
+      "fichier": "docs/blender/CONTRAT_ET_JALONS.md",
+      "sha256": "43dfea893a3c975a82b28eda6bb6f844f1b0570d6ad0ef31558e90c912591552"
+    },
+    {
+      "fichier": "docs/blender/GUIDE_COLLEGUES.md",
+      "sha256": "8f1d3986ed7a278e0801fc9428e26e0831e64dc932249c08dd8779122e767c71"
+    },
+    {
+      "fichier": "docs/blender/GUIDE_LAO_D.md",
+      "sha256": "23b1f6f190b75db51c7d6e502949712c5242e668e87e24df6ea287d4389c8d56"
+    },
+    {
+      "fichier": "electron/animations-test.cjs",
+      "sha256": "b9940edd41ebdca9303d91df38a53f94bf1f3f15fe64c851a4bde78811c0f3de"
+    },
+    {
+      "fichier": "electron/blender-collegues-test.cjs",
+      "sha256": "e6cdf482cd062005547e361b1a5beab1c1315397c9c86ba5e88d1d375a10b589"
+    },
+    {
+      "fichier": "electron/blender-test.cjs",
+      "sha256": "0bbc8b3dee853932fa237789dbd56c47488f3b560991e0a73ad0e46186a1afb6"
+    },
+    {
+      "fichier": "electron/blender-visuel-test.cjs",
+      "sha256": "e5bb998f5bfffebee0f1626b8376d83dc8bf9d5c4adcbe1735132e4c8df870c0"
+    },
+    {
+      "fichier": "electron/decor-test.cjs",
+      "sha256": "f4ba94e2bd319cb77ea7c7fe045575a2da5f4cea2a5647c7ee9aea17be7424d2"
+    },
+    {
+      "fichier": "electron/gameplay-test.cjs",
+      "sha256": "c0e2fa6c947def52e2d704c9469500a36f9e1f3d401de902468ef2110cc31377"
+    },
+    {
+      "fichier": "electron/humour-test.cjs",
+      "sha256": "9075a9478bd97605bbfd95ae2da1bb2e13c1e4ca1d8ffd36ffc31fa4366036de"
+    },
+    {
+      "fichier": "electron/main.cjs",
+      "sha256": "efeaa4e0d00d7351fa2fecacaad0c17d87919bcba39b2eaf422516f7512eb353"
+    },
+    {
+      "fichier": "electron/personnage-test.cjs",
+      "sha256": "f62204c2ab53ac7309ec49e103e34c8276e9fe86f580d7930cab116f730ebbeb"
+    },
+    {
+      "fichier": "electron/preload.cjs",
+      "sha256": "dd9650a565015c02caaa2dde810073734761f0e3f453a0a778c6a22facd24c2c"
+    },
+    {
+      "fichier": "electron/reperes-test.cjs",
+      "sha256": "39485f085e98d0fa937de2f0ab720f9c347eaf4dee4fd603814baf4d246c3827"
+    },
+    {
+      "fichier": "electron/sauvegarde.cjs",
+      "sha256": "2073e7dd206090a648ffa4aa0a49ddc946015dbd828b97490dd478ef2dda9be8"
+    },
+    {
+      "fichier": "electron/textures-test.cjs",
+      "sha256": "d7a410daa7d929952fae51a6f6c4a5f03b893ed2e952f1715e55708c9281a74a"
+    },
+    {
+      "fichier": "electron/transitions-test.cjs",
+      "sha256": "2b4ca8d212b4ecf7b88cfa88303001bf834b6d66df6d2b5baa5424f173ec4ba6"
+    },
+    {
+      "fichier": "electron/travail-test.cjs",
+      "sha256": "1c0a46a0dd46c10cf88736fc0930ad878ea39dc970c601ab7281dba6f4321e28"
+    },
+    {
+      "fichier": "index.html",
+      "sha256": "15abf9ad9859bfe55efffbeef631375ab82ff2a2415dcac03eefb1afbc7948a5"
+    },
+    {
+      "fichier": "package.json",
+      "sha256": "20afa723a341929d9c4ef1a74f0a9af473eba0cefa89d730193d87bf3e0bf30f"
+    },
+    {
+      "fichier": "src/architecture.js",
+      "sha256": "2bcb8d3023a006e901a243dc6ceebbf4d34fcc80bdd8df45aa6a6508e897ad47"
+    },
+    {
+      "fichier": "src/audio.js",
+      "sha256": "ddee4ac0f72310a3d1b49551e377ffa466117daa1d77b9e865a2e106a7b1079a"
+    },
+    {
+      "fichier": "src/body.js",
+      "sha256": "81432d4d2a79b3532bec9597a817507188ba38e6765d92e02102069308d114e5"
+    },
+    {
+      "fichier": "src/characters.js",
+      "sha256": "efd53cc3eb05eac9213f2f6b4a4cc3534add2dde18ffb616b730b034cae3c804"
+    },
+    {
+      "fichier": "src/decor-blender.js",
+      "sha256": "edd69a3c004e9c153765425051a4ea6217a6b69183175c6fa8a19accfb2bb924"
+    },
+    {
+      "fichier": "src/emotes.js",
+      "sha256": "1bd190aa0cc0a56797a3166c67ab2560a0a8037e81643fdb2a5ceccfcd5f4ee0"
+    },
+    {
+      "fichier": "src/environment.js",
+      "sha256": "cfc5dd04bfef2a71633c99065b80c4b5433776a5db95f050c165877bb9e3d324"
+    },
+    {
+      "fichier": "src/humour.js",
+      "sha256": "36f9f85e009eba6c4638818bdb97a3bb927346716ac5c2a9b1b32f6ce8504691"
+    },
+    {
+      "fichier": "src/input.js",
+      "sha256": "0e7d1b881c33e6b9f4b833f8071315968cc9388194aebf77f7887afc82262540"
+    },
+    {
+      "fichier": "src/level.js",
+      "sha256": "eed0623be3acb2a3c0128c55e2154ce5bfed7fb332f1b3360b6f56d93e631332"
+    },
+    {
+      "fichier": "src/levels.js",
+      "sha256": "49b94c34c7afa741b701097a8ed4a7797e57c8b48640fbfe5b2983333cb6118e"
+    },
+    {
+      "fichier": "src/main.js",
+      "sha256": "411e7536fb1ccb6cb6e38d59aada84075e6f92c0833c2d6bd6fb9b35f68fd532"
+    },
+    {
+      "fichier": "src/materials.js",
+      "sha256": "06fa004c1cbda4cde956be7ececc654d96e4aadfd4eb80a4839f4b044f390dcf"
+    },
+    {
+      "fichier": "src/menu.js",
+      "sha256": "e1f0194f7f964108d18ddee7726413aecafa9590669e036e7a147fe19c852ade"
+    },
+    {
+      "fichier": "src/minimap.js",
+      "sha256": "26d14d233f91d2490c1922b58106329eaa37ce2d7633d5e650eb9c7c68a423be"
+    },
+    {
+      "fichier": "src/npc.js",
+      "sha256": "ac01001c6b3e6328f538e05b2c81b2a5aee0e6ae256963cfa18333165e8eed88"
+    },
+    {
+      "fichier": "src/office.js",
+      "sha256": "7bd45c2ff3731c531c86ceb6192c924ccbdf681b8d22b51ec5e6c7686a520e1d"
+    },
+    {
+      "fichier": "src/perception.js",
+      "sha256": "50f5a3336c74a92ac4eb4a93659be92997dc5608c35c53c934fbcfa411cfcd2f"
+    },
+    {
+      "fichier": "src/personnage-glb.js",
+      "sha256": "4c2d3d9eb986a6686d98e3958ec60cb7f1324f82bd2accb4aa0c8f955024aa12"
+    },
+    {
+      "fichier": "src/player.js",
+      "sha256": "1ddf009bafd46955377bee4ad5f8abcc6f85bbd632a7719ede7cd601d3275485"
+    },
+    {
+      "fichier": "src/render.js",
+      "sha256": "b5db02d3f4de78e9ef76122b2bf52b963f2f0c62b1c543f97de32b3aed4970bd"
+    },
+    {
+      "fichier": "src/reperes.js",
+      "sha256": "3d11f09233eeb1cd7d2a3b09660d00ae1d918724c36b27038b64c1f4d64e441a"
+    },
+    {
+      "fichier": "src/resources.js",
+      "sha256": "c254475dafd2c948051758b00d1f8c3963e2c0717d001b3fea94a92439ac354b"
+    },
+    {
+      "fichier": "src/store.js",
+      "sha256": "a332ec3c5991121f3b307e1e2cc98e00ffd6bd291461be34268b50ec420f06f8"
+    },
+    {
+      "fichier": "src/textures-blender.js",
+      "sha256": "c24a16a199016cd793c94b93fb869f91acc3dc9bcf57855c5b76cdf4ba47b70f"
+    },
+    {
+      "fichier": "src/travail.js",
+      "sha256": "855b5355c918bbfb03225530b4c753fd3705164083e912af4e4a5270b56671ed"
+    },
+    {
+      "fichier": "src/ui.js",
+      "sha256": "e71c4cb5d0fe1f6524031b31650bd49102eb40c58ecd145bd5c8ececd81db40b"
+    },
+    {
+      "fichier": "src/uv.js",
+      "sha256": "d3c0b8bffc479d2358cf9c6cd8ef1e0c8197330dee85a5bed151bc1741b3a56c"
+    },
+    {
+      "fichier": "vendor/jsm/environments/RoomEnvironment.js",
+      "sha256": "85869bdd22f7cf0b22e68dcefe6cb710480af0f5c901a76f7a7764fd07fc8014"
+    },
+    {
+      "fichier": "vendor/jsm/geometries/RoundedBoxGeometry.js",
+      "sha256": "d20aeaf7077c459a8d952d215738d7b44fba028440bb862d84b622a34f0c80bb"
+    },
+    {
+      "fichier": "vendor/jsm/loaders/GLTFLoader.js",
+      "sha256": "6f1719dcc6a179d30273dfb0de07a8c898a7981f7b08e600b446387f5967371f"
+    },
+    {
+      "fichier": "vendor/jsm/loaders/LICENSE-three.txt",
+      "sha256": "4c40a1ef62450b857c3b2aaf294936304cd552d965fbcd9d32d4c5bcf4ba4454"
+    },
+    {
+      "fichier": "vendor/jsm/loaders/PROVENANCE.json",
+      "sha256": "b00ceaaa143e04eb76bcd332b0e490859e54b42d1c001eb2035ff4f0cc4f2b05"
+    },
+    {
+      "fichier": "vendor/jsm/math/SimplexNoise.js",
+      "sha256": "9b8d541b77b0ddc79afaa6a1de8941452c191b8b9006f04e7b8fc422e2b263f7"
+    },
+    {
+      "fichier": "vendor/jsm/objects/Sky.js",
+      "sha256": "eacd17d5debec3b909d1208304d70024a59c38c58b6533fcd4711f8a6a0b63bc"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/BokehPass.js",
+      "sha256": "581ad606035764f92a6c5124980ddeb78c09cb076d2bdeb6c760ca9d0a8332ec"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/EffectComposer.js",
+      "sha256": "d234e578618fa816955ebdc059c049c577e203e650e33cf22bde3f232c29e669"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/GTAOPass.js",
+      "sha256": "980b036767c439cf2aadd0e869b2e51b2ec00736a75a5ad1bb69dddb03254fe8"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/MaskPass.js",
+      "sha256": "328cf7db0da5d9be83ffe39d54b01d5ac1fddf108cc98182ddbb056f5c8b537f"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/OutputPass.js",
+      "sha256": "32f879d2179087676631c799857a885586b3cdd13b9731bd3b13f06428bd58b7"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/Pass.js",
+      "sha256": "b3c6128340eaa37e40a6a2f1b738e894c855239417d50959759b34a2b5e89f92"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/RenderPass.js",
+      "sha256": "6c9b8a539ea16e898f65e4760f14937ef9ea94043bd9842c141e0301f41903e8"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/SMAAPass.js",
+      "sha256": "f3508e3e17f40c1358921b5c7eb3ab60460d97b06fdadf6b0d40b52d3842c44a"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/ShaderPass.js",
+      "sha256": "3b28a1ee27e0eb96c0eab137a1f442ccf127a926904eced2d51e125ec44af781"
+    },
+    {
+      "fichier": "vendor/jsm/postprocessing/UnrealBloomPass.js",
+      "sha256": "3bd23a1097af75c7002d0ffc21a6c14f45c4dd701dbaf737030dfc61fb7c64d9"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/BokehShader.js",
+      "sha256": "a6558cc4baf2c372c192828e9fffcf088d22f80291ac72a13a5be6d3b7a18ddc"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/CopyShader.js",
+      "sha256": "4e3346db194db56a596cd074e9bdb39fb5eb52040c333e0d29dc4eb1324d3b1d"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/GTAOShader.js",
+      "sha256": "e1f5dd89bca4ee679a4aca50c3ef3513926be71f6860c38e31a62cc9d7120b39"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/LuminosityHighPassShader.js",
+      "sha256": "9f4866f9abb2d96fd83eec46ba4bf2165b22155a7a37ff425c0f60eba18007cb"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/OutputShader.js",
+      "sha256": "4944cecd49c0d4d1520a4d927bde8a590fd43f041ee913252b9451855a01d0f0"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/PoissonDenoiseShader.js",
+      "sha256": "3dab419b23529f8fd59e2713458502f9f51d2dd3af3e1285dc671fcc451d49fb"
+    },
+    {
+      "fichier": "vendor/jsm/shaders/SMAAShader.js",
+      "sha256": "3c7e942a25cb09dd431e395e6e91904715a834b2a6e62ec0b9b77c2f8655c369"
+    },
+    {
+      "fichier": "vendor/jsm/utils/BufferGeometryUtils.js",
+      "sha256": "c25b7930e570e9ec56173cd3b866ec8d2e10016630db3937efb439daf1cedbf6"
+    },
+    {
+      "fichier": "vendor/three.module.js",
+      "sha256": "0a3368c165eea773490aec7b77c22de70e3eac288503409256fdbf4d12578416"
+    }
+  ]
+}

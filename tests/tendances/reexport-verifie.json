@@ -1,0 +1,16 @@
+{
+  "67": {
+    "identique": true,
+    "images": 289,
+    "canaux": 70,
+    "source": "67-v01.blend",
+    "note": "réexporté aussi avec l'exporteur qui déroule les angles : identique"
+  },
+  "ela-ke-leitada": {
+    "identique": true,
+    "images": 709,
+    "canaux": 70,
+    "source": "ela-ke-leitada-v03.blend",
+    "son": "emote-ela-ke-leitada-son-v01.mp3"
+  }
+}

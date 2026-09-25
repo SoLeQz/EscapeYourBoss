@@ -1,0 +1,9 @@
+
+> escape-your-boss@1.0.0 test:animations
+> node --import ./tests/personnages/resolveur.mjs tests/animations/verifier.mjs
+
+(node:570680) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/vendor/three.module.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+4 scènes, 72 interruptions marche/accroupi à 30/60/144 Hz, appui des vraies semelles ±0.0 mm, variation maximale 5.5° par image à 120 Hz. Retour du poste et index invalides OK.

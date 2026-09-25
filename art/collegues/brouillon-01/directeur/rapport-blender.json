@@ -1,0 +1,25 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "jalon": "B proposition à valider",
+  "objetsSkinnes": 13,
+  "triangles": 27196,
+  "materiaux": 13,
+  "glbOctets": 1157904,
+  "textures": 0,
+  "profil": {
+    "nom": "Directeur Wang",
+    "role": "le boss",
+    "palette": {
+      "skin": "E6B288",
+      "jacket": "2B3140",
+      "shirt": "E8EEF4",
+      "trousers": "22262E",
+      "hair": "2A2320",
+      "red": "6E2B33"
+    },
+    "description": "Costume ample, taille large, mâchoire affirmée, tempes grisonnantes, cheveux peignés en arrière."
+  },
+  "bretelles": [],
+  "expressions": "regard, clignements, doigts indépendants non finalisés — jalon C",
+  "source": "géométrie originale créée dans Blender, aucun asset tiers"
+}

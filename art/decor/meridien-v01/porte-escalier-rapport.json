@@ -1,0 +1,12 @@
+{
+  "blender": "5.2.2 LTS",
+  "objet": "porte-escalier",
+  "triangles": 1212,
+  "piecesEditables": 14,
+  "materiaux": [
+    "DECOR_alu",
+    "DECOR_murAccent",
+    "DECOR_verre"
+  ],
+  "source": "Géométrie originale modelée dans Blender ; matériaux PBR réassignés aux matériaux du jeu à l’import."
+}

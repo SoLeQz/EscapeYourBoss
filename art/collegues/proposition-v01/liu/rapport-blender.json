@@ -1,0 +1,25 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "jalon": "B proposition à valider",
+  "objetsSkinnes": 11,
+  "triangles": 26376,
+  "materiaux": 11,
+  "glbOctets": 1124892,
+  "textures": 0,
+  "profil": {
+    "nom": "Lao Liu",
+    "role": "sécurité",
+    "palette": {
+      "skin": "DDA878",
+      "jacket": "3F4550",
+      "shirt": "C3CCD4",
+      "trousers": "454951",
+      "hair": "34302C",
+      "red": "75827D"
+    },
+    "description": "Carrure solide, veste de sécurité zippée, poches, insigne et radio, coiffure courte."
+  },
+  "bretelles": [],
+  "expressions": "regard, clignements, doigts indépendants non finalisés — jalon C",
+  "source": "géométrie originale créée dans Blender, aucun asset tiers"
+}

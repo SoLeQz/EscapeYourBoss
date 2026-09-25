@@ -1,0 +1,156 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":894,\"premierNiveau\":926,\"rendu\":12,\"total\":3917},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "preparer",
+      "result": {
+        "actions": [
+          {
+            "id": "imprimante",
+            "x": -18.4,
+            "z": -13.2
+          },
+          {
+            "id": "travail-3",
+            "x": -15.25,
+            "z": 4.05
+          },
+          {
+            "id": "travail-4",
+            "x": -9.25,
+            "z": 4.05
+          }
+        ],
+        "etat": "play"
+      }
+    },
+    {
+      "name": "briefing-et-tutorial",
+      "result": {
+        "elapsed": 0.49999999999999994,
+        "guide": "\n    2 / 4 · Se baisserAccroupis-toi avec C.Le haut du corps passe sous les cloisons.\n  "
+      }
+    },
+    {
+      "name": "silence-roue-et-alertes",
+      "result": {
+        "sons": [],
+        "emote": "tchao"
+      }
+    },
+    {
+      "name": "roue-selection",
+      "result": 1
+    },
+    {
+      "name": "poste-travail",
+      "result": {
+        "reste": 10.99999999999995,
+        "pose": 0.9999938557876467
+      }
+    },
+    {
+      "name": "travail-interruption-et-limite",
+      "result": {
+        "reste": 0,
+        "etat": "play"
+      }
+    },
+    {
+      "name": "diversion",
+      "result": {
+        "nb": 2,
+        "restant": 6
+      }
+    },
+    {
+      "name": "menaces",
+      "result": "▲Xiao Wang · vous voit"
+    },
+    {
+      "name": "depart-5",
+      "result": {
+        "prepare": {
+          "elapsed": 0,
+          "timeLeft": 160,
+          "preparation": true
+        },
+        "apres": {
+          "elapsed": 8.033333333333312,
+          "suspicion": 0
+        }
+      }
+    },
+    {
+      "name": "depart-6",
+      "result": {
+        "prepare": {
+          "elapsed": 0,
+          "timeLeft": 62,
+          "preparation": true
+        },
+        "apres": {
+          "elapsed": 8.033333333333312,
+          "suspicion": 0
+        }
+      }
+    },
+    {
+      "name": "scene-emotes",
+      "result": "Prêt"
+    },
+    {
+      "name": "emote-0",
+      "result": {
+        "id": "tchao",
+        "heightMin": 0.8499999991059304,
+        "heightMax": 0.8499999991059304
+      }
+    },
+    {
+      "name": "emote-1",
+      "result": {
+        "id": "arrogance",
+        "heightMin": 0.8470390866826255,
+        "heightMax": 0.8499999991059304
+      }
+    },
+    {
+      "name": "emote-2",
+      "result": {
+        "id": "moulin",
+        "heightMin": 0.7413819377046862,
+        "heightMax": 0.8499999991059304
+      }
+    },
+    {
+      "name": "emote-3",
+      "result": {
+        "id": "takeL",
+        "heightMin": 0.847409381211052,
+        "heightMax": 0.8499999991059304
+      }
+    },
+    {
+      "name": "sortie-et-transition",
+      "result": {
+        "niveau": 2,
+        "transition": {
+          "index": 1,
+          "ms": 908.8000000007451
+        },
+        "errors": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

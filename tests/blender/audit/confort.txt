@@ -1,0 +1,11 @@
+
+> escape-your-boss@1.0.0 test:confort
+> node --import ./tests/personnages/resolveur.mjs tests/confort/verifier.mjs
+
+(node:473631) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/nicleena/fun/jeu/vendor/three.module.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/nicleena/fun/jeu/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Sprint maintenu 12 s : 8 transitions, récupération continue 1.82 s
+Marche sur 2 s : 5.582 m à 30 Hz / 5.546 m à 144 Hz
+Personnage : 41 appels, 5 surfaces skinnées. Réinitialisation et couleurs : OK

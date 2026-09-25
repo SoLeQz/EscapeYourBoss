@@ -1,0 +1,227 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2009,\"premierNiveau\":929,\"rendu\":13,\"total\":4825},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "version-livree",
+      "result": {
+        "version": "1.1.0",
+        "emotes": [
+          "Démission",
+          "Encore un mail",
+          "Réunion KO",
+          "Take the L"
+        ],
+        "decor": {
+          "bureau": {
+            "fichier": "bureau-v01.glb",
+            "pieces": 6,
+            "triangles": 2704
+          },
+          "chaise": {
+            "fichier": "chaise-v01.glb",
+            "pieces": 4,
+            "triangles": 3068
+          },
+          "escalier": {
+            "fichier": "escalier-v01.glb",
+            "pieces": 5,
+            "triangles": 12012
+          },
+          "porte": {
+            "fichier": "porte-escalier-v01.glb",
+            "pieces": 3,
+            "triangles": 1212
+          }
+        }
+      }
+    },
+    {
+      "name": "preparer-revue",
+      "result": {
+        "etat": "play",
+        "obstacles": 55,
+        "objets": {
+          "bureau-v01.glb": 6,
+          "chaise-v01.glb": 13,
+          "escalier-v01.glb": 1,
+          "porte-escalier-v01.glb": 1
+        }
+      }
+    },
+    {
+      "name": "open-space",
+      "result": "OK"
+    },
+    {
+      "name": "poste",
+      "result": "OK"
+    },
+    {
+      "name": "hall",
+      "result": "OK"
+    },
+    {
+      "name": "cafe",
+      "result": "OK"
+    },
+    {
+      "name": "reunion",
+      "result": "OK"
+    },
+    {
+      "name": "direction",
+      "result": "OK"
+    },
+    {
+      "name": "escalier-acces",
+      "result": "OK"
+    },
+    {
+      "name": "escalier-volume",
+      "result": "OK"
+    },
+    {
+      "name": "baie",
+      "result": "OK"
+    },
+    {
+      "name": "etage-1",
+      "result": {
+        "lots": 91,
+        "triangles": 229120,
+        "obstacles": 55,
+        "msMedian": 9,
+        "msP95": 25,
+        "textures": 96,
+        "geometries": 220,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-2",
+      "result": {
+        "lots": 94,
+        "triangles": 229316,
+        "obstacles": 55,
+        "transition": {
+          "index": 1,
+          "ms": 3902.0999999940395
+        },
+        "msMedian": 7.80000000000291,
+        "msP95": 13.69999999999709,
+        "textures": 94,
+        "geometries": 188,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-3",
+      "result": {
+        "lots": 93,
+        "triangles": 252346,
+        "obstacles": 58,
+        "transition": {
+          "index": 2,
+          "ms": 860.2000000029802
+        },
+        "msMedian": 9.5,
+        "msP95": 13.599999999998545,
+        "textures": 97,
+        "geometries": 206,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-4",
+      "result": {
+        "lots": 96,
+        "triangles": 251450,
+        "obstacles": 57,
+        "transition": {
+          "index": 3,
+          "ms": 893
+        },
+        "msMedian": 9.19999999999709,
+        "msP95": 13.299999999995634,
+        "textures": 98,
+        "geometries": 202,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-5",
+      "result": {
+        "lots": 92,
+        "triangles": 258830,
+        "obstacles": 60,
+        "transition": {
+          "index": 4,
+          "ms": 988
+        },
+        "msMedian": 10.30000000000291,
+        "msP95": 15.799999999995634,
+        "textures": 101,
+        "geometries": 206,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "etage-6",
+      "result": {
+        "lots": 99,
+        "triangles": 259330,
+        "obstacles": 60,
+        "transition": {
+          "index": 5,
+          "ms": 1158.2999999970198
+        },
+        "msMedian": 10.5,
+        "msP95": 14,
+        "textures": 102,
+        "geometries": 208,
+        "qualite": "haut",
+        "resolution": [
+          1424,
+          821
+        ]
+      }
+    },
+    {
+      "name": "camera-jouable",
+      "result": {
+        "etat": "play",
+        "erreurs": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

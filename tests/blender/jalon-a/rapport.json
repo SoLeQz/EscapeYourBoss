@@ -1,0 +1,136 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":2026,\"premierNiveau\":1018,\"rendu\":9,\"total\":4829},\"pnj\":4,\"obstacles\":55}"
+    },
+    {
+      "name": "blender-import-strict",
+      "result": {
+        "source": "lao-d-test.glb",
+        "secours": false,
+        "three": "169",
+        "bounds": {
+          "min": [
+            -0.26499998569488525,
+            0.800000011920929,
+            -0.03500000014901161
+          ],
+          "max": [
+            -0.16500000163912754,
+            1.399999976158142,
+            0.07500000298023224
+          ]
+        },
+        "skins": 2,
+        "triangles": 126,
+        "materiaux": 2,
+        "geometries": 2,
+        "erreurPoids": 2.9802322387695312e-8
+      }
+    },
+    {
+      "name": "blender-coude-45",
+      "result": {
+        "angle": -0.7853981633974483,
+        "erreurMaxMetres": 1.4670211267461239e-8,
+        "deplacementMaxMetres": 0.24410883085200027,
+        "appels": 2,
+        "triangles": 126
+      }
+    },
+    {
+      "name": "blender-coude-90",
+      "result": {
+        "angle": -1.5707963267948966,
+        "erreurMaxMetres": 2.7107015820479094e-8,
+        "deplacementMaxMetres": 0.45105430505884564,
+        "appels": 2,
+        "triangles": 126
+      }
+    },
+    {
+      "name": "blender-placement-monde",
+      "result": {
+        "angle": -1.5707963267948966,
+        "erreurMaxMetres": 3.2883149874927507e-7,
+        "deplacementMaxMetres": 0.45105430505884564,
+        "appels": 2,
+        "triangles": 126
+      }
+    },
+    {
+      "name": "blender-retour-repos",
+      "result": {
+        "angle": 0,
+        "erreurMaxMetres": 0,
+        "deplacementMaxMetres": 0,
+        "appels": 2,
+        "triangles": 126
+      }
+    },
+    {
+      "name": "blender-animation",
+      "result": {
+        "imagesVerifiees": 121,
+        "erreurMaxMetres": 2.7107015820479094e-8,
+        "retourAuRepos": {
+          "angle": 0,
+          "erreurMaxMetres": 0,
+          "deplacementMaxMetres": 0,
+          "appels": 2,
+          "triangles": 126
+        }
+      }
+    },
+    {
+      "name": "blender-liberation-rechargements",
+      "result": {
+        "reference": {
+          "geometries": 186,
+          "textures": 93
+        },
+        "cycles": [
+          {
+            "avecModele": {
+              "geometries": 188,
+              "textures": 94
+            },
+            "apres": {
+              "geometries": 186,
+              "textures": 93
+            }
+          },
+          {
+            "avecModele": {
+              "geometries": 188,
+              "textures": 94
+            },
+            "apres": {
+              "geometries": 186,
+              "textures": 93
+            }
+          },
+          {
+            "avecModele": {
+              "geometries": 188,
+              "textures": 94
+            },
+            "apres": {
+              "geometries": 186,
+              "textures": 93
+            }
+          }
+        ],
+        "portee": "ressources GPU de l’éprouvette ; ne mesure pas la mémoire système"
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(134,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(232,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(130,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

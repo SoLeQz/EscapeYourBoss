@@ -1,0 +1,23 @@
+{
+  "versionBlender": "5.2.2 LTS",
+  "os": 16,
+  "sommets": 65,
+  "faces": 62,
+  "poidsNormalises": true,
+  "glbOctets": 10692,
+  "optionsExport": {
+    "filepath": "C:\\Users\\nicol\\AppData\\Local\\Temp\\EscapeBlenderWork\\jalon-a-01\\lao-d-test.glb",
+    "export_format": "GLB",
+    "use_selection": true,
+    "export_yup": true,
+    "export_animations": false,
+    "export_skins": true,
+    "export_morph": true,
+    "export_cameras": false,
+    "export_lights": false,
+    "export_def_bones": false,
+    "export_leaf_bone": false,
+    "export_apply": false
+  },
+  "statut": "création, sauvegarde, export et rendu Blender exécutés"
+}

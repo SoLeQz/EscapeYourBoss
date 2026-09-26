@@ -534,16 +534,17 @@ qu'au dernier étage** — mesures du parcours obligatoire :
 
 | Étage | Plan | Parcours | Marche continue | Imparti |
 |---|---|---|---|---|
-| 1 | A | 24,6 m → escaliers | 8 s | 185 s |
-| 2 | A | 55,3 m via badge | 19 s | 175 s |
-| 3 | B | 38,7 m → ascenseur | 13 s | 170 s |
-| 4 | B | 48,8 m via portable | 17 s | 165 s |
-| 5 | C | 21,5 m → ascenseur | 7 s | 160 s |
-| 6 | C | 81,6 m via badge + portable | **28 s** | **62 s** |
+| 1 | A | 35,0 m → ascenseur (escalier : 54,8 m via le passe) | 12 s | 185 s |
+| 2 | A | 59,9 m via badge → ascenseur (escalier : 69,1 m) | 21 s | 175 s |
+| 3 | B | 40,4 m → ascenseur | 14 s | 170 s |
+| 4 | B | 68,9 m via portable → ascenseur (escalier : 85,2 m) | 24 s | 165 s |
+| 5 | C | 22,6 m → ascenseur (escalier : 44,3 m via le passe) | 8 s | 160 s |
+| 6 | C | 92,5 m via badge + portable + passe → escalier (ascenseur : 101,9 m) | **32 s** | **66 s** |
 
 Autrement dit : aux étages 1 à 5, la pression vient des collègues, pas du
 chrono. À l'étage 6, il reste 34 s de marge pour se cacher et laisser passer
-les rondes — serré **par dessein**, pas cassé.
+les rondes — serré **par dessein**, pas cassé (66 s depuis la section 30, pour
+absorber le détour du passe).
 
 ### 6.7 Entrées et menus
 
@@ -1966,3 +1967,62 @@ défaite commune, relance, victoire à deux, déconnexion. 5 passages sur 5 vert
 **Partage.** `npm run paquet:win` → `dist/EscapeYourBoss-win64.zip` (≈ 125 Mo), le
 seul fichier à envoyer. `.gitignore` ajouté (node_modules, dist, zips). Le mp3
 d'origine resté à la racine est exclu des builds.
+
+## 30. Sorties rééquilibrées : stores et passe de sécurité — 26 septembre 2026
+
+Retour utilisateur : l'escalier était trop simple, l'ascenseur sans intérêt dans
+les premiers niveaux.
+
+**Diagnostic chiffré.** Un simulateur (vrais PNJ, vraie perception, joueur qui
+suit le plus court chemin après une attente variable, 30 essais) mesurait la zone
+de sortie depuis les portes de l'open space. Ascenseur : 0 à 3 % de réussite à
+tous les étages. Le directeur le voit à travers sa façade vitrée (12,6 m, plein
+cône) et sa pause café s'arrête à 2,7 m de l'ascenseur : aucune fenêtre, jamais.
+Escalier au niveau 1 : 80 à 90 %, à 8 m de la porte sud, sans aucun témoin.
+L'escalier dominait donc strictement : plus proche, 1,3 s au lieu de 3,4 s, sans
+« ding ».
+
+**Principes retenus** (jeux d'infiltration) : aucune sortie ne doit dominer ; la
+sortie principale est sur le chemin naturel mais exposée ; la sortie discrète se
+mérite par un objet posé dans une zone à risque (Hitman, Deus Ex) ; toute sortie
+surveillée offre une fenêtre lisible, dictée par une routine (Metal Gear).
+
+**Changements.**
+- `niveau.stores` (étages 1, 2, 3 et 5) : lamelles sur la façade du directeur
+  côté hall. Obstacle `kind: 'stores'`, `noClip`, qui ne coupe que le regard ; la
+  paroi sur le couloir reste vitrée. Assis, il ne voit plus l'ascenseur : la
+  fenêtre, c'est tant qu'il travaille ; le danger, sa pause café.
+- Porte coupe-feu verrouillée après 18 h : l'escalier exige le passe de la
+  sécurité, objet facultatif `ouvre: 'stairs'` (◇ dans les objectifs, repère
+  « facultatif, ouvre l'escalier »). `objetsRestants(sortie)` n'exige un objet
+  `ouvre` que pour sa sortie ; badge et portable restent obligatoires partout.
+  Emplacements : casiers du fond (1, à l'opposé de l'escalier), salle de réunion
+  sur la ronde du vigile (2), machine à café en plein hall (4), bureau du
+  directeur, accessible pendant sa pause café, quand le hall ne l'est plus (5),
+  armoire de reprographie (6, où l'escalier est la voie rapide).
+- Étage 6 : 62 → 66 s pour garder la marge malgré le détour du passe.
+
+**Après.** Ascenseur du niveau 1 depuis la porte sud : 3 % → 63-80 % (échecs =
+pause café). Étages 2, 3 et 5 : de 0-3 % à 10-20 %, Lao Liu restant l'obstacle
+à contourner. Étages 4 et 6 (stores levés) : zone de sortie inchangée, le coût de
+l'escalier est le passe. Collisions, départs et sorties identiques hors stores :
+la référence `tests/environnement/collisions-avant.json` est régénérée pour les
+étages 1, 2, 3 et 5 seulement.
+
+**Budgets.** Les objets ramassables échappent à la fusion : halo et balise tiennent
+désormais en un maillage, le passe en un autre (≈ 90 triangles). L'étage 6 reste à
+99 lots. Lamelles en `BoxGeometry` : l'étage 5 est à 259 972 triangles avec les
+modèles Blender, **28 sous le budget de 260 000** — plus aucune marge. Les lampes
+d'objectif étant dimensionnées sur l'étage le plus chargé, il y en a désormais
+trois (sans ombre, éteintes quand elles ne servent pas) au lieu de deux.
+
+**Multijoueur.** L'étiquette du coéquipier n'était pas recensée dans
+`recenserOverlays` : dessinée dans les passes de profondeur/normales du GTAO, elle
+devenait un rectangle noir (même cause que les « POSTE LIBRE » autrefois). Son
+contour et ses sprites sont maintenant masqués pendant ces passes.
+
+**Tests.** Toutes les suites Node sont vertes. Les autotests Electron (`--selftest`,
+`--gameplay`, `--gameplay --reperes`) ramassent désormais le passe avant l'escalier
+et vérifient que la porte refuse de s'ouvrir sans lui. Ils n'ont pas pu être
+rejoués : l'exe lancé depuis WSL n'obtient pas de contexte WebGL. À relancer sous
+Windows après `npm run build:win`.

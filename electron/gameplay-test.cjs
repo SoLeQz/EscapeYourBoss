@@ -108,6 +108,7 @@ module.exports = async ({ js, shot, step, wait }) => {
     const g=window.__game;g.updateCamera=g.__camera;g.rejouerNiveau();g.preparation=false;
     g.npcs.forEach(n=>{n.pos.set(-18,0,-14);n.suspicion=0;});
     const it=g.level.interactables.find(a=>a.id==='stairs');
+    g.level.ramassables.forEach((o,i)=>g.ramasserObjet(i));
     g.player.pos.set(it.x,0,it.z);g.tryInteract();ticks(1);
     check(g.player.exitPose?.progress>0,'Aucune animation de sortie');
     ticks(.4);check(g.state==='over','Sortie incomplète');

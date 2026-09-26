@@ -184,28 +184,47 @@ const RONDES = {
 };
 
 // ------------------------------------------------------------
+//  Sorties
+//
+//  Ascenseur : la sortie évidente, au bout du chemin naturel. Il faut y
+//  rester 3,4 s et le « ding » fait lever la tête du directeur. Quand ses
+//  stores sont baissés (`stores`), il ne voit pas le hall depuis son bureau :
+//  la fenêtre, c'est tant qu'il est assis ; le danger, sa pause café.
+//
+//  Escalier : porte coupe-feu verrouillée après 18 h. Elle ne s'ouvre
+//  qu'avec le passe de la sécurité, facultatif, posé dans un endroit
+//  différent à chaque étage — loin de l'escalier ou sous un regard. C'est
+//  lui qui fixe le prix de la sortie discrète (1,3 s, sans bruit).
+// ------------------------------------------------------------
+const passe = (x, z, y) => ({ id: 'passe', nom: 'le passe de la sécurité', ouvre: 'stairs', x, z, y });
+
+// ------------------------------------------------------------
 //  Les niveaux
 // ------------------------------------------------------------
 export const NIVEAUX = [
   {
     id: 1, plan: 'A', titre: 'Étage 23 — 18:00',
-    sousTitre: 'Un mardi comme les autres. Personne ne se méfie encore.',
+    sousTitre: 'Un mardi comme les autres. Le directeur est en visio, stores baissés.',
     heure: 18 * 3600, limite: 185, soleil: { elevation: 11.5, azimut: -92, intensite: 4.4 },
-    eclairage: 1.0, sorties: ['elevator', 'stairs'], objets: [],
+    eclairage: 1.0, stores: true, sorties: ['elevator', 'stairs'],
+    // Passe sur les casiers du fond, à l'opposé de l'escalier : l'ascenseur
+    // est la sortie naturelle, l'escalier un détour par tout l'étage.
+    objets: [passe(3.1, -12.1, 1.87)],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -9.25, -7.95, Math.PI),
       assis('Xiao Li', 'collègue', 'li', -3.25, 4.05, Math.PI, { scanAmp: 70, scanSpeed: 0.33 }),
       patrouille('Zhang Jie', 'chef d’équipe', 'zhang', RONDES.A.openspace, { pause: 2.2, speed: 1.4 }),
       directeur(p, { sitMin: 22, sitVar: 14 }),
     ],
-    conseil: 'Accroupis-toi derrière un meuble : il doit se trouver entre toi et le collègue pour couper son regard.',
+    conseil: 'Stores baissés : assis, le directeur ne voit pas l’ascenseur. File quand il n’est pas en pause café.',
   },
   {
     id: 2, plan: 'A', titre: 'Étage 23 — 18:20',
-    sousTitre: 'Tu as laissé ton badge près de la photocopieuse. Sans lui, pas d’ascenseur.',
+    sousTitre: 'Ton badge est resté près de la photocopieuse. Sans lui, pas de portique en bas.',
     heure: 18 * 3600 + 1200, limite: 175, soleil: { elevation: 9.5, azimut: -94, intensite: 4.2 },
-    eclairage: 1.0, sorties: ['elevator', 'stairs'],
-    objets: [{ id: 'badge', nom: 'ton badge', x: -18.4, z: -14.3, y: 1.29 }],
+    eclairage: 1.0, stores: true, sorties: ['elevator', 'stairs'],
+    // Le passe attend en salle de réunion, au bout de la ronde du vigile.
+    objets: [{ id: 'badge', nom: 'ton badge', x: -18.4, z: -14.3, y: 1.29 }, passe(14.2, 10.4, 0.80)],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -9.25, -7.95, Math.PI),
       assis('Xiao Li', 'collègue', 'li', -3.25, 4.05, Math.PI),
@@ -213,13 +232,13 @@ export const NIVEAUX = [
       patrouille('Lao Liu', 'sécurité', 'liu', RONDES.A.couloir, { speed: 1.65, pause: 1.4, dist: 12.5 }),
       directeur(p, { sitMin: 18, sitVar: 10 }),
     ],
-    conseil: 'Ramasse d’abord ce dont tu as besoin : les sorties te refuseront sans.',
+    conseil: 'Le badge est obligatoire. Le passe de l’escalier traîne en salle de réunion, sur la ronde du vigile.',
   },
   {
     id: 3, plan: 'B', titre: 'Étage 19 — 18:45',
     sousTitre: 'Escaliers condamnés pour travaux. Il ne reste que l’ascenseur.',
     heure: 18 * 3600 + 2700, limite: 170, soleil: { elevation: 7.5, azimut: -96, intensite: 3.9 },
-    eclairage: 1.0, sorties: ['elevator'], objets: [],
+    eclairage: 1.0, stores: true, sorties: ['elevator'], objets: [],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -15.35, -10, -PI2),
       assis('Xiao Chen', 'collègue', 'chen', -8.35, -1, -PI2, { scanAmp: 80 }),
@@ -228,15 +247,17 @@ export const NIVEAUX = [
       patrouille('Lao Liu', 'sécurité', 'liu', RONDES.B.couloir, { speed: 1.75, pause: 1.2, dist: 13 }),
       directeur(p, { sitMin: 15, sitVar: 9 }),
     ],
-    conseil: 'Une seule sortie : l’ascenseur. Et il faut y tenir trois secondes immobile.',
+    conseil: 'Une seule sortie : l’ascenseur, trois secondes immobile. Le directeur passe au café juste à côté.',
   },
   {
     id: 4, plan: 'B', titre: 'Étage 19 — 19:30',
-    sousTitre: 'La moitié des néons sont coupés. Le directeur fait des allers-retours au café.',
+    sousTitre: 'La moitié des néons sont coupés. Stores levés : le directeur surveille le hall.',
     heure: 19 * 3600 + 1800, limite: 165, soleil: { elevation: 3.2, azimut: -99, intensite: 2.6 },
     eclairage: 0.45, sorties: ['elevator', 'stairs'],
     // Plan B : réunion au nord, direction au sud. Portable près du bord de la table.
-    objets: [{ id: 'portable', nom: 'ton portable', x: 16, z: -10.4, y: 0.80 }],
+    // Le passe est sur la machine à café : les deux sorties passent par le hall,
+    // l'une y attend 3,4 s, l'autre ne fait qu'y entrer et en ressortir.
+    objets: [{ id: 'portable', nom: 'ton portable', x: 16, z: -10.4, y: 0.80 }, passe(18.45, -1.2, 1.41)],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -15.35, -10, -PI2),
       assis('Xiao Ma', 'collègue', 'ma', -1.35, -10, -PI2),
@@ -245,13 +266,16 @@ export const NIVEAUX = [
       patrouille('Lao Liu', 'sécurité', 'liu', RONDES.B.couloir, { speed: 1.8, pause: 1.1, dist: 13 }),
       directeur(p, { sitMin: 11, sitVar: 6 }),
     ],
-    conseil: 'Ton portable est resté en salle de réunion. Il faudra entrer, et ressortir.',
+    conseil: 'Portable en salle de réunion. Le passe est sur la machine à café, en plein hall : entre et ressors vite.',
   },
   {
     id: 5, plan: 'C', titre: 'Étage 12 — 20:15',
     sousTitre: 'Box serrés, couloirs étroits. On se croise vite, ici.',
     heure: 20 * 3600 + 900, limite: 160, soleil: { elevation: 0.5, azimut: -101, intensite: 1.2 },
-    eclairage: 0.7, sorties: ['elevator', 'stairs'], objets: [],
+    eclairage: 0.7, stores: true, sorties: ['elevator', 'stairs'],
+    // Passe sur le bureau du directeur. Assis, il bloque le passe mais ne voit
+    // pas le hall ; en pause café, c'est l'inverse. Deux fenêtres opposées.
+    objets: [passe(14.75, -9.0, 0.80)],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -15.25, -6.15, Math.PI),
       assis('Xiao Li', 'collègue', 'li', -8.25, -6.15, 0),
@@ -261,19 +285,22 @@ export const NIVEAUX = [
       patrouille('Lao Liu', 'sécurité', 'liu', RONDES.C.couloir, { speed: 1.7, pause: 1.3, dist: 12.5 }),
       directeur(p, { sitMin: 12, sitVar: 6 }),
     ],
-    conseil: 'Les allées sont étroites : vérifie la mini-carte avant de t’engager.',
+    conseil: 'Le passe est sur le bureau du directeur : prends-le pendant sa pause café. Sinon, l’ascenseur.',
   },
   {
     id: 6, plan: 'C', titre: 'Étage 12 — 21:00',
     sousTitre: 'Le directeur range son bureau. Il sera dans le couloir dans une minute.',
-    heure: 21 * 3600, limite: 62, soleil: { elevation: -1.5, azimut: -104, intensite: 0.6 },
+    heure: 21 * 3600, limite: 66, soleil: { elevation: -1.5, azimut: -104, intensite: 0.6 },
     eclairage: 0.5, sorties: ['elevator', 'stairs'],
     // Le portable était posé sur le bureau du directeur pendant qu'il
     // chassait : deux objectifs incompatibles. Il passe en salle de
     // réunion, qui reste un détour risqué mais franchissable.
+    // L'escalier est ici la voie rapide (la salle de réunion donne sur le
+    // palier) : le passe, sur l'armoire de reprographie, en est le prix.
     objets: [
       { id: 'badge', nom: 'ton badge', x: -18.4, z: -14.3, y: 1.29 },
       { id: 'portable', nom: 'ton portable', x: 16, z: 11, y: 0.80 },
+      passe(2.3, -14.8, 1.86),
     ],
     pnj: (p) => [
       assis('Xiao Wang', 'collègue', 'wang', -15.25, -6.15, Math.PI),
@@ -284,7 +311,7 @@ export const NIVEAUX = [
       patrouille('Lao Liu', 'sécurité', 'liu', RONDES.C.couloir, { speed: 1.78, pause: 1.2, dist: 12.5 }),
       directeur(p, { sitMin: 14, sitVar: 6, dist: 15 }),
     ],
-    conseil: 'Ton portable est en salle de réunion. Prends-le avant que le directeur sorte.',
+    conseil: 'Portable en salle de réunion, collée à l’escalier. Le passe est sur l’armoire de reprographie.',
   },
 ];
 

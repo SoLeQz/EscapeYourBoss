@@ -50,6 +50,8 @@ module.exports = async ({js,shot,step,wait}) => {
   await step('sorties-animees',`(async()=>{
     const g=window.__game;await g.demarrerNiveau(0);g.preparation=false;
     const it=g.level.interactables.find(i=>i.id==='stairs');g.player.pos.set(it.x,0,it.z);g.tryInteract();ticks(.5);
+    check(!g.exitSeq&&g.level.escalier.door.rotation.y===0,'Porte coupe-feu ouverte sans le passe');
+    g.level.ramassables.forEach((o,i)=>g.ramasserObjet(i));g.tryInteract();ticks(.5);
     check(g.level.escalier.door.rotation.y<-.8,'Porte d’escalier immobile');
     g.player.pos.set(8,0,8);ticks(.02);check(!g.exitSeq&&g.level.escalier.door.rotation.y===0,'Porte non refermée après annulation');
     g.player.pos.set(it.x,0,it.z);g.tryInteract();ticks(.8);
@@ -70,7 +72,8 @@ module.exports = async ({js,shot,step,wait}) => {
   await step('transitions-nettoyage',`(async()=>{
     const g=window.__game;g.updateCamera=g.__camera;await g.demarrerNiveau(0);
     g.ui.setObjectives(g.level.ramassables,g.player,g.camera);
-    check(!document.querySelector('.repere-objet'),'Ancien objectif conservé');
+    const reperes=[...document.querySelectorAll('.repere-objet strong')].map(e=>e.textContent);
+    check(reperes.length===g.level.ramassables.length&&reperes.every(t=>t==='Passe de sécurité'),'Ancien objectif conservé : '+reperes);
     check(g.level.escalier.door.rotation.y===0,'Porte ouverte au nouvel étage');
     check(!window.__erreurs.length,'Erreur JavaScript');
     return {niveau:g.niveauIndex,erreurs:window.__erreurs};

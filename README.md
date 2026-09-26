@@ -1,556 +1,236 @@
-# Escape your boss
+<h1 align="center">Escape your boss</h1>
 
-Premier volet envisagé de la série **Escape…** (anciennement *Partir à l’heure*).
+<p align="center">
+  <b>Il est 18:00. Ton travail est fini. Ton sac est prêt.</b><br>
+  Entre toi et l'ascenseur : un open space, des collègues qui ont toujours
+  « une petite question »,<br>et un directeur qui adore les réunions de
+  « juste cinq minutes ».
+</p>
 
+<p align="center">
+  <a href="https://github.com/SoLeQz/EscapeYourBoss/releases/latest">
+    <img src="https://img.shields.io/badge/T%C3%A9l%C3%A9charger-Windows%2064%20bits-f5b869?style=for-the-badge&logo=windows&logoColor=white" alt="Télécharger pour Windows">
+  </a>
+</p>
 
-Prototype jouable d'un jeu d'infiltration humoristique en 3D. Tu es **Lao D**,
-développeur dans un open space. Il est 18:00. Ton sac est prêt. Entre toi et la
-sortie : cinq collègues et un directeur qui adore « les cinq petites minutes ».
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/SoLeQz/EscapeYourBoss?label=version&color=2b3a3f" alt="Version">
+  <img src="https://img.shields.io/badge/coop-2%20joueurs%20en%20r%C3%A9seau%20local-4ade80" alt="Coop à deux">
+  <img src="https://img.shields.io/badge/langue-fran%C3%A7ais-3b82f6" alt="En français">
+  <img src="https://img.shields.io/badge/installation-aucune-lightgrey" alt="Sans installation">
+</p>
 
-Distribué **uniquement en exécutable** (Electron). Pas de version web : la
-compatibilité navigateur imposait des compromis sur les textures et le filtrage
-pour aucun bénéfice ici.
+<p align="center">
+  <img src="docs/captures/etage-23.jpg" alt="Lao D dans l'open space de l'étage 23, au coucher du soleil" width="100%">
+</p>
+
+**Escape your boss** est un jeu d'infiltration humoristique en 3D. Tu incarnes
+**Lao D**, développeur chez Méridien (*Conseil · Stratégie · Café*), et ta seule
+mission est de **quitter le bureau à l'heure**. Faufile-toi derrière les
+cloisons, fais semblant de travailler quand un regard se pose sur toi, lance la
+photocopieuse pour détourner l'attention… et file avant la fin de la réunion du
+directeur.
+
+Premier volet de la série **Escape…**
 
 ---
 
-## Contenu
+## Télécharger et jouer
 
-**6 étages** à difficulté croissante, répartis sur 3 plans d'étage distincts, et
-deux façons d'y jouer.
+1. Va sur la **[page des versions](https://github.com/SoLeQz/EscapeYourBoss/releases/latest)**
+   et télécharge `EscapeYourBoss-<version>-win64.zip` (≈ 125 Mo).
+2. **Dézippe** le dossier où tu veux (bureau, `Documents`, clé USB…).
+3. Double-clique sur **`EscapeYourBoss.exe`**. C'est tout : rien à installer.
+
+> **Windows affiche « Windows a protégé votre ordinateur » ?**
+> Le jeu n'est pas signé numériquement (ça coûte cher pour un projet perso).
+> Clique sur **Informations complémentaires** puis **Exécuter quand même**.
+
+| | Configuration |
+|---|---|
+| **Système** | Windows 10 ou 11, 64 bits |
+| **Carte graphique** | dédiée conseillée ; un GPU intégré fonctionne, avec des effets allégés |
+| **Espace disque** | ≈ 300 Mo une fois dézippé |
+| **Contrôles** | clavier + souris (ZQSD en AZERTY sans rien régler) |
+
+Le jeu détecte ta carte graphique au lancement et règle la qualité tout seul.
+Sur un portable à deux GPU, il réclame la carte dédiée. Pas de réglage à
+chercher, pas de version navigateur : c'est ce qui permet des textures plus fines
+et des ombres plus nettes.
+
+---
+
+## Ce qui t'attend
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/captures/repere.jpg" alt="Un collègue repère Lao D" width="100%"><br>
+      <sub><b>« Hé ? Tu vas où ? »</b> Xiao Li t'a vu. La jauge monte : disparais avant qu'elle soit pleine.</sub></td>
+    <td width="50%"><img src="docs/captures/faire-semblant.jpg" alt="Lao D fait semblant de travailler" width="100%"><br>
+      <sub><b>Très occupé. Absolument.</b> Assieds-toi à un poste libre : 12 secondes d'immunité, même sous le nez du boss.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/captures/etage-12.jpg" alt="Étage 12 avec deux objets à récupérer" width="100%"><br>
+      <sub><b>Étage 12, 21:00.</b> Ton badge et ton portable traînent à l'autre bout de l'étage. La réunion se termine dans 62 secondes.</sub></td>
+    <td width="50%"><img src="docs/captures/roue-emotes.jpg" alt="La roue d'emotes" width="100%"><br>
+      <sub><b>Six emotes</b>, dont <i>67</i> et <i>Ela Ké Leitada</i>. Tant qu'à partir, autant partir avec style.</sub></td>
+  </tr>
+</table>
+
+- **Une vraie infiltration.** Les collègues ont un champ de vision, une ligne de
+  vue et des oreilles. Accroupi, tu passes sous la hauteur des bureaux et des
+  cloisons basses. Debout, on te voit par-dessus.
+- **Ils te voient venir… et toi aussi.** Chaque collègue passe par quatre états :
+  il travaille, il **doute** (« ? »), il **t'observe** (« ! », cône rouge), puis
+  il te **repère**. Tu as toujours une chance de te cacher avant la fin.
+- **Des outils de bureau.** La photocopieuse fait diversion, un poste libre te
+  sert d'alibi, et le verre de la salle de réunion laisse passer les regards.
+- **Un compte à rebours.** À la fin de la réunion, le directeur sort de son
+  bureau et part à ta recherche. Le jeu continue, mais en beaucoup plus dur.
+- **Deux sorties, deux risques.** L'ascenseur est tout près, mais collé à la
+  cage vitrée du directeur, et il faut y rester immobile trois secondes.
+  L'escalier démarre tout de suite, mais le trajet est deux fois plus long et
+  traverse le couloir du vigile.
+- **Un bureau qui a de l'humour.** Affiches internes, trophée de l'employé du
+  mois décerné à la machine à café, sablier de « réunion express », tampon
+  « départ à l'heure » en attente de validation depuis 18 h…
+
+<table>
+  <tr>
+    <td width="33%"><img src="docs/captures/decor-employe-du-mois.jpg" alt="Trophée de l'employé du mois : le café" width="100%"></td>
+    <td width="33%"><img src="docs/captures/decor-reunion-express.jpg" alt="Salle de réunion express avec un sablier" width="100%"></td>
+    <td width="33%"><img src="docs/captures/decor-depart-a-l-heure.jpg" alt="Tampon départ à l'heure" width="100%"></td>
+  </tr>
+</table>
+
+---
+
+## Six étages, un seul objectif : sortir
 
 | # | Étage | Ce qui change |
 |---|---|---|
-| 1 | 23 — 18:00 | Prise en main. 3 collègues, les deux sorties ouvertes. |
-| 2 | 23 — 18:20 | Ton badge est resté près de la photocopieuse. Un vigile en plus. |
-| 3 | 19 — 18:45 | Nouveau plan (postes en colonnes). Escaliers condamnés : ascenseur obligatoire. |
-| 4 | 19 — 19:30 | Un néon sur deux coupé. Ton portable est en salle de réunion. |
-| 5 | 12 — 20:15 | Plan en box denses, allées étroites. 6 collègues. |
-| 6 | 12 — 21:00 | La réunion se termine dans 62 secondes. Deux objets à récupérer. |
+| 1 | **23 — 18:00** | Un mardi comme les autres. Personne ne se méfie encore : parfait pour apprendre. |
+| 2 | **23 — 18:20** | Tu as laissé ton badge près de la photocopieuse, et un vigile fait sa ronde. |
+| 3 | **19 — 18:45** | Nouveau plan. Escaliers condamnés pour travaux : il ne reste que l'ascenseur. |
+| 4 | **19 — 19:30** | La moitié des néons sont coupés. Ton portable est en salle de réunion. |
+| 5 | **12 — 20:15** | Box serrés, allées étroites, six collègues. On se croise vite, ici. |
+| 6 | **12 — 21:00** | Deux objets à récupérer. La réunion se termine dans 62 secondes. |
 
-**Jouer normalement** — un étage se débloque en terminant le précédent. Chaque
-étage garde ton meilleur temps.
+<p align="center">
+  <img src="docs/captures/menu.jpg" alt="Menu principal : jouer, speedrun, multijoueur" width="70%">
+</p>
 
-**Speedrun** — tous les étages sont ouverts, on enchaîne sans interruption, le
-chrono cumule et les temps intermédiaires s'affichent à la fin. Un échec ne remet
-pas le chrono à zéro : il te coûte le temps de recommencer l'étage.
-
-La progression, les records, les touches et les options sont sauvegardés dans
-`%APPDATA%/EscapeYourBoss/progression.json`. La progression de l’ancien nom
-`PartirALHeure` est reprise automatiquement si le nouveau profil n’existe pas.
-
----
-
-## Multijoueur (1.6.0)
-
-À deux, en coopération, sur le même réseau : l'un **héberge** depuis le menu
-*Multijoueur*, l'autre **rejoint** (recherche automatique ou IP). Si l'un est repéré,
-vous perdez tous les deux ; l'étage est gagné quand vous êtes sortis tous les deux.
-Fichier à envoyer à ton ami : `dist/EscapeYourBoss-win64.zip` (`npm run paquet:win`).
-[Guide complet, dépannage et publication GitHub](docs/MULTIJOUEUR.md).
-
-## Personnages
-
-La version **1.5.0** ajoute **67** et **Ela Ké Leitada** (Passinho do Jamal) à la roue :
-maintenir `T`, sélectionner avec la souris ou `1–6`, puis relâcher. Leurs animations sont
-créées dans Blender et exportées depuis les courbes du fichier source. Ela Ké Leitada
-reprend les gestes de la trend d’après une vraie vidéo (capture Rokoko), calés sur
-son drop musical, joué pendant la danse.
-[Voir les deux animations](tests/tendances/apercu.html) ·
-[Sources Blender et retouches](art/emotes/tendances-v01/README.md) ·
-[Ela Ké Leitada v03](art/emotes/tendances-v03/README.md).
-
-
-La version **1.4.0** intègre des têtes et mains modélisées dans Blender au joueur
-et aux collègues : quatre variantes de visage, paupières mobiles, oreilles et
-lèvres dessinées, mèches sculptées et doigts articulés pour les quatre emotes.
-Le corps habillé, le sac et le rig existants restent utilisés.
-[Comparaisons et animations](tests/anatomie/apercu.html) ·
-[Fichiers Blender et guide de retouche](art/personnages/anatomie-v01/README.md).
-
-## Décor
-
-La version **1.3.0** ajoute une scène humoristique propre à chaque niveau, avec
-six accessoires Blender : café employé du mois, cascade de papier, chef de
-chantier en cône, sablier de réunion, tour de dossiers et tampon de sortie.
-[Captures des six niveaux](tests/humour/apercu.html) ·
-[Sources Blender éditables](art/humour/meridien-v01/README.md).
-
-
-Le bureau porte désormais l’identité de l’entreprise fictive **Méridien** :
-moquette pétrole, chêne clair, signalétique commune, espaces de pause et de
-réunion, postes personnalisés et ville en volume derrière les fenêtres.
-Les graphismes et leur placement se modifient dans `src/environment.js` ;
-les matières sont dans `src/materials.js`. Les parcours existants sont conservés.
-
-Depuis la version **1.1.0**, les bureaux de travail, fauteuils, volées d’escalier
-et porte de la cage utilisent de vrais exports Blender dans les niveaux.
-[Sources Blender éditables](art/decor/meridien-v01/README.md) ·
-[Comparaison en jeu](tests/environnement/blender-v01/apercu.html).
-La majorité des autres éléments architecturaux et accessoires restent procéduraux.
-La version **1.1.1** dégage le passage entre la réunion et l’escalier aux niveaux
-5 et 6 : le mur décoratif ne recouvre plus la porte franchissable.
-
-La version **1.2.0** ajoute sept matières préparées dans Blender : bois, textile,
-moquette, pierre, béton, métal et cuir. Elle corrige aussi l’échelle des textures
-sur les meubles, les murs et les plafonds.
-[Diagnostic des 51 matières](tests/textures/DIAGNOSTIC.md) ·
-[Comparaison avant/après](tests/textures/apercu.html) ·
-[Sources Blender](art/matieres/meridien-v01/README.md).
-
-Validation et captures : [tests/environnement](tests/environnement/README.md).
+- **Jouer normalement** : chaque étage terminé débloque le suivant et garde ton
+  meilleur temps.
+- **Speedrun** : les six étages d'affilée, chrono cumulé et temps intermédiaires.
+  Un échec ne remet pas le chrono à zéro : il te coûte le temps de recommencer
+  l'étage.
+- **Multijoueur** : les six étages en coopération, à deux.
 
 ---
 
-## Lancer le jeu
+## Joue à deux
 
-### En `.exe` (Windows)
+<p align="center">
+  <img src="docs/captures/cooperation.jpg" alt="Deux joueurs accroupis progressent ensemble dans l'open space" width="100%">
+</p>
 
-Le build se trouve dans `dist/EscapeYourBoss-win32-x64/`. **Il faut le copier sur
-un disque Windows avant de le lancer** — Windows refuse d'exécuter un `.exe`
-depuis un chemin réseau `\\wsl.localhost\…`.
+Depuis la version 1.6.0, tu peux t'évader **avec un ami, sur le même réseau**
+(même Wi-Fi ou même box). Pas de serveur ni de compte à créer.
 
-```bash
-mkdir -p /mnt/c/Users/<toi>/EscapeYourBoss
-cp -r dist/EscapeYourBoss-win32-x64/. /mnt/c/Users/<toi>/EscapeYourBoss/
-# puis double-clic sur EscapeYourBoss.exe
-```
+1. Vous téléchargez tous les deux **la même version** du jeu.
+2. L'un choisit **Multijoueur → Héberger une partie**. La première fois, Windows
+   demande l'accès au réseau : coche **Réseaux privés** et accepte.
+3. L'autre choisit **Multijoueur → Rechercher une partie** et clique sur la
+   partie trouvée. Si rien n'apparaît, il peut taper l'adresse IP affichée chez
+   l'hôte.
+4. L'hôte choisit l'étage et lance. Ton coéquipier porte une veste bordeaux et
+   son nom flotte au-dessus de sa tête.
 
-**Vérifier la copie lancée :** le menu doit afficher `Version 1.5.0` et la roue
-proposer six emotes. Reconstruire `dist/` ne met pas à jour une copie située
-ailleurs : il faut copier le contenu du paquet, comme ci-dessus.
+**Les règles sont simples :** si l'un de vous se fait repérer, vous retournez
+tous les deux à votre poste. L'étage est gagné quand vous êtes sortis tous les
+deux. Les objets à récupérer sont communs, et la photocopieuse, les postes et les
+emotes marchent pour chacun.
 
-### Reconstruire l'exe
-
-```bash
-npm install
-npm run build:win      # -> dist/EscapeYourBoss-win32-x64/EscapeYourBoss.exe
-npm run build:linux    # variante Linux
-```
-
-### En développement
-
-```bash
-npm start              # Electron, rechargement par F5
-```
+Ça ne se connecte pas ? Le [guide multijoueur](docs/MULTIJOUEUR.md) détaille le
+pare-feu, les ports et les messages d'erreur.
 
 ---
 
 ## Commandes
 
-Toutes les touches sont personnalisables : **Menu → Commandes**. Le jeu repère
-les touches par leur **position physique**, donc ZQSD sur AZERTY tombe déjà
-naturellement au bon endroit sans rien changer.
+Toutes les touches se changent dans **Menu → Commandes**. Le jeu lit la position
+physique des touches : sur un clavier AZERTY, **ZQSD** fonctionne sans rien
+toucher.
 
-| Touche par défaut | Action |
+| Touche | Action |
 |---|---|
-| `W A S D` | se déplacer (relatif à la caméra ; `ZQSD` marche aussi, le code lit la position physique des touches) |
-| `Shift` | courir — rapide, mais bruyant et ça fait monter le stress |
-| `Ctrl` ou `C` | s'accroupir (`C` = bascule, `Ctrl` = maintien) |
-| `E` | sorties, photocopieuse, poste de travail / quitter le poste |
-| `T` maintenu | roue d’emotes : souris ou `1–6`, relâcher pour jouer ; centre ou `Échap` pour annuler |
-| Souris | caméra · molette : zoom |
-| `V` | afficher/masquer les cônes de vision |
-| `B` | afficher/masquer les noms des PNJ |
-| `M` | couper le son · `R` recommencer · `Échap` pause |
+| `W` `A` `S` `D` (`Z` `Q` `S` `D` en AZERTY) | se déplacer |
+| `Shift` | courir : rapide, mais bruyant, et ça fait monter le stress |
+| `Ctrl` (maintenir) ou `C` (bascule) | s'accroupir |
+| `E` | interagir : sorties, photocopieuse, s'asseoir à un poste ou le quitter |
+| `T` (maintenir) | roue d'emotes : choisis à la souris ou avec `1`–`6`, relâche pour jouer |
+| Souris · molette | caméra · zoom |
+| `V` · `B` | afficher/masquer les cônes de vision · les noms des collègues |
+| `M` · `R` · `Échap` | couper le son · recommencer · pause |
+| `F11` | plein écran |
 
 ---
 
-## Les règles du jeu
+## Petit guide de survie en open space
 
-**Avant le départ** — le chrono et les collègues attendent le premier déplacement.
-Profite du briefing pour lire les objectifs et orienter la caméra. L’étage 1 propose
-un guide jouable, facultatif : `Échap → Passer la prise en main` pour le masquer.
+- **Prends ton temps au départ.** Le chrono et les collègues attendent ton
+  premier pas : lis les objectifs et regarde autour de toi. L'étage 1 propose une
+  prise en main facultative.
+- **Baisse-toi.** Accroupi, tu disparais derrière les bureaux (0,75 m) et les
+  cloisons basses (1,15 m). Les ombres, elles, ne te cachent pas.
+- **Méfie-toi du verre.** Le bureau du directeur et la salle de réunion
+  bloquent le passage, pas le regard.
+- **Ne cours pas n'importe où.** Courir s'entend à 5 m à travers les murs,
+  marcher à 3 m, avancer accroupi à 1,4 m. Si ton stress sature, tu reprends ton
+  souffle bruyamment et tout le monde sursaute à 7 m.
+- **Utilise la photocopieuse.** `E` à côté lance une diversion de 6 secondes, une
+  fois par étage : les collègues à moins de 12 m tournent la tête.
+- **Fais semblant de travailler.** Deux postes libres par étage, 12 secondes de
+  protection chacun, qui ne se rechargent pas. Une jauge te prévient à 3 secondes
+  de la fin.
+- **Choisis ta sortie.** Ascenseur rapide mais exposé, ou escalier long mais
+  discret : à chaque étage, le bon choix change.
 
-**Visibilité** — « Visible », « Entendu » et « Hors des regards » décrivent les
-perceptions actuelles. Être près d’un meuble ne protège pas d’un collègue sur le
-côté. Les ombres restent une ambiance et ne réduisent pas la détection.
-
-**Photocopieuse** — `E` près de la machine lance une diversion de 6 secondes,
-une fois par étage. Les collègues à moins de 12 m tournent le regard ; ceux déjà
-en observation poursuivent leur surveillance.
-
-**Faire semblant de travailler** — deux postes libres par étage, **12 secondes
-cumulées de protection chacun**, y compris de près et face au boss. Les collègues
-cessent de te surveiller en rouge ; leurs soupçons diminuent pendant que tu travailles.
-`E` pour s’asseoir et taper, déplacement ou `E` pour quitter le poste. Se rasseoir
-ne recharge pas le crédit et ne remet pas les soupçons à zéro instantanément.
-Une jauge affiche le temps restant et prévient à 3 secondes. À zéro, le personnage
-se relève, la détection reprend et ce poste est épuisé jusqu’au prochain essai.
-Une emote ou l’accroupissement met aussi fin à la protection.
-
-**Son** — pas, claviers et bruits du bureau sont localisés à gauche/droite selon
-la caméra et atténués avec la distance. Détection, défaite liée au repérage,
-roue et emotes sont silencieuses. Les réactions des collègues restent visuelles.
-
-**Objectif** — atteindre l'ascenseur ou les escaliers avant que la réunion du
-directeur ne se termine (durée propre à chaque étage), sans qu'aucun collègue ne te repère.
-
-**Deux itinéraires, deux risques :**
-
-- **Ascenseur** (nord-est) — court, mais il est collé à la cage de verre du
-  directeur, et il faut y rester immobile 3 secondes pendant que la cabine monte.
-- **Escaliers** (sud) — départ en 1,3 seconde, mais le trajet est deux fois plus
-  long et traverse tout le couloir patrouillé par Lao Liu.
-
-**Se cacher** — accroupi, tu passes sous la ligne de vue des bureaux (0,75 m) et
-des cloisons basses (1,15 m). Debout, on te voit par-dessus les cloisons. C'est
-une vraie occultation géométrique, pas un malus de probabilité.
-
-**Le verre** — le bureau du directeur et la salle de réunion sont des cages
-vitrées : elles bloquent le passage mais pas le regard.
-
-**Le bruit** — courir s'entend à 5 m à travers les murs, marcher à 3 m, ramper à
-1,4 m. Si la barre de stress sature, tu reprends bruyamment ton souffle et tout
-le monde à 7 m sursaute.
-
-**Fin de la réunion** — quand le compte à rebours atteint zéro, le directeur
-sort de son bureau et te cherche activement. Le jeu ne s'arrête pas : il devient
-juste beaucoup plus dur.
+Tes progrès, tes records, tes touches et tes options sont sauvegardés dans
+`%APPDATA%\EscapeYourBoss\progression.json`.
 
 ---
 
-## Game feel
+## Pour les curieux et les développeurs
 
-Quelques décisions qui ne se voient pas dans une capture mais se sentent
-manette en main.
+Le jeu est écrit en JavaScript avec **Three.js** (sans moteur de jeu ni moteur
+physique) et distribué avec **Electron**. Les personnages, le mobilier et les
+accessoires sont modélisés dans **Blender** ; une grande partie des textures est
+générée au lancement.
 
-**Le déplacement pilote un vecteur vitesse, pas un scalaire.** Avec un scalaire,
-changer de direction fait pivoter le déplacement instantanément — c'est ce qui
-donnait la sensation de se déplacer sur une grille. Ici la vitesse est infléchie,
-donc un demi-tour décrit une courbe, et un virage serré coûte de la reprise
-(`accel *= 0.55 + 0.45 * cap` dans [`player.js`](src/player.js)).
-
-**Tous les lissages utilisent `1 - exp(-k·dt)`,** jamais `lerp(dt·k)`. Le second
-accélère quand le jeu rame : la sensation de contrôle changerait avec le débit
-d'images, ce qui est inacceptable.
-
-**La caméra a trois ressorts distincts** — le point visé, la distance, la
-position — et le point visé est lissé à part pour qu'elle ne copie pas le ballant
-vertical du personnage. La collision rentre d'un coup mais ressort doucement :
-l'inverse produit des à-coups permanents dès qu'on longe un meuble. Le lacet
-reste piloté directement par la souris ; y mettre de l'inertie rendrait la visée
-molle.
-
-**Le corps est une surface continue déformée par un squelette.** Un assemblage de
-primitives rigides — une sphère d'épaule posée sur une capsule de bras — laisse
-une jonction visible dès que le membre tourne : c'est la signature du Playmobil.
-Chaque membre est ici un tube unique, droit en pose de repos, dont les sommets
-sont pondérés sur deux os ([`body.js`](src/body.js)). La flexion vient du
-squelette, donc la surface se plie au lieu de se casser.
-
-> Piège rencontré : le constructeur de `THREE.Skeleton` calcule les matrices
-> inverses de liaison à partir des matrices **monde** des os. Tant que la
-> hiérarchie n'a pas été attachée et mise à jour, elles valent l'identité — et le
-> personnage part en spaghetti. D'où `updateMatrixWorld()` avant `lierSquelette()`.
-
-## Se faire repérer
-
-La détection progresse en quatre paliers avec hystérésis, pour qu'un collègue ne
-clignote pas à la frontière :
-
-| État | Ce qu'il fait | Ce que tu vois |
-|---|---|---|
-| **travail** | tape, lit, s'étire, boit un café | cône jaune pâle |
-| **doute** | la tête part vers le bruit, il ralentit | cône orangé, « ? », indication de menace hors champ |
-| **observation** | il lâche tout et te fixe | cône rouge pulsant, « ! », secousse caméra, bandeau qui s'allume |
-| **repéré** | « juste cinq minutes » | écran rouge |
-
-En observation, le gain de suspicion est **réduit de 30 %** : se faire repérer
-doit être une conséquence qu'on voit venir, pas une surprise. Si la fausse alerte
-retombe, le collègue hausse les épaules et se remet au travail.
-
-Le cône est dégradé par couleurs de sommets — franc au pied du collègue, éteint
-au bord. Un aplat uniforme, soit on ne le voit pas, soit il inonde la moquette.
-
-## Architecture
-
-Three.js r169 en modules ES, sans bundler, sans moteur physique.
-
-```
-index.html              HUD, écrans, import map
-vendor/three.module.js  Three.js vendorisé (hors-ligne)
-vendor/jsm/             addons de post-traitement vendorisés (280 ko)
-electron/main.cjs       fenêtre Electron + mode --selftest
-src/
-  main.js         boucle de jeu, caméra, chargement des étages, modes
-  levels.js       plans d'étage, effectifs, objectifs, progression
-  menu.js         menus, sélection d'étage, remappage des touches
-  input.js        actions et touches personnalisables
-  store.js        sauvegarde (IPC Electron vers le dossier utilisateur)
-  render.js       pipeline : ciel, IBL, lumières, composer, paliers de qualité
-  materials.js    textures PBR procédurales (aucun fichier externe)
-  level.js        géométrie du niveau, collisions, ligne de vue
-  player.js       déplacement, accroupi, stress, cycle de marche
-  npc.js          perception, machine à états, patrouilles
-  characters.js   anatomie des personnages, sprites d'interface
-  ui.js / minimap.js / audio.js
-```
-
----
-
-## Le rendu
-
-### Ce qui est activé
-
-| Étage | Réglage | Où |
-|---|---|---|
-| **HDR** | cible `HalfFloatType`, espace linéaire | [render.js](src/render.js) `createComposer` |
-| **Tone mapping** | `ACESFilmicToneMapping`, exposition 0,95 | `createRenderer`, appliqué par `OutputPass` |
-| **Espace colorimétrique** | `SRGBColorSpace` en sortie | `createRenderer` |
-| **IBL** | `PMREMGenerator.fromScene` sur une pièce factice | `buildEnvironment` |
-| **Occlusion ambiante** | `GTAOPass`, 8 à 16 échantillons + débruitage Poisson | paliers `haut` / `ultra` |
-| **Bloom** | `UnrealBloomPass`, force 0,28, seuil 1,25 | paliers `moyen` et au-dessus |
-| **Profondeur de champ** | `BokehPass`, ouverture 0,00009, mise au point suivie | palier `ultra` |
-| **Anti-aliasing** | MSAA 4× sur la cible HDR | palier `ultra` |
-| **Ombres** | `PCFSoftShadowMap`, 1536 à 3072 px | tous |
-
-**Pas de global illumination** : Three.js n'en a pas. L'IBL en tient lieu — voir ci-dessous.
-
-### Les deux décisions qui font l'essentiel du rendu
-
-**1. L'IBL est une fausse pièce, pas le ciel.** Éclairer l'intérieur avec l'env map
-du ciel l'aurait baigné uniformément et aurait écrasé le contraste. `buildEnvironment`
-photographie une boîte de panneaux émissifs qui reproduit la vraie distribution :
-baie chaude et intense à l'ouest, plafond tiède, rebond sourd au sol. Sans env map,
-`MeshStandardMaterial` n'a rien à réfléchir — les métaux sont noirs et tout paraît
-en plastique.
-
-**2. Le ciel est peint à la main, en valeurs linéaires.** `Sky.js` (modèle de
-Preetham) applique sa propre courbe *puis* se fait tone-mapper une seconde fois :
-le résultat sature en blanc. `skyTexture()` écrit un dégradé équirectangulaire dans
-une plage qui ne dépasse jamais `SKY_SCALE`, et laisse ACES faire son travail une
-seule fois. Le piège à connaître : un canal rouge clippé à 255 face à un vert élevé
-donne du blanc, qu'ACES désature encore.
-
-### Matériaux
-
-Tout est généré au chargement sur des `<canvas>` — aucune texture à télécharger.
-Chaque matière produit un champ de hauteur dont on dérive la normal map (Sobel) et
-la roughness : moquette en dalles, chêne verni, flanelle, métal brossé, dalles
-acoustiques perforées, pierre du hall.
-
-Trois règles apprises à la dure :
-
-- **Ne jamais teinter deux fois.** Si la texture porte déjà sa couleur, laisser
-  `material.color` à blanc — sinon tout brunit.
-- **Chanfreiner.** Aucune arête n'est vive (`RoundedBoxGeometry`, congé de 1 à 2 cm).
-- **Proscrire la régularité parfaite.** Des cernes de bois strictement périodiques,
-  une moquette identique d'une dalle à l'autre, une carnation d'une seule couleur :
-  ce sont les trois choses qui font « image calculée ». Le bois a donc des nœuds et
-  un écartement de cernes variable, la moquette des zones de passage lustrées, la
-  peau des marbrures et des plages de brillance inégales.
-
-### Les personnages
-
-C'est ce qui trahit le plus vite. Ce qui les sortait de l'aspect pâte à modeler :
-
-| Problème | Correctif |
-|---|---|
-| Peau d'une seule couleur, uniformément mate | Carte de marbrures et de pores, et surtout une **rugosité variable** — la peau brille par plaques |
-| Cheveux en bloc lisse | Normal map anisotrope étirée dans le sens de l'implantation, rugosité 0,24–0,58 : les mèches accrochent la lumière |
-| Vêtements sans matière | Trame serrée (20 répétitions sur la chemise, 24 sur le pantalon) plus des plis larges en relief |
-| Sept clones | Une carnation différente par personnage |
-| Épaules et torse boursouflés | Congés ramenés de 9 cm à 4–5 cm |
-
-### Ce que l'exclusivité exécutable apporte
-
-Le jeu détecte la carte graphique au lancement et se dimensionne en conséquence
-(`profilMateriel` dans [`render.js`](src/render.js)). Une page web ne peut pas se
-le permettre : elle doit prévoir le pire et rester téléchargeable.
-
-| Réglage | GPU intégré | Carte dédiée |
-|---|---|---|
-| Filtrage anisotrope | 8× | **16×** |
-| Résolution des textures | ×1 | **×1,5** |
-| Carte d'ombre | 2048 | **4096** |
-
-Coût mesuré de ces trois montées de qualité : **nul**. On n'est pas limité par le
-remplissage, donc une texture plus fine ou une ombre plus nette ne change rien au
-nombre d'images par seconde.
-
-### Temps de chargement
-
-Les textures étant calculées et non téléchargées, le démarrage n'est pas gratuit.
-Deux optimisations l'ont ramené de 14 s à environ 7 s :
-
-- **Chemin rapide sur le bruit** : `wrap()` faisait deux modulos par échantillon,
-  `Math.floor` remplacé par `| 0`, et les bruits lents n'étaient plus recalculés
-  dans la passe couleur.
-- **Champs basse fréquence à résolution réduite** : un fbm de période 5 sur une
-  texture de 768 px ne porte aucun détail fin. Le calculer au huitième de la
-  résolution puis l'interpoler est invisible à l'œil et divise le coût par trois.
-
-Reste ~3,3 s de textures et ~4 s de construction du premier étage, masqués par un
-écran d'attente. L'étape suivante, si besoin, serait de **précalculer les textures
-au moment du build** et de les livrer dans l'exécutable : le démarrage tomberait
-sous la seconde, au prix d'une étape de compilation supplémentaire.
-
-### Netteté
-
-Le jeu rend à **1:1** : un pixel calculé = un pixel écran. Un rendu sous-résolu
-puis étiré gagne des images par seconde mais ramollit toute l'image — c'est le
-premier réflexe à ne pas avoir.
-
-La qualité n'est pas réglable : elle est déduite de la carte graphique au
-lancement, et un garde-fou redescend d'un cran si la partie tombe sous 24 images
-par seconde. Un réglage de moins à se tromper.
-
-### Performance : mesurée, pas devinée
-
-Le mode `--selftest` embarque un banc d'essai et une sonde qui isole chaque
-poste de coût. Deux découvertes ont tout changé.
-
-**1. Le jeu tournait sur le mauvais GPU.** Sur un portable à double carte,
-Chromium choisit le circuit intégré par défaut. La sonde renvoyait
-`ANGLE (Intel, Intel(R) UHD Graphics)` alors que la machine avait une RTX 3070.
-Un commutateur suffit, dans [`electron/main.cjs`](electron/main.cjs) :
-
-```js
-app.commandLine.appendSwitch('force_high_performance_gpu');
-```
-
-**2. Le goulot n'était pas le GPU, mais le nombre d'appels de dessin.** Diviser
-la résolution par deux ne gagnait que 19 %, alors que masquer les personnages en
-gagnait 61 % : signe qu'on soumettait trop d'objets, pas qu'on calculait trop de
-pixels. La scène comptait **2 377 maillages** — 75 touches de clavier par bureau,
-194 livres dans la bibliothèque, 16 feuilles par plante — et chacun est redessiné
-trois fois par image (couleur, ombres, normales du GTAO).
-
-La correction tient en deux gestes :
-
-- **Fusionner la géométrie statique** par matériau (`mergeGeometries`). Les pivots
-  animés des personnages restent séparés, tout le reste devient une poignée de
-  maillages.
-- **Mutualiser les matériaux.** Un `new MeshStandardMaterial` par livre rend la
-  fusion impossible : 356 des 380 maillages restants avaient un matériau utilisé
-  une seule fois. Une palette partagée les ramène à une vingtaine.
-
-Deux pièges rencontrés en chemin : `RoundedBoxGeometry` est **non indexée** alors
-que les autres primitives le sont, et `mergeGeometries` refuse de mélanger les
-deux (il faut donc séparer les lots) ; et il faut retirer les attributs exotiques
-avant de fusionner.
-
-Résultat, étage 6 (le plus chargé), RTX 3070 Laptop à 1426×739 :
-
-| | Avant | Après |
-|---|---|---|
-| Maillages dans la scène | 2 377 | **369** |
-| Étage 6, qualité « haut » | 23 fps | **82 fps** |
-| Banc « haut » (occlusion ambiante) | 39 fps | **109 fps** |
-
-Deux coûts par image découverts en fin de parcours, tous deux invisibles à la
-lecture du code : la **mini-carte se redessinait à chaque image** (214 px de
-canvas, avec un secteur rempli par PNJ) alors que 20 Hz suffisent, et la liste
-des sprites d'interface était reparcourue deux fois par image pour être masquée
-pendant les passes de profondeur, alors qu'elle ne change qu'au chargement d'un
-étage. À elles deux, elles coûtaient près de la moitié du débit.
-
-Et surtout : masquer les personnages, couper les ombres ou diviser la résolution
-ne change plus rien (60, 60, 59 fps). Il n'y a plus de goulot — on attend la vsync.
-
-Paliers retenus : `moyen` (bloom seul) sur GPU intégré, `haut` (occlusion
-ambiante + bloom) sur carte dédiée. `ultra` existe mais retombe à 30 fps même sur
-une 3070 : la profondeur de champ redessine toute la scène et le MSAA 4× à 1,25×
-de résolution coûte trop cher pour ce qu'il apporte.
-
-## Si vous voulez aller vers un vrai photoréalisme
-
-Ce prototype vise la qualité « archviz temps réel », pas Lumen/Nanite. Pour franchir
-le palier, il faut changer de moteur **et** d'assets. Ressources gratuites précises :
-
-**Moteur** — Unreal Engine 5 (Lumen + Nanite), ou Unity HDRP.
-
-**Intérieur de bureau**
-- *Archviz Interiors Vol. 1-6* — Epic Games, gratuit sur Fab (ex-Marketplace)
-- *Office Props Pack* — Kenney.nl (CC0, low-poly, bon pour le blocking)
-- *Modern Office* — Sketchfab, filtrer sur licence CC-BY
-- Poly Haven — mobilier et props scannés, CC0
-
-**Matériaux**
-- **ambientCG.com** — moquette, bois, métal brossé, verre ; CC0, 2K à 8K, PBR complet
-- **Poly Haven** (textures) — CC0
-- **Quixel Megascans** — gratuit avec un compte Epic, pour usage Unreal
-
-**Éclairage HDRI**
-- Poly Haven HDRIs — chercher *golden hour*, *sunset*, *rooftop* ; 16K, CC0
-- *Kloppenheim 06*, *Venice Sunset*, *Spruit Sunrise* sont les classiques du genre
-
-**Personnage**
-- **Mixamo** (Adobe, gratuit) — personnages rigués + animations *stealth walk*,
-  *crouch walk*, *sneak* prêtes à l'emploi
-- **Character Creator 4** en essai, ou **MetaHuman** (Unreal, gratuit)
-- *Ready Player Me* pour un avatar rapide
-
-**Sons**
-- freesound.org — *office ambience*, *keyboard typing*, *footsteps carpet*
-
-## Tests
-
-Le build embarque un mode d'autotest qui joue une partie scriptée, capture la
-fenêtre et écrit un rapport JSON :
+Pour le lancer depuis les sources (Node.js 20 ou plus récent) :
 
 ```bash
-EscapeYourBoss.exe --selftest --out=C:\chemin\rapport
+git clone https://github.com/SoLeQz/EscapeYourBoss.git
+cd EscapeYourBoss
+npm install
+npm start              # lance le jeu en développement
+npm run build:win      # -> dist/EscapeYourBoss-win32-x64/EscapeYourBoss.exe
+npm run build:linux    # variante Linux, à compiler soi-même
 ```
 
-Il vérifie le démarrage, les menus, le déplacement, le strafe, l'accroupissement,
-la sortie par les escaliers, le repérage par le directeur, l'enchaînement des
-étages, le speedrun et le chargement du dernier étage — et remonte toute erreur
-console ou exception non capturée.
-
-En complément, un validateur Node vérifie **chaque étage hors du navigateur** :
-que le poste de départ n'est pas dans un mur, que les deux sorties et tous les
-objets sont atteignables par un parcours en largeur, et qu'aucune ronde de PNJ
-(y compris le trajet café du directeur) ne bute sur un meuble. C'est lui qui a
-attrapé les plantes posées devant une porte et le fauteuil encastré dans le
-bureau du directeur.
+- [Notes techniques](docs/TECHNIQUE.md) : game feel, détection, rendu,
+  performances, tests automatisés et journal des versions.
+- [Guide multijoueur](docs/MULTIJOUEUR.md) : réseau, dépannage et publication.
+- [Créer ses propres personnages](docs/CREER_DES_PERSONNAGES.md) avec Blender
+  ou Unreal Engine 5.
 
 ---
 
-## Limites connues du prototype
+<p align="center">
+  <img src="docs/captures/echec.jpg" alt="Écran d'échec : Lao D, t'es pas encore parti ? Parfait, viens en salle de réunion." width="70%"><br>
+  <sub>Ne laisse pas ça t'arriver. <a href="https://github.com/SoLeQz/EscapeYourBoss/releases/latest"><b>Télécharge le jeu</b></a> et rentre chez toi à l'heure.</sub>
+</p>
 
-- Les cônes de vision affichés au sol traversent les murs (le calcul de
-  détection, lui, en tient compte — c'est purement visuel).
-- Les PNJ vont en ligne droite d'un point de passage au suivant : pas de
-  navmesh, pas de contournement dynamique.
-- Pas d'animation de sortie de cabine : la victoire se déclenche à la fermeture
-  des portes.
-
-
-## Passe UX et personnages — 24 septembre 2026
-
-Le sprint dispose d’une récupération stable, les menus se pilotent au clavier,
-les objectifs apparaissent sur la mini-carte et la pause se déclenche quand le jeu
-perd le focus. Les options proposent sensibilité souris, caméra stable et rappel
-des commandes. La peau, les cheveux, la forme du visage et le sac ont été retouchés.
-
-Validation locale : `npm run test:personnages`, `npm run test:confort`,
-`npm run test:sauvegarde`. Le `--selftest` Windows utilise son propre profil temporaire.
-
-Pour créer tes propres personnages : [guide Unreal Engine 5 et Blender](docs/CREER_DES_PERSONNAGES.md).
-
-
-## Lao D dans Blender — proposition à valider
-
-Blender 5.2.2 LTS a réellement créé et exporté les assets. Le jalon technique
-Blender → GLB → Electron/Three → animation est validé. Le premier personnage
-complet est disponible dans [art/lao-d/proposition-v03/lao-d-v03.blend](art/lao-d/proposition-v03/lao-d-v03.blend).
-
-[Captures avant/après](tests/blender/jalon-b/README.md) ·
-[Guide de retouche et d'export](docs/blender/GUIDE_LAO_D.md) ·
-[Contrat et limites](docs/blender/CONTRAT_ET_JALONS.md).
-
-La proposition attend la validation artistique. Le jeu normal et les PNJ gardent
-leurs personnages procéduraux ; l'atelier Windows se lance avec
-`--selftest --blender --visuel`. Le modèle avec les bretelles corrigées compte 29 248 triangles et
-11 appels de dessin. Aucun gain FPS n'est encore annoncé.
-
-Trois collègues sont également disponibles en sources Blender : **Directeur Wang,
-Zhang Jie et Lao Liu**. [Fichiers et guide](docs/blender/GUIDE_COLLEGUES.md) ·
-[Aperçus dans Electron](tests/blender/collegues-v01/README.md).
-Atelier isolé : `--selftest --blender --collegues`. Leur intégration aux PNJ en
-partie reste à réaliser après validation des propositions.
-
-Les animations du joueur proposent maintenant **six emotes**,
-avec interruption par déplacement ou accroupissement et transitions adoucies.
-[Animations historiques](tests/animations/apercu.html) · [67 et Ela Ké Leitada](tests/tendances/apercu.html).
+<p align="center"><sub>Un jeu de <a href="https://github.com/SoLeQz">SoLeQz</a>.</sub></p>

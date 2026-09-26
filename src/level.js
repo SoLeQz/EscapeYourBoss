@@ -197,6 +197,7 @@ function palette() {
     rouge: std(0xb02a1e, 0.35, 0.2),
     cadran: std(0xf4f2ec, 0.4),
     terreau: std(0x302b24, 1),
+    store: std(0xd6d0c2, 0.8),
   };
   for (const m of PAL.feuilles) m.side = THREE.DoubleSide;
   for (const value of Object.values(PAL)) for (const mat of [].concat(value)) partager(mat);
@@ -240,6 +241,30 @@ function rbox(w, h, d, r = 0.014) {
   let g = geoCache.get(key);
   if (!g) { g = uvBoiteMetrique(new RoundedBoxGeometry(w, h, d, Math.max(w,h,d) < 0.65 ? 1 : 2, rad)); geoCache.set(key, partager(g)); }
   return g;
+}
+
+// Anneau au sol et petite balise suspendue qui désigne le meuble à rejoindre.
+let geoHalo = null;
+function geometrieHalo() {
+  if (geoHalo) return geoHalo;
+  const anneau = new THREE.RingGeometry(.25, .30, 40).rotateX(-Math.PI / 2).translate(0, .018, 0);
+  const balise = new THREE.RingGeometry(.065, .095, 4).rotateZ(Math.PI / 4).translate(0, .42, 0);
+  geoHalo = partager(mergeGeometries([anneau, balise], false));
+  anneau.dispose(); balise.dispose();
+  return geoHalo;
+}
+
+// Passe de sécurité : carte à plat et son anneau porte-clés, d'un seul tenant.
+let geoPasse = null;
+function geometriePasse() {
+  if (geoPasse) return geoPasse;
+  // Environ 90 triangles : les étages 5 et 6 frôlent le budget de 260 000.
+  const carte = new THREE.BoxGeometry(0.09, 0.008, 0.13).toNonIndexed();
+  const anneau = new THREE.TorusGeometry(0.03, 0.005, 4, 10).rotateX(-Math.PI / 2)
+    .translate(0, 0.002, -0.085).toNonIndexed();
+  geoPasse = partager(mergeGeometries([carte, anneau], false));
+  carte.dispose(); anneau.dispose();
+  return geoPasse;
 }
 
 let dossierChaise;
@@ -343,9 +368,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
   // ---------- salles vitrées est : une pour le directeur, une pour les réunions ----------
   const bossAuNord = plan.bossSalle === 'nord';
-  cageVitree(-16, -4, plan[bossAuNord ? 'porteBoss' : 'porteReunion']);
+  // Stores baissés (début de soirée, le directeur est en visio) : seule sa
+  // façade côté hall devient opaque, la paroi sur le couloir reste vitrée.
+  cageVitree(-16, -4, plan[bossAuNord ? 'porteBoss' : 'porteReunion'], bossAuNord && niveau.stores);
   const porteSalleSud = plan[bossAuNord ? 'porteReunion' : 'porteBoss'];
-  cageVitree(6, 16, porteSalleSud);
+  cageVitree(6, 16, porteSalleSud, !bossAuNord && niveau.stores);
 
   // ---------- cage d'escalier ----------
   box(4, 11.85, 7, 12.15, WALL_H, MAT.mur, { r: 0.03 });
@@ -508,14 +535,26 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
   // Cage de verre : deux parois sur x = 12 encadrant une porte, plus la
   // façade côté hall. Bloque le passage, pas le regard.
-  function cageVitree(zDeb, zFin, porte) {
+  function cageVitree(zDeb, zFin, porte, stores = false) {
     const [pz1, pz2] = porte;
     cloisonVitree(11.85, zDeb, 12.15, pz1);
     cloisonVitree(11.85, pz2, 12.15, zFin);
     const zFacade = zDeb < 0 ? zFin : zDeb;
     cloisonVitree(12, zFacade - 0.15, 20, zFacade + 0.15);
+    if (stores) storesBaisses(12.2, 19.8, zFacade + (zDeb < 0 ? -0.24 : 0.24));
     box(11.8, pz1 - 0.2, 12.2, pz1 + 0.1, WALL_H, MAT.aluSombre, { r: 0.02 });
     box(11.8, pz2 - 0.1, 12.2, pz2 + 0.2, WALL_H, MAT.aluSombre, { r: 0.02 });
+  }
+
+  // Stores à lamelles côté intérieur : ils coupent le regard sans rien changer
+  // aux déplacements (le verre porte déjà la collision).
+  function storesBaisses(x1, x2, z) {
+    obstacles.push({ x1, z1: z - 0.04, x2, z2: z + 0.04, h: WALL_H, noClip: true, kind: 'stores' });
+    // Boîtes simples : 12 triangles chacune au lieu de 300 arrondies (budget).
+    const lame = new THREE.BoxGeometry(x2 - x1, 0.012, 0.08), x = (x1 + x2) / 2;
+    for (let y = 0.36; y < 3.28; y += 0.1)
+      mesh(lame, palette().store, x, y, z, { cast: false }).rotation.x = 0.3;
+    mesh(new THREE.BoxGeometry(x2 - x1 + 0.12, 0.1, 0.12), MAT.aluSombre, x, 3.38, z, { cast: false });
   }
 
   function ascenseurCondamne(x, z) {
@@ -544,23 +583,23 @@ export function buildLevel(scene, MAT, plan, niveau) {
     g.position.set(o.x, o.y, o.z);
     g.userData.noFusion = true;
     root.add(g);
-    const corps = o.id === 'badge'
-      ? new THREE.Mesh(rbox(0.09, 0.13, 0.008, 0.006), MAT.plastiqueBlanc)
+    // Badge blanc, passe de sécurité rouge sur son anneau, portable. Ces objets
+    // échappent à la fusion : chaque maillage est un appel de dessin, d'où un
+    // passe d'une seule pièce et un halo qui porte aussi la balise.
+    const carte = o.id === 'badge' || o.id === 'passe';
+    const corps = o.id === 'passe' ? new THREE.Mesh(geometriePasse(), palette().rouge)
+      : carte ? new THREE.Mesh(rbox(0.09, 0.13, 0.008, 0.006), MAT.plastiqueBlanc)
       : new THREE.Mesh(rbox(0.32, 0.022, 0.23, 0.008), MAT.aluSombre);
     if(o.id === 'badge')corps.rotation.x=-Math.PI/2;
     corps.castShadow = true;
     g.add(corps);
-    if (o.id !== 'badge') {
+    if (!carte) {
       const ecr = new THREE.Mesh(rbox(0.31, 0.2, 0.014, 0.006), MAT.aluSombre);
       ecr.position.set(0, 0.1, -0.11); ecr.rotation.x = -0.35; g.add(ecr);
     }
-    const halo = new THREE.Mesh(new THREE.RingGeometry(.25,.30,40),
+    const halo = new THREE.Mesh(geometrieHalo(),
       new THREE.MeshBasicMaterial({ color: 0xffd487, transparent:true, opacity:.85,
         depthWrite:false, side:THREE.DoubleSide, toneMapped:false }));
-    halo.rotation.x=-Math.PI/2;halo.position.y=.018;
-    // Une petite balise suspendue désigne précisément le meuble à rejoindre.
-    const balise = new THREE.Mesh(new THREE.RingGeometry(.065,.095,4),halo.material);
-    balise.position.y=.42;balise.rotation.z=Math.PI/4;g.add(balise);
     g.add(halo);
     // Les lumières des objectifs sont permanentes dans Game : masquer cet
     // objet ne doit pas changer le nombre de lumières et recompiler les shaders.

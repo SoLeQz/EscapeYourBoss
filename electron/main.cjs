@@ -543,6 +543,8 @@ async function runSelfTest(target) {
 
   // sortie par les escaliers
   await step('escaliers', `(async () => { const g = window.__game; g.input.delete('ControlLeft');
+      // La porte coupe-feu exige le passe de la sécurité : on le ramasse d'abord.
+      g.level.ramassables.forEach((o, i) => g.ramasserObjet(i));
       g.player.pos.set(8, 0, 12.6); await new Promise(r => setTimeout(r, 300));
       const invite = document.getElementById('prompt').textContent;
       g.tryInteract(); await new Promise(r => setTimeout(r, 3500));

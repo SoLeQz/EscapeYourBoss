@@ -109,7 +109,7 @@ export class UI {
       if(!el) {
         el=document.createElement('div');el.className='repere-objet';
         el.innerHTML='<i class="repere-direction">▲</i><b class="repere-numero"></b><span><strong></strong><small></small></span>';
-        el.querySelector('strong').textContent=o.id==='badge'?'Badge d’accès':'Ordinateur portable';
+        el.querySelector('strong').textContent={badge:'Badge d’accès',passe:'Passe de sécurité'}[o.id]||'Ordinateur portable';
         el.querySelector('b').textContent=i+1;
         $('reperes-objets').appendChild(el);this.objectiveNodes.set(o,el);
       }
@@ -124,7 +124,7 @@ export class UI {
       el.classList.toggle('hors-champ',p.horsChamp);
       el.querySelector('.repere-direction').style.transform=`rotate(${p.angle}rad)`;
       const distance=Math.ceil(Math.hypot(o.x-player.pos.x,o.z-player.pos.z));
-      el.querySelector('small').textContent=`${distance} m · à récupérer`;
+      el.querySelector('small').textContent=`${distance} m · ${o.ouvre?'facultatif, ouvre l’escalier':'à récupérer'}`;
     }
     for(const [o,el] of this.objectiveNodes)if(!actifs.has(o)){el.remove();this.objectiveNodes.delete(o);}
     $('legende-objets').hidden=!actifs.size;

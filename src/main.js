@@ -203,6 +203,12 @@ class Game {
       this.overlays.push(n.cone);
       n.mesh.traverse(o => { if (o.isSprite) this.overlays.push(o); });
     }
+    // Même piège pour le coéquipier : son étiquette de nom, oubliée ici,
+    // devenait un rectangle noir au-dessus de sa tête en multijoueur.
+    if (this.coequipier) {
+      this.overlays.push(this.coequipier.outline);
+      this.coequipier.mesh.traverse(o => { if (o.isSprite) this.overlays.push(o); });
+    }
   }
 
   masquerOverlays() {
@@ -473,12 +479,18 @@ class Game {
     const boite = document.getElementById('objectifs');
     const objets = this.level.ramassables;
     boite.classList.toggle('on', this.state === 'play');
+    // Le passe est facultatif : il ouvre l'escalier, l'ascenseur s'en passe.
     liste.innerHTML = objets.map(o =>
-      `<li class="${o.pris ? 'ok' : 'objet'}"><i>${o.pris ? '✓' : '◆'}</i>Récupérer ${o.nom}</li>`
+      `<li class="${o.pris ? 'ok' : 'objet'}"><i>${o.pris ? '✓' : o.ouvre ? '◇' : '◆'}</i>` +
+      (o.ouvre ? `Facultatif : ${o.nom} (ouvre l’escalier)` : `Récupérer ${o.nom}`) + `</li>`
     ).join('') + `<li><i>○</i>Atteindre une sortie</li>`;
   }
 
-  objetsRestants() { return this.level.ramassables.filter(o => !o.pris); }
+  // Objets encore exigés : ceux de tout l'étage, plus la clé propre à la
+  // sortie visée (le passe pour la porte coupe-feu de l'escalier).
+  objetsRestants(sortie = null) {
+    return this.level.ramassables.filter(o => !o.pris && (!o.ouvre || o.ouvre === sortie));
+  }
 
   // Objectif ramassé ici ou par le coéquipier (multijoueur : objets partagés).
   ramasserObjet(i, distant = false) {
@@ -488,8 +500,10 @@ class Game {
     o.group.visible = false;
     this.majLumieresObjets();
     this.audio.ding();
+    const reste = this.objetsRestants().length;
     this.ui.toast((distant ? (this.multi.nomDistant || 'Ton coéquipier') + ' a récupéré ' : 'Récupéré : ') + o.nom,
-      this.objetsRestants().length ? 'Il en reste ' + this.objetsRestants().length : 'Vous pouvez sortir.');
+      o.ouvre ? 'La porte coupe-feu de l’escalier est déverrouillée.'
+        : reste ? 'Il en reste ' + reste : 'Vous pouvez sortir.');
     this.majObjectifs();
     if (!distant) this.multi.envoyer({ t: 'objet', id: i });
   }
@@ -786,9 +800,11 @@ class Game {
       this.ui.toast('Très occupé. Absolument.', `${Math.ceil(it.restant)} s de protection, même face au boss. Ce temps ne se recharge pas.`);
       return;
     }
-    const manque = this.objetsRestants();
+    const manque = this.objetsRestants(it.id);
     if (manque.length) {
-      this.ui.toast('Il te manque ' + manque[0].nom, 'Pas question de partir sans.');
+      if (manque[0].ouvre) this.ui.toast('Porte coupe-feu verrouillée',
+        'Après 18 h, elle ne s’ouvre qu’avec ' + manque[0].nom + '. Ou prends l’ascenseur.');
+      else this.ui.toast('Il te manque ' + manque[0].nom, 'Pas question de partir sans.');
       this.audio.blip();
       return;
     }
@@ -1042,11 +1058,12 @@ class Game {
 
     // prompt d'interaction
     const it = this.exitSeq ? null : this.nearestInteractable();
-    const manque = this.objetsRestants();
+    const manque = it && !it.type ? this.objetsRestants(it.id) : [];
     const label = it?.type === 'diversion' && it.utilise ? 'Bac à papier vide'
       : it?.type === 'travail' ? (this.player.working ? 'Quitter le poste'
         : it.restant > 0 ? `${it.label} · ${Math.ceil(it.restant)} s` : 'Protection épuisée pour cet étage') : it?.label;
-    this.ui.setPrompt(it ? (!it.type && manque.length ? `Récupère ${manque[0].nom} avant de partir`
+    this.ui.setPrompt(it ? (manque.length ? (manque[0].ouvre ? `Verrouillée · il te faut ${manque[0].nom}`
+      : `Récupère ${manque[0].nom} avant de partir`)
       : `<kbd>${this.touche('interagir')}</kbd> ${label}`) : '');
     this.ui.setExit(this.exitSeq);
 

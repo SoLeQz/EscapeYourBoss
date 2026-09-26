@@ -2026,3 +2026,24 @@ contour et ses sprites sont maintenant masqués pendant ces passes.
 et vérifient que la porte refuse de s'ouvrir sans lui. Ils n'ont pas pu être
 rejoués : l'exe lancé depuis WSL n'obtient pas de contexte WebGL. À relancer sous
 Windows après `npm run build:win`.
+
+## 31. Jouer en ligne via playit.gg — 26 septembre 2026, 1.7.0
+
+Demande : jouer avec un ami sur un autre réseau, au moindre coût. Choix : un tunnel
+playit.gg (*playit Premium*, 3 $/mois pour le TCP générique) plutôt qu'une redirection
+de port (IPv4 parfois partagée, port exposé) ou un serveur loué (le jeu de l'hôte
+simule les PNJ : un serveur ne servirait que de relais).
+
+Le seul frein côté jeu : *Rejoindre* visait toujours le port 47800, alors qu'un tunnel
+publie un autre port. `lireAdresse` (`electron/reseau.cjs`) accepte `hôte`,
+`hôte:port`, `[IPv6]:port` et une IPv6 nue, ignore un `tcp://` collé, et refuse une
+saisie invalide **avant** de fermer la session en cours. Côté hôte, rien ne change :
+l'agent playit.gg relaie vers `127.0.0.1:47800`, sans passer par le pare-feu.
+
+Version 1.7.0 : le contrôle de version est le seul garde-fou contre un ami resté
+sur un ancien zip. Or les stores et le passe (section 30) changent les objets
+partagés : un invité en 1.6.0 face à un hôte à jour se désynchroniserait.
+
+Tests : `npm run test:multijoueur` couvre les formats d'adresse et une vraie
+connexion par `127.0.0.1:<port>` depuis une session réglée sur le port par défaut.
+Guide joueur : `docs/MULTIJOUEUR.md`, section « Jouer en ligne ».

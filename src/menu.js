@@ -90,7 +90,7 @@ export class Menu {
       statut('Ouverture de la partie…');
       try {
         const r = await m.heberger(nom());
-        statut(`Partie ouverte. Ton ami la trouve avec « Rechercher », ou tape ton adresse : ${r.adresses.join(' ou ') || 'voir les paramètres réseau'}. Si Windows demande l’accès réseau, accepte pour les réseaux privés.`);
+        statut(`Partie ouverte. Sur le même réseau, ton ami la trouve avec « Rechercher », ou tape ton adresse : ${r.adresses.join(' ou ') || 'voir les paramètres réseau'}. En ligne, donne-lui l’adresse de ton tunnel playit.gg (nom:port). Si Windows demande l’accès réseau, accepte pour les réseaux privés.`);
       } catch (e) { statut('Impossible d’héberger : ' + e.message); }
       this.majMulti();
     };

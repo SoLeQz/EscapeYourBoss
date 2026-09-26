@@ -1,7 +1,7 @@
 {
   "name": "escape-your-boss",
   "productName": "EscapeYourBoss",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Escape your boss — jeu d'infiltration de bureau (Electron + Three.js)",
   "main": "electron/main.cjs",
   "author": "nicleena",

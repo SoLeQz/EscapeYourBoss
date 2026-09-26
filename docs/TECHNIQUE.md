@@ -19,7 +19,7 @@ cp -r dist/EscapeYourBoss-win32-x64/. /mnt/c/Users/<toi>/EscapeYourBoss/
 ```
 
 **Vérifier la copie lancée :** le menu doit afficher la version de `package.json`
-(`Version 1.6.0`) et la roue proposer six emotes. Reconstruire `dist/` ne met pas
+(`Version 1.7.0`) et la roue proposer six emotes. Reconstruire `dist/` ne met pas
 à jour une copie située ailleurs : il faut copier le contenu du paquet, comme
 ci-dessus.
 

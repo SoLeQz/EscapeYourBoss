@@ -1,11 +1,19 @@
 // Couche réseau du multijoueur, testée en Node pur (hôte + invité sur la même machine).
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-const { creerSession, rechercherParties } = createRequire(import.meta.url)('../../electron/reseau.cjs');
+const { creerSession, rechercherParties, lireAdresse } = createRequire(import.meta.url)('../../electron/reseau.cjs');
 const PORTS = { portJeu: 47900, portDecouverte: 47901 };
 const attendre = (liste, pred, ms = 3000) => new Promise((res, rej) => {
   const t0 = Date.now(), iv = setInterval(() => { const e = liste.find(pred); if (e) { clearInterval(iv); res(e); } else if (Date.now() - t0 > ms) { clearInterval(iv); rej(new Error('délai : ' + pred)); } }, 10);
 });
+// Adresses tapées à la main : IP locale, tunnel playit.gg (hôte:port), IPv6.
+assert.deepEqual(lireAdresse('192.168.1.20'), { hote: '192.168.1.20', port: 47800 });
+assert.deepEqual(lireAdresse(' nom-ami.gl.at.ply.gg:12345 '), { hote: 'nom-ami.gl.at.ply.gg', port: 12345 });
+assert.deepEqual(lireAdresse('tcp://nom.ply.gg:5000/'), { hote: 'nom.ply.gg', port: 5000 });
+assert.deepEqual(lireAdresse('[::1]:47900'), { hote: '::1', port: 47900 });
+assert.deepEqual(lireAdresse('fe80::1'), { hote: 'fe80::1', port: 47800 });
+for (const faux of ['', 'nom.ply.gg:', 'nom.ply.gg:abc', 'nom.ply.gg:70000', ':123', '[::1]:'])
+  assert.throws(() => lireAdresse(faux), /Adresse invalide/, faux);
 const evH = [], evI = [];
 const hote = creerSession({ version: '1.6.0', evenement: e => evH.push(e), adresseEcoute: '127.0.0.1', ...PORTS });
 const invite = creerSession({ version: '1.6.0', evenement: e => evI.push(e), ...PORTS });
@@ -24,8 +32,9 @@ await attendre(evH, e => e.type === 'message' && e.msg.i === 49);
 assert.equal(evH.filter(e => e.type === 'message').length, 50, 'Messages perdus ou dupliqués');
 assert.equal((await attendre(evI, e => e.type === 'message')).msg.texte, 'Où est passé Lao D ? 🙂\nligne');
 // un troisième joueur est refusé
-const evT = [], tiers = creerSession({ version: '1.6.0', evenement: e => evT.push(e), ...PORTS });
-await tiers.rejoindre('127.0.0.1', 'Intrus', PORTS.portJeu);
+// (session aux ports par défaut : c'est le « :port » tapé qui mène à l'hôte)
+const evT = [], tiers = creerSession({ version: '1.6.0', evenement: e => evT.push(e) });
+await tiers.rejoindre('127.0.0.1:' + PORTS.portJeu, 'Intrus');
 assert.match((await attendre(evT, e => e.type === 'deconnecte')).raison, /complète/);
 // déconnexion de l'invité signalée à l'hôte
 invite.fermer();
@@ -36,5 +45,7 @@ await vieux.rejoindre('127.0.0.1', 'Vieux', PORTS.portJeu);
 assert.match((await attendre(evV, e => e.type === 'deconnecte')).raison, /Versions différentes|Version différente/);
 // hôte injoignable
 await assert.rejects(creerSession({ version: '1.6.0', evenement: () => {}, portJeu: 47999 }).rejoindre('127.0.0.1', 'X', 47999), /Aucune partie/);
+// une adresse mal tapée est refusée sans couper la session en cours
+await assert.rejects(tiers.rejoindre('nom.ply.gg:abc', 'Intrus'), /Adresse invalide/);
 hote.fermer(); tiers.fermer(); vieux.fermer();
-console.log(`Réseau : découverte UDP, connexion, ${50 + 1} messages, 3e joueur refusé, version vérifiée, déconnexion signalée.`);
+console.log(`Réseau : découverte UDP, connexion, adresses hôte:port, ${50 + 1} messages, 3e joueur refusé, version vérifiée, déconnexion signalée.`);

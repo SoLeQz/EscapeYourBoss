@@ -31,6 +31,23 @@ function adressesLocales() {
   return res;
 }
 
+// Adresse tapée par l'invité : « hôte », « hôte:port » (tunnel playit.gg, dont
+// le port public n'est pas 47800) ou « [IPv6]:port ». Une IPv6 nue garde le
+// port par défaut. Un éventuel « tcp:// » collé avec l'adresse est ignoré.
+function lireAdresse(saisie, portDefaut = PORT_JEU) {
+  const s = String(saisie ?? '').trim().replace(/^[a-z]+:\/\//i, '').replace(/\/+$/, '');
+  let hote = s, port = portDefaut;
+  const v6 = s.match(/^\[([^\]]+)\](?::(\d*))?$/);
+  if (v6) { hote = v6[1]; if (v6[2] !== undefined) port = v6[2] === '' ? NaN : Number(v6[2]); }
+  else if ((s.match(/:/g) || []).length === 1) {
+    const i = s.indexOf(':');
+    hote = s.slice(0, i); port = /^\d+$/.test(s.slice(i + 1)) ? Number(s.slice(i + 1)) : NaN;
+  }
+  if (!hote || !Number.isInteger(port) || port < 1 || port > 65535)
+    throw new Error(`Adresse invalide : « ${s} ». Exemples : 192.168.1.20 ou nom.ply.gg:12345.`);
+  return { hote, port };
+}
+
 // Découpe un flux TCP en messages JSON (un par ligne).
 function lecteurLignes(surMessage, surErreur) {
   let tampon = '';
@@ -113,11 +130,15 @@ function creerSession({ version, evenement, adresseEcoute = '0.0.0.0', portJeu =
       });
     },
 
-    rejoindre(ip, nom, port = portJeu) {
+    rejoindre(adresse, nom, portDefaut = portJeu) {
+      // Une faute de frappe ne doit pas couper la session en cours.
+      let cible;
+      try { cible = lireAdresse(adresse, portDefaut); } catch (e) { return Promise.reject(e); }
+      const ip = String(adresse).trim();
       this.fermer();
       nomLocal = String(nom || 'Invité').slice(0, 24);
       return new Promise((resolve, reject) => {
-        const s = net.connect({ host: String(ip).trim(), port, timeout: 5000 });
+        const s = net.connect({ host: cible.hote, port: cible.port, timeout: 5000 });
         s.once('connect', () => { s.setTimeout(0); brancher(s, 'invite'); resolve(true); });
         s.once('timeout', () => { s.destroy(); reject(new Error(`Aucune réponse de ${ip} (délai dépassé).`)); });
         s.once('error', e => reject(new Error(e.code === 'ECONNREFUSED'
@@ -162,4 +183,4 @@ function rechercherParties({ duree = 1500, version = null, portDecouverte = PORT
   });
 }
 
-module.exports = { creerSession, rechercherParties, adressesLocales, PORT_JEU, PORT_DECOUVERTE };
+module.exports = { creerSession, rechercherParties, adressesLocales, lireAdresse, PORT_JEU, PORT_DECOUVERTE };

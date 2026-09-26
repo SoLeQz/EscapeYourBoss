@@ -152,8 +152,10 @@ tous les deux à votre poste. L'étage est gagné quand vous êtes sortis tous l
 deux. Les objets à récupérer sont communs, et la photocopieuse, les postes et les
 emotes marchent pour chacun.
 
-Ça ne se connecte pas ? Le [guide multijoueur](docs/MULTIJOUEUR.md) détaille le
-pare-feu, les ports et les messages d'erreur.
+**Pas sur le même réseau ?** L'hôte ouvre un tunnel [playit.gg](https://playit.gg)
+vers le port TCP 47800, et son ami tape l'adresse du tunnel (`nom.ply.gg:12345`)
+dans *Rejoindre*. La marche à suivre est dans le [guide multijoueur](docs/MULTIJOUEUR.md),
+avec le pare-feu, les ports et les messages d'erreur.
 
 ---
 

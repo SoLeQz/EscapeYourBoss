@@ -42,11 +42,14 @@ export class Multijoueur {
   async rejoindre(ip, nom) { this.role = 'invite'; try { return await this.pont.rejoindre(ip, nom); } catch (e) { this.role = null; throw e; } }
   rechercher() { return this.pont.rechercher(); }
   adresses() { return this.pont.adresses(); }
-  async quitter() { await this.pont?.fermer(); this.role = null; this.connecte = false; this.etatDistant = null; this.monde = null; }
+  async quitter() { await this.pont?.fermer(); this.role = null; this.connecte = false; this.etatDistant = null; this.monde = null; this.apparenceDistante = null; }
   envoyer(msg) { if (this.connecte) this.pont.envoyer(msg); }
 
   surEvenement(e) {
-    if (e.type === 'connecte') { this.connecte = true; this.nomDistant = e.nom; this.role = e.role; }
+    if (e.type === 'connecte') {
+      this.connecte = true; this.nomDistant = e.nom; this.role = e.role;
+      this.envoyer({ t: 'apparence', a: this.jeu.etat?.apparence ?? null });  // chacun voit la tenue de l'autre
+    }
     if (e.type === 'deconnecte') {
       const etaitActif = this.connecte; this.connecte = false; this.etatDistant = null;
       if (etaitActif) this.jeu.coequipierParti?.(e.raison);
@@ -69,9 +72,8 @@ export class Multijoueur {
       case 'emote': if (this.hote) jeu.reagirEmote?.(EMOTES[m.index], jeu.coequipier); break;
       case 'perdu': if (this.invite) jeu.lose(jeu.npcs[m.i] || jeu.npcs[0]); break;
       case 'gagne': jeu.terminerNiveau(m.route); break;
-      case 'pause': jeu.pause(true); break;
-      case 'reprise': jeu.resume(true); break;
       case 'menu': jeu.retourMenuMulti?.(true); break;
+      case 'apparence': this.apparenceDistante = m.a && typeof m.a === 'object' ? m.a : null; jeu.majCoequipierApparence?.(); break;
     }
   }
 

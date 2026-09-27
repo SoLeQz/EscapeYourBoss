@@ -12,6 +12,7 @@ export const DEFAUT = {
   records: {},               // { "n1": secondes, "speedrun": secondes }
   touches: null,             // null = valeurs d'usine
   options: { echelle: 1.0, son: true, cones: true, noms: true, sensibilite: 1, mouvementReduit: false, aide: true },
+  apparence: null,           // tenue du vestiaire (garde-robe.js) ; null = Lao D d'origine
 };
 
 let memoire = null;          // filet si l'écriture disque échoue
@@ -23,6 +24,7 @@ function fusionner(brut) {
   if (brut.records && typeof brut.records === 'object') Object.assign(d.records, brut.records);
   if (brut.touches && typeof brut.touches === 'object') d.touches = brut.touches;
   if (brut.options && typeof brut.options === 'object') Object.assign(d.options, brut.options);
+  if (brut.apparence && typeof brut.apparence === 'object') d.apparence = brut.apparence;  // nettoyée à l'usage
   if (!Number.isFinite(d.options.sensibilite)) d.options.sensibilite = 1;
   d.options.sensibilite = Math.max(0.3, Math.min(2, d.options.sensibilite));
   return d;

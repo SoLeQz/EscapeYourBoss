@@ -1,7 +1,12 @@
 // Lecture seulement : chaque échantillon provient des courbes du fichier Blender.
 import sixSeven from '../assets/emote-67-v05.js';
 import leitada from '../assets/emote-ela-ke-leitada-v05.js';
-const clips={67:sixSeven,'ela-ke-leitada':leitada};
+// v06 : quatre tendances animées dans Blender, chacune avec sa musique originale.
+import auraFarming from '../assets/emote-aura-farming-v06.js';
+import griddy from '../assets/emote-griddy-v06.js';
+import floss from '../assets/emote-floss-v06.js';
+import apple from '../assets/emote-apple-v06.js';
+const clips={67:sixSeven,'ela-ke-leitada':leitada,'aura-farming':auraFarming,griddy,floss,apple};
 const os=new Set(['root','upper','head','armL','armR','elbowL','elbowR','mainL','mainR','legL','legR','kneeL','kneeR','footL','footR','doigtsL','doigtsR','pouceL','pouceR']);
 for(const [id,c] of Object.entries(clips)){
   if(c.schema!==1||c.fps!==60||c.duree<=0||c.duree>12||!new RegExp('^'+id+'-v\\d\\d\\.blend$').test(c.source)||c.frames.length!==Math.round(c.duree*c.fps)+1)throw Error('Clip Blender incompatible : '+id);

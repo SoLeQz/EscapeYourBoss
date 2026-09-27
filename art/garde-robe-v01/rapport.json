@@ -1,0 +1,249 @@
+{
+ "casquette": {
+  "os": "tete",
+  "objets": 9,
+  "triangles": 5520,
+  "materiaux": [
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "bonnet": {
+  "os": "tete",
+  "objets": 3,
+  "triangles": 3112,
+  "materiaux": [
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "casque-chantier": {
+  "os": "tete",
+  "objets": 4,
+  "triangles": 3512,
+  "materiaux": [
+   "GARDE_jaune",
+   "GARDE_noir"
+  ],
+  "roles": []
+ },
+ "chapeau-fete": {
+  "os": "tete",
+  "objets": 4,
+  "triangles": 3544,
+  "materiaux": [
+   "GARDE_blanc",
+   "GARDE_noir",
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "chapeau-melon": {
+  "os": "tete",
+  "objets": 3,
+  "triangles": 2240,
+  "materiaux": [
+   "GARDE_noir",
+   "GARDE_teinte"
+  ],
+  "roles": []
+ },
+ "bandeau": {
+  "os": "tete",
+  "objets": 2,
+  "triangles": 1148,
+  "materiaux": [
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "casque-audio": {
+  "os": "tete",
+  "objets": 9,
+  "triangles": 3696,
+  "materiaux": [
+   "GARDE_metal",
+   "GARDE_noir",
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "oreilles-chat": {
+  "os": "tete",
+  "objets": 5,
+  "triangles": 704,
+  "materiaux": [
+   "GARDE_rose",
+   "GARDE_teinte"
+  ],
+  "roles": []
+ },
+ "casquette-helice": {
+  "os": "tete",
+  "objets": 6,
+  "triangles": 3644,
+  "materiaux": [
+   "GARDE_bleu",
+   "GARDE_jaune",
+   "GARDE_metal",
+   "GARDE_rouge",
+   "GARDE_vert"
+  ],
+  "roles": [
+   "helice"
+  ]
+ },
+ "couronne": {
+  "os": "tete",
+  "objets": 11,
+  "triangles": 5728,
+  "materiaux": [
+   "GARDE_bleu",
+   "GARDE_or",
+   "GARDE_rouge"
+  ],
+  "roles": []
+ },
+ "aviateur": {
+  "os": "tete",
+  "objets": 8,
+  "triangles": 4144,
+  "materiaux": [
+   "GARDE_or",
+   "GARDE_verreFonce"
+  ],
+  "roles": []
+ },
+ "rondes": {
+  "os": "tete",
+  "objets": 7,
+  "triangles": 2552,
+  "materiaux": [
+   "GARDE_noir",
+   "GARDE_verreClair"
+  ],
+  "roles": []
+ },
+ "pixel": {
+  "os": "tete",
+  "objets": 74,
+  "triangles": 1856,
+  "materiaux": [
+   "GARDE_blanc",
+   "GARDE_noir"
+  ],
+  "roles": []
+ },
+ "lunettes-3d": {
+  "os": "tete",
+  "objets": 9,
+  "triangles": 1340,
+  "materiaux": [
+   "GARDE_blanc",
+   "GARDE_cyan",
+   "GARDE_rouge"
+  ],
+  "roles": []
+ },
+ "moustache-brosse": {
+  "os": "tete",
+  "objets": 1,
+  "triangles": 976,
+  "materiaux": [
+   "GARDE_cheveux"
+  ],
+  "roles": []
+ },
+ "moustache-guidon": {
+  "os": "tete",
+  "objets": 2,
+  "triangles": 1712,
+  "materiaux": [
+   "GARDE_cheveux"
+  ],
+  "roles": []
+ },
+ "gilet-fluo": {
+  "os": "buste",
+  "objets": 7,
+  "triangles": 5136,
+  "materiaux": [
+   "GARDE_fluo",
+   "GARDE_reflechissant"
+  ],
+  "roles": []
+ },
+ "cape": {
+  "os": "buste",
+  "objets": 5,
+  "triangles": 6456,
+  "materiaux": [
+   "GARDE_noir",
+   "GARDE_or",
+   "GARDE_teinte"
+  ],
+  "roles": []
+ },
+ "noeud-papillon": {
+  "os": "buste",
+  "objets": 3,
+  "triangles": 1248,
+  "materiaux": [
+   "GARDE_teinte"
+  ],
+  "roles": []
+ },
+ "collier-fleurs": {
+  "os": "buste",
+  "objets": 132,
+  "triangles": 9856,
+  "materiaux": [
+   "GARDE_blanc",
+   "GARDE_jaune",
+   "GARDE_rose",
+   "GARDE_rouge"
+  ],
+  "roles": []
+ },
+ "sac-livreur": {
+  "os": "buste",
+  "objets": 4,
+  "triangles": 768,
+  "materiaux": [
+   "GARDE_reflechissant",
+   "GARDE_teinte",
+   "GARDE_teinte2"
+  ],
+  "roles": []
+ },
+ "jetpack": {
+  "os": "buste",
+  "objets": 15,
+  "triangles": 5412,
+  "materiaux": [
+   "GARDE_flamme",
+   "GARDE_metal",
+   "GARDE_noir",
+   "GARDE_rouge"
+  ],
+  "roles": [
+   "flamme"
+  ]
+ },
+ "sac-banane": {
+  "os": "buste",
+  "objets": 3,
+  "triangles": 3256,
+  "materiaux": [
+   "GARDE_metal",
+   "GARDE_noir",
+   "GARDE_teinte"
+  ],
+  "roles": []
+ }
+}

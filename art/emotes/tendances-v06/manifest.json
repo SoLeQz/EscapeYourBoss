@@ -1,0 +1,26 @@
+[
+  {
+    "source": "aura-farming-v06.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 8.6
+  },
+  {
+    "source": "griddy-v06.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 7.4
+  },
+  {
+    "source": "floss-v06.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 8.0
+  },
+  {
+    "source": "apple-v06.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 8.3
+  }
+]

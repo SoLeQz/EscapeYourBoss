@@ -12,7 +12,8 @@ const matieres=new Set(['peau','cheveux','blancOeil','iris','pupille','reflet','
 const cache=new Map();let chargement;
 export function anatomieBlenderDisponible(){return cache.size===5;}
 export function etatAnatomieBlender(){return Object.fromEntries([...cache].map(([nom,pieces])=>[nom,
-  {fichier:FICHIERS_ANATOMIE[nom],lots:pieces.length,triangles:pieces.reduce((s,p)=>s+p.geometry.attributes.position.count/3,0),
+  {fichier:FICHIERS_ANATOMIE[nom],lots:pieces.filter(p=>p.chignon!=='sans').length,
+    triangles:pieces.filter(p=>p.chignon!=='sans').reduce((s,p)=>s+p.geometry.attributes.position.count/3,0),
     controles:[...new Set(pieces.map(p=>p.controle))]}]));}
 function transformerMorphs(geo,matrix){
   const linear=new THREE.Matrix3().setFromMatrix4(matrix),normal=new THREE.Matrix3().getNormalMatrix(matrix),v=new THREE.Vector3();
@@ -57,13 +58,17 @@ export async function prechargerAnatomieBlender(lire=nom=>window.jeuAssets.lire(
             if(geo.attributes.color.itemSize!==3){const a=geo.attributes.color,c=[];for(let i=0;i<a.count;i++)c.push(a.getX(i),a.getY(i),a.getZ(i));geo.setAttribute('color',new THREE.Float32BufferAttribute(c,3));}
             for(const a of [...Object.values(geo.attributes),...Object.values(geo.morphAttributes).flat()])if(!a.array.every(Number.isFinite)){geo.dispose();throw Error('Sommet anatomique non fini');}
             const morphs=o.morphTargetDictionary?{...o.morphTargetDictionary}:{},key=JSON.stringify([controle,origine,option,material,morphs]);
-            if(!groupes.has(key))groupes.set(key,{controle,origine,option,material,morphs,geos:[]});
-            groupes.get(key).geos.push(geo);
+            if(!groupes.has(key))groupes.set(key,{controle,origine,option,material,morphs,geos:[],chignon:[]});
+            // Le chignon (tools/blender/creer_anatomie.py) se range sous un bonnet du vestiaire.
+            groupes.get(key)[o.name.startsWith('Chignon')?'chignon':'geos'].push(geo);
           });
-          for(const {geos,...p} of groupes.values()){
-            const geometry=mergeGeometries(geos,false);if(!geometry)throw Error('Fusion anatomique impossible : '+nom);
-            geometry.morphTargetsRelative=geos[0].morphTargetsRelative;
-            pieces.push({...p,geometry});
+          const fusionner=geos=>{const geometry=mergeGeometries(geos,false);if(!geometry)throw Error('Fusion anatomique impossible : '+nom);
+            geometry.morphTargetsRelative=geos[0].morphTargetsRelative;return geometry;};
+          for(const {geos,chignon,...p} of groupes.values()){
+            if(!chignon.length){pieces.push({...p,geometry:fusionner(geos)});continue;}
+            // Deux lots exclusifs, avec et sans chignon : jamais un appel de dessin de plus.
+            pieces.push({...p,chignon:'avec',geometry:fusionner([...geos,...chignon])},{...p,chignon:'sans',geometry:fusionner(geos)});
+            for(const geo of chignon)geo.dispose();
           }
           const attends=nom==='mains'?['mainL','mainR','doigtsL','doigtsR','pouceL','pouceR']:['head','regard','paupiere','bouche'];
           for(const c of attends)if(!pieces.some(p=>p.controle===c))throw Error('Contrôle manquant : '+nom+'/'+c);
@@ -84,6 +89,7 @@ export function poserAnatomieBlender(parts,options,materiaux){
   const pivots={head:visage};parts._mainsBlender=[];
   for(const p of [...cache.get(nom),...cache.get('mains')]){
     if(p.option==='lunettes'&&!options.lunettes)continue;
+    if(p.chignon&&(p.chignon==='sans')!==!!options.sansChignon)continue;
     if(!pivots[p.controle]){
       const pivot=new THREE.Group();pivot.name='Blender:'+p.controle;pivot.position.fromArray(p.origine);
       const parent=p.controle.endsWith('L')?parts.mainL:p.controle.endsWith('R')?parts.mainR:visage;

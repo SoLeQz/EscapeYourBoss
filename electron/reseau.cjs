@@ -138,7 +138,11 @@ function creerSession({ version, evenement, adresseEcoute = '0.0.0.0', portJeu =
       this.fermer();
       nomLocal = String(nom || 'Invité').slice(0, 24);
       return new Promise((resolve, reject) => {
-        const s = net.connect({ host: cible.hote, port: cible.port, timeout: 5000 });
+        // Node essaie IPv6 puis IPv4 et, par défaut, abandonne chaque tentative
+        // (même la dernière) au bout de 250 ms : un relais playit.gg lointain
+        // échouait en « ETIMEDOUT » alors que le tunnel marchait.
+        const s = net.connect({ host: cible.hote, port: cible.port, timeout: 5000,
+          autoSelectFamily: true, autoSelectFamilyAttemptTimeout: 2500 });
         s.once('connect', () => { s.setTimeout(0); brancher(s, 'invite'); resolve(true); });
         s.once('timeout', () => { s.destroy(); reject(new Error(`Aucune réponse de ${ip} (délai dépassé).`)); });
         s.once('error', e => reject(new Error(e.code === 'ECONNREFUSED'

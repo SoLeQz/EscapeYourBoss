@@ -1,4 +1,6 @@
 import { prechargerAnatomieBlender } from './anatomie-blender.js';
+import { prechargerGardeRobe } from './garde-robe-blender.js';
+import { nettoyerApparence, restreindre, nouveautes } from './garde-robe.js';
 import { prechargerTexturesBlender } from './textures-blender.js';
 import { prechargerDecorBlender } from './decor-blender.js';
 import * as THREE from 'three';
@@ -16,7 +18,7 @@ import { Menu, formaterTemps } from './menu.js';
 import { Entrees, touchesParDefaut, nomTouche } from './input.js';
 import { EMOTES, reactionEmote } from './emotes.js';
 import { mesurerVue, bilanVisibilite } from './perception.js';
-import { creerInteractions, actionAccessible, lancerDiversion } from './office.js';
+import { creerInteractions, actionAccessible, lancerDiversion, diversionMusique } from './office.js';
 import { DUREE_TRAVAIL, ALERTE_TRAVAIL, travailProtege, avancerTravail } from './travail.js';
 import * as Store from './store.js';
 import { Multijoueur, LOOK_COEQUIPIER } from './multijoueur.js';
@@ -80,7 +82,15 @@ class Game {
     this.clock = new THREE.Clock();
     this.ui.show('start');
     this.menu.ouvrir('menu-principal');
-    this.renderer.setAnimationLoop(() => this.frame());
+    // Une exception dans une image arrêtait pour de bon la boucle de three.js :
+    // jeu figé, et à deux, coéquipier figé avec lui. On la signale et on continue.
+    this.renderer.setAnimationLoop(() => {
+      try { this.frame(); }
+      catch (err) {
+        const msg = String(err?.stack || err).slice(0, 700);
+        if (msg !== this.derniereErreur) { this.derniereErreur = msg; console.error(err); window.__erreurs?.push(msg); }
+      }
+    });
   }
 
   // Charge la sauvegarde puis applique les préférences.
@@ -101,6 +111,9 @@ class Game {
     this.audio.setMuted(!o.son);
     this.appliquerConfort();
     this.menu.majNiveaux();
+    // Tenue du vestiaire, limitée aux pièces débloquées par cette sauvegarde.
+    this.player.changerApparence(restreindre(this.etat.apparence, this.etat));
+    this.overlays = null;
   }
 
   sauver() { Store.sauver(this.etat); }
@@ -130,6 +143,7 @@ class Game {
     this.appliquerConfort();
     this.menu.majOptions();
     this.menu.majNiveaux();
+    this.player.changerApparence(null); this.overlays = null;
     this.ui.toast('Sauvegarde effacée', 'Tout est revenu à zéro.');
   }
 
@@ -294,6 +308,15 @@ class Game {
     this.overlays = null;        // à recenser au prochain rendu
   }
 
+  // Le coéquipier a envoyé sa tenue (à la connexion ou en quittant son vestiaire).
+  majCoequipierApparence() {
+    if (!this.coequipier) return;
+    this.etiquetteCoequipier.removeFromParent();   // l'étiquette survit au changement de tenue
+    this.coequipier.changerApparence(this.multi.apparenceDistante || LOOK_COEQUIPIER);
+    this.coequipier.mesh.add(this.etiquetteCoequipier);
+    this.overlays = null;
+  }
+
   preparerCoequipier() {
     const actif = this.multi.actif;
     if (!actif) {
@@ -302,7 +325,7 @@ class Game {
       return;
     }
     if (!this.coequipier) {
-      this.coequipier = new Player(this.scene, this.level, LOOK_COEQUIPIER);
+      this.coequipier = new Player(this.scene, this.level, this.multi.apparenceDistante || LOOK_COEQUIPIER);
       this.etiquetteCoequipier = makeLabelSprite(this.multi.nomDistant || 'Coéquipier', 'coéquipier');
       this.etiquetteCoequipier.position.y = 2.25;
       this.coequipier.mesh.add(this.etiquetteCoequipier);
@@ -425,6 +448,7 @@ class Game {
     for (const o of this.level.ramassables) { o.pris = false; o.group.visible = true; }
     this.majLumieresObjets();
     this.preparation = true;
+    this.menuMulti = false; this.bruitEmote = {};
     this.apprentissage = this.niveauIndex === 0 && this.mode === 'campagne' ? 0 : null;
     if (this.mode === 'multi') {
       this.apprentissage = null;
@@ -508,6 +532,55 @@ class Game {
     if (!distant) this.multi.envoyer({ t: 'objet', id: i });
   }
 
+  // ---------------------------------------------------------- vestiaire
+  //
+  // Lao D pose dans le hall d'ascenseur, dos à la sortie, face à une caméra de
+  // studio. Chaque essai reconstruit le vrai personnage du jeu : ce qu'on voit
+  // ici est exactement ce que verront les collègues (et le coéquipier).
+  ouvrirVestiaire() {
+    const p = this.player;
+    this.vestiaire = { brouillon: nettoyerApparence(p.apparence), origine: { pos: p.pos.clone(), yaw: p.yaw, visible: p.mesh.visible },
+      yawBase: -Math.PI / 2, tour: 0, auto: true, zoom: 'corps', cam: null, vise: null };
+    p.pos.set(15.3, 0, 1.2); p.mesh.visible = true; p.exitPose = null; p.working = null; p.emote = null; p.crouch = 0; p.speed = 0; p.moving = false;
+    for (const e of EMOTES) if (e.son) this.audio.chargerSon(e.son.fichier);
+    this.ui.show('vestiaire');
+  }
+  essayerTenue(apparence) {
+    if (!this.vestiaire) return;
+    this.vestiaire.brouillon = nettoyerApparence(apparence);
+    this.player.changerApparence(this.vestiaire.brouillon);
+    this.overlays = null;
+  }
+  fermerVestiaire(garder) {
+    const v = this.vestiaire;
+    if (!v) return;
+    if (garder) {
+      this.etat.apparence = v.brouillon; this.sauver();
+      this.multi.envoyer({ t: 'apparence', a: v.brouillon });
+    } else this.player.changerApparence(restreindre(this.etat.apparence, this.etat));
+    this.player.pos.copy(v.origine.pos); this.player.yaw = v.origine.yaw; this.player.emote = null;
+    this.player.mesh.visible = v.origine.visible;
+    this.player.animate(0);
+    this.vestiaire = null; this.overlays = null;
+    this.ui.show('start'); this.menu.ouvrir('menu-principal');
+  }
+  animerVestiaire(dt) {
+    const v = this.vestiaire, p = this.player;
+    if (v.auto) v.tour += dt * .32;
+    p.yaw = v.yawBase + v.tour;
+    p.animate(dt);
+    // Caméra fixe face au mannequin, décalée pour le laisser dans la moitié gauche
+    // de l'écran : le panneau du vestiaire occupe la droite.
+    const tete = v.zoom === 'tete', dist = tete ? 1.25 : 3.2;
+    const devant = new THREE.Vector3(Math.sin(v.yawBase), 0, Math.cos(v.yawBase));
+    const droiteEcran = new THREE.Vector3(devant.z, 0, -devant.x);
+    const vise = p.pos.clone().add(droiteEcran.clone().multiplyScalar(dist * .24)).setY(tete ? 1.62 : 1.0);
+    const cam = vise.clone().add(devant.multiplyScalar(dist)).setY(tete ? 1.66 : 1.22);
+    const k = v.cam ? 1 - Math.exp(-6 * dt) : 1;
+    v.cam = (v.cam || cam.clone()).lerp(cam, k); v.vise = (v.vise || vise.clone()).lerp(vise, k);
+    this.camera.position.copy(v.cam); this.camera.lookAt(v.vise);
+  }
+
   // ---------------------------------------------------------- roue d'emotes
   //
   // Maintenir la touche ouvre la roue ; la souris pilote la sélection
@@ -516,16 +589,19 @@ class Game {
   // un jeu d'infiltration, mettre en pause tuerait la tension.
   construireRoue() {
     const disque = document.getElementById('roue-disque');
-    const R = 150;
-    document.getElementById('roue-note').textContent = `Souris ou 1–${EMOTES.length} · Relâche pour jouer · Centre ou Échap pour annuler`;
+    // Dix cases de 96 px tiennent sans se toucher sur un cercle de 205 px (disque de 540 px).
+    const R = 205, centre = 270;
+    const touche = i => i < 9 ? String(i + 1) : i === 9 ? '0' : '';
+    document.getElementById('roue-note').textContent =
+      `Souris ou ${EMOTES.length > 9 ? '1–9 et 0' : '1–' + EMOTES.length} · Relâche pour jouer · Centre ou Échap pour annuler`;
     this.roueCases = EMOTES.map((e, i) => {
       const a = -Math.PI / 2 + (i / EMOTES.length) * Math.PI * 2;
       const el = document.createElement('div');
       el.className = 'roue-case';
-      el.setAttribute('aria-label', `${i + 1}. ${e.nom}`);
-      el.style.left = `${215 + Math.cos(a) * R}px`;
-      el.style.top = `${215 + Math.sin(a) * R}px`;
-      el.innerHTML = `<small class="raccourci">${i + 1}</small><div class="ic">${e.icone}</div><div class="nm">${e.nom}</div>`;
+      el.setAttribute('aria-label', `${touche(i)}. ${e.nom}`);
+      el.style.left = `${centre + Math.cos(a) * R}px`;
+      el.style.top = `${centre + Math.sin(a) * R}px`;
+      el.innerHTML = `<small class="raccourci">${touche(i)}</small><div class="ic">${e.icone}</div><div class="nm">${e.nom}</div>`;
       disque.appendChild(el);
       return el;
     });
@@ -593,18 +669,20 @@ class Game {
         if (this.menu?.depuisPause) {
           this.menu.depuisPause = false;
           this.ui.show('pause');
-        } else if (this.state === 'play') this.pause();
+        } else if (this.vestiaire) this.fermerVestiaire(false);
+        else if (this.state === 'play') this.menuMulti ? this.resume() : this.pause();
         else if (this.state === 'pause') this.resume();
         else if (this.state === 'menu') this.menu.ouvrir('menu-principal');
         return;
       }
       if (this.state !== 'play') {
-        if (this.state === 'over' && I.correspond('recommencer', e.code)) this.rejouerNiveau();
+        if (this.state === 'over' && I.correspond('recommencer', e.code)) this.recommencer();
         return;
       }
+      if (this.menuMulti) return;  // menu ouvert à deux : la partie continue, sans nous
       if (e.repeat) return;
-      if (this.roueOuverte && /^(Digit|Numpad)[1-9]$/.test(e.code)) {
-        const index = Number(e.code.at(-1)) - 1;
+      if (this.roueOuverte && /^(Digit|Numpad)[0-9]$/.test(e.code)) {
+        const index = e.code.at(-1) === '0' ? 9 : Number(e.code.at(-1)) - 1;  // 0 : dixième case
         if (index < EMOTES.length) { this.roueSel = index; this.majRoue(); }
         e.preventDefault(); return;
       }
@@ -624,7 +702,7 @@ class Game {
         this.etat.options.son = !this.etat.options.son;
         this.audio.setMuted(!this.etat.options.son); this.sauver();
       }
-      if (I.correspond('recommencer', e.code) && this.state !== 'menu') this.rejouerNiveau();
+      if (I.correspond('recommencer', e.code) && this.state !== 'menu') this.recommencer();
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code))
         e.preventDefault();
     });
@@ -664,11 +742,7 @@ class Game {
       this.apprentissage = null; this.ui.setGuide('', '', ''); this.resume();
     };
     const multi = () => this.mode === 'multi';
-    document.getElementById('btn-retry').onclick = () => {
-      if (!multi()) return this.rejouerNiveau();
-      if (this.multi.hote) this.lancerMulti(this.niveauIndex);
-      else this.ui.toast('C’est l’hôte qui relance', 'Attends sa décision.');
-    };
+    document.getElementById('btn-retry').onclick = () => this.recommencer();
     document.getElementById('btn-again').onclick = () => { if (multi()) return this.retourMenuMulti(); this.state = 'menu'; this.menu.afficher(); };
     document.getElementById('btn-fail-menu').onclick = () => { if (multi()) return this.retourMenuMulti(); this.state = 'menu'; this.menu.afficher(); };
     document.getElementById('btn-pause-options').onclick = () => { this.menu.depuisPause = true; this.ui.show('start'); this.menu.ouvrir('menu-options'); };
@@ -686,18 +760,40 @@ class Game {
     };
   }
 
-  pause(distant = false) {
-    if (this.state !== 'play') return;
-    if (this.mode === 'multi' && !distant) this.multi.envoyer({ t: 'pause' });
+  // Bouton « Réessayer » et touche R. À deux, seul l'hôte relance, et toujours
+  // par le réseau : la touche R redémarrait l'étage chez un seul joueur. L'hôte
+  // repartait aussitôt (l'ancien « pret » de l'invité correspondait encore)
+  // pendant que l'invité restait sur l'écran d'échec : plus personne ne se voyait.
+  // En pleine partie à deux, R ne fait rien : ni retour au départ en gardant les
+  // objets, ni relance commune déclenchée par une touche voisine de E.
+  recommencer() {
+    if (this.mode !== 'multi') return this.rejouerNiveau();
+    if (this.state === 'play') return this.ui.toast('Pas de retour au départ à deux', 'On recommence seulement après la fin de l’étage.');
+    if (this.multi.hote) this.lancerMulti(this.niveauIndex);
+    else this.ui.toast('C’est l’hôte qui relance', 'Attends sa décision.');
+  }
+
+  // À deux, Échap (ou la perte du focus) ouvre le menu chez soi seulement : la
+  // partie continue pour le coéquipier, et on reste là où on est, visible.
+  pause() {
+    if (this.state !== 'play' || this.menuMulti) return;
     this.input.clear();
     this.fermerRoue(false);
-    this.state = 'pause';
+    const aDeux = this.mode === 'multi' && this.multi.actif;
+    document.getElementById('pause-titre').textContent = aDeux ? 'Menu' : 'Pause';
+    document.getElementById('pause-sous').textContent = aDeux
+      ? 'La partie continue pour ton coéquipier. Ton personnage reste où il est.'
+      : 'Souffle un peu. Le bureau peut attendre.';
+    if (aDeux) this.menuMulti = true;
+    else this.state = 'pause';
     document.getElementById('btn-guide').hidden = this.apprentissage == null;
     this.ui.show('pause');
     document.exitPointerLock?.();
   }
-  resume(distant = false) {
-    if (this.mode === 'multi' && !distant) this.multi.envoyer({ t: 'reprise' });
+  resume() {
+    // Rien à reprendre hors pause : écrans d'échec, de victoire, chargement.
+    if (!this.menuMulti && this.state !== 'pause') return;
+    this.menuMulti = false;
     this.state = 'play';
     this.ui.show(null);
     this.input.clear();
@@ -710,7 +806,7 @@ class Game {
   // modérément : l'emote doit rester un plaisir, pas une punition. Il
   // en faut trois dans le champ de vision pour déclencher l'observation.
   reagirEmote(def, acteur = this.player) {
-    if (acteur === this.player) this.ui.toast(def.nom, 'En plein open space.');
+    if (acteur === this.player) this.ui.toast(def.nom, def.son ? 'La musique attire les regards.' : 'En plein open space.');
     if (this.mode === 'multi' && this.multi.invite && acteur === this.player) {
       this.multi.envoyer({ t: 'emote', index: EMOTES.indexOf(def) }); return;
     }
@@ -733,6 +829,14 @@ class Game {
       }
     }
     this.temoinsEmote = temoins;
+    // Une musique s'entend aussi sans être vu : ceux qui l'entendent regardent vers
+    // la source. Une fois par danseur toutes les 25 s, sinon les collègues s'y font.
+    const cle = acteur === this.player ? 'joueur' : 'coequipier';
+    this.bruitEmote ??= {};
+    if (def.son && !(this.elapsed - (this.bruitEmote[cle] ?? -Infinity) < 25)) {
+      this.bruitEmote[cle] = this.elapsed;
+      diversionMusique(p, this.npcs, n => mesurerVue(n, acteur, this.level.obstacles).visible, this.hunting);
+    }
   }
 
   // ---------------------------------------------------------- interaction
@@ -757,6 +861,7 @@ class Game {
   }
   retourMenuMulti(distant = false) {
     if (!distant) this.multi.envoyer({ t: 'menu' });
+    this.menuMulti = false;
     this.jetonChargement = (this.jetonChargement || 0) + 1;  // annule un chargement en cours
     this.ui.loading(null);
     this.fermerRoue(false);
@@ -827,7 +932,9 @@ class Game {
     const brut = this.clock.getDelta();
     // Musique d’emote : seulement en jeu, jamais pendant une pause ou une sortie en fondu.
     const e = this.player?.emote;
-    this.audio.suivreMusique(this.state === 'play' && e && !e.coupee ? e : null);
+    this.audio.suivreMusique((this.state === 'play' || this.vestiaire) && e && !e.coupee ? e : null);
+    const ec = this.mode === 'multi' && this.coequipier?.mesh.visible ? this.coequipier.emote : null;
+    this.audio.suivreMusiqueDistante(this.state === 'play' && ec && !ec.coupee ? ec : null, this.coequipier?.pos);
     if (this.state === 'loading' || this.state === 'load-error') return;
     // On conserve le temps écoulé lors d'un ralentissement court et on
     // le découpe en pas sûrs. Les gels de plus de 250 ms restent bornés.
@@ -856,7 +963,8 @@ class Game {
       for (let i = 0; i < pas && this.state === 'play'; i++) this.step(dt / pas);
     }
     this.ui.update(dt);
-    this.updateCamera(dt, this.state === 'play');
+    if (this.vestiaire) this.animerVestiaire(dt);
+    else this.updateCamera(dt, this.state === 'play');
     this.ui.setObjectives(this.state === 'play' && !this.roueOuverte ? this.level.ramassables : [], this.player, this.camera);
     this.ui.setThreats(this.state === 'play' && !this.preparation ? this.npcs : [], this.player, this.camera, this.camYaw);
     // 20 Hz suffisent pour une carte de 214 px : la redessiner à chaque
@@ -1047,9 +1155,10 @@ class Game {
         multi.envoiT = 0; multi.envoyerJoueur(0);
         this.ui.say('Tu es sorti', `Attends ${multi.nomDistant || 'ton coéquipier'}… ou regarde-le faire.`, 4);
       }
-      // on doit rester près du point de sortie
-      const it = this.level.interactables.find(i => i.id === this.exitSeq.id);
-      if (Math.hypot(it.x - this.player.pos.x, it.z - this.player.pos.z) > it.r + 1.2) {
+      // on doit rester près du point de sortie (à deux, la séquence vient
+      // peut-être de se terminer : exitSeq est alors déjà remis à zéro)
+      const it = this.exitSeq && this.level.interactables.find(i => i.id === this.exitSeq.id);
+      if (it && Math.hypot(it.x - this.player.pos.x, it.z - this.player.pos.z) > it.r + 1.2) {
         this.exitSeq = null; this.player.exitPose = null;
         this.level.escalier.door.rotation.y = 0;
         this.ui.toast('Tu t’es éloigné', 'Recommence.');
@@ -1173,7 +1282,7 @@ class Game {
     if (this.state !== 'play') return;
     if (this.mode === 'multi' && this.multi.hote) this.multi.envoyer({ t: 'perdu', i: this.npcs.indexOf(npc) });
     this.fermerRoue(false);
-    this.state = 'over';
+    this.state = 'over'; this.menuMulti = false;
     this.failCount++;
     document.exitPointerLock?.();
     this.ui.flash();
@@ -1190,7 +1299,7 @@ class Game {
 
   terminerNiveau(route) {
     if (this.state !== 'play') return;
-    this.state = 'over';
+    this.state = 'over'; this.menuMulti = false;
     document.exitPointerLock?.();
     this.audio.success();
     if (this.mode === 'multi') {
@@ -1214,6 +1323,14 @@ class Game {
     const cle = 'n' + niv.id;
 
     // record personnel de l'étage
+    // Pièces du vestiaire débloquées par cet étage (ou ce speedrun) : annoncées au bilan.
+    const avant = { niveauxFinis: [...this.etat.niveauxFinis], records: { ...this.etat.records } };
+    const cadeaux = () => {
+      const liste = nouveautes(avant, this.etat);
+      if (!liste.length) return '';
+      this.ui.toast('Nouveau au vestiaire', liste.map(p => p.icone + ' ' + p.nom).join(' · '), 5);
+      return `<div class="cadeau"><span>🎁 Nouveau au vestiaire</span><b>${liste.map(p => p.icone + ' ' + p.nom).join(', ')}</b></div>`;
+    };
     const rec = this.etat.records[cle];
     const nouveauRecord = rec == null || t < rec;
     if (nouveauRecord) this.etat.records[cle] = +t.toFixed(1);
@@ -1249,7 +1366,7 @@ class Game {
         this.srSplits.map(sp => `<div><span>${sp.titre}</span><b>${formaterTemps(sp.t)}</b></div>`).join('') +
         `<div><span><b>Total</b></span><b>${formaterTemps(total)}</b></div>` +
         (recSr != null ? `<div><span>Ancien record</span><b>${formaterTemps(recSr)}</b></div>` : '') +
-        `</div>`;
+        cadeaux() + `</div>`;
       document.getElementById('btn-suivant').textContent = 'Retour au menu';
       this.ui.show('suite');
       return;
@@ -1272,6 +1389,7 @@ class Game {
         <div><span>Frôlements</span><b>${this.nearMisses}</b></div>
         <div><span>Note</span><b>${note}</b></div>
         <div><span>Record de l’étage</span><b>${formaterTemps(this.etat.records[cle])}${nouveauRecord ? ' ★' : ''}</b></div>
+        ${cadeaux()}
       </div>`;
     document.getElementById('btn-suivant').textContent =
       dernier ? 'Retour au menu' : 'Étage suivant';
@@ -1322,6 +1440,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     await prechargerTexturesBlender();
     etape.textContent = 'Chargement des personnages…';
     await prechargerAnatomieBlender();
+    etape.textContent = 'Chargement du vestiaire…';
+    await prechargerGardeRobe();
     window.__game = new Game();
     etape.textContent = 'Prêt';
     await window.__game.demarrer();

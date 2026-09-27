@@ -14,7 +14,7 @@ export class UI {
       prompt: $('prompt'), subtitle: $('subtitle'), state: $('state-chip'),
       vignette: $('vignette'), flash: $('flash'),
       start: $('screen-start'), fail: $('screen-fail'), win: $('screen-win'),
-      pause: $('screen-pause'), suite: $('screen-suite'),
+      pause: $('screen-pause'), suite: $('screen-suite'), vestiaire: $('screen-vestiaire'),
       failLine: $('fail-line'), winStats: $('win-stats'), failCount: $('fail-count'),
       toast: $('toast'),
     };
@@ -233,7 +233,7 @@ export class UI {
 
   show(which) {
     if (which) document.getElementById('objectifs').classList.remove('on');
-    for (const k of ['start', 'fail', 'win', 'pause', 'suite']) {
+    for (const k of ['start', 'fail', 'win', 'pause', 'suite', 'vestiaire']) {
       this.el[k].classList.toggle('on', k === which);
       this.el[k].inert = k !== which;
       this.el[k].setAttribute('aria-hidden', String(k !== which));

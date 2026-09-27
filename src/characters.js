@@ -1,6 +1,7 @@
 import { POIGNET_REPOS } from './emotes.js';
 import { partager } from './resources.js';
 import { anatomieBlenderDisponible, poserAnatomieBlender } from './anatomie-blender.js';
+import { poserGardeRobe } from './garde-robe-blender.js';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -132,7 +133,8 @@ export function makeCharacter(o = {}) {
   const M = initCharacterMaterials();
   const c = Object.assign({
     chemise: null, pantalon: null, cheveux: null, peau: null, veste: null,
-    lunettes: false, sac: false, badge: false, chignon: false, cravate: null, carrure: 1,
+    lunettes: false, sac: false, badge: false, chignon: false, sansChignon: false, cravate: null, carrure: 1,
+    sangles: false, garde: null,   // vestiaire : sangles seules (jetpack, sac de livreur) et pièces Blender
   }, o);
 
   const anatomie=c.anatomie!==false&&anatomieBlenderDisponible();
@@ -480,6 +482,9 @@ export function makeCharacter(o = {}) {
       add(sac, rb(0.018, 0.067, 0.018, 0.006, 1), M.sangle, 0.128 * s, -0.135, 0.045);
   }
 
+  // Le jetpack et le sac de livreur tiennent avec les mêmes sangles que le sac.
+  if (!c.sac && c.sangles) parts.sangles = add(buste, geometrieAccessoire('sangles', veste), M.sangle, 0, 0, 0);
+
   // ---------------- badge ----------------
   if (c.badge) {
     parts.cordon = add(buste, geometrieAccessoire('cordon', veste), M.cordon, 0, 0, 0);
@@ -513,6 +518,9 @@ export function makeCharacter(o = {}) {
   });
 
   fusionnerParPivot(g);
+
+  // Garde-robe Blender (vestiaire) : posée après la fusion, déjà regroupée par matériau.
+  parts._animGarde = poserGardeRobe(parts, c.garde);
 
   // La carrure différencie les silhouettes sans changer la hauteur des yeux.
   g.scale.x = THREE.MathUtils.clamp(c.carrure, .88, 1.18);

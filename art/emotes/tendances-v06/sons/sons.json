@@ -1,0 +1,34 @@
+[
+  {
+    "id": "aura-farming",
+    "bpm": 90,
+    "duree_son": 8.45,
+    "duree_emote": 8.6,
+    "mp3": "emote-aura-farming-son-v01.mp3",
+    "wav": "emote-aura-farming-son-v01.wav"
+  },
+  {
+    "id": "griddy",
+    "bpm": 140,
+    "duree_son": 7.25,
+    "duree_emote": 7.4,
+    "mp3": "emote-griddy-son-v01.mp3",
+    "wav": "emote-griddy-son-v01.wav"
+  },
+  {
+    "id": "floss",
+    "bpm": 128,
+    "duree_son": 7.85,
+    "duree_emote": 8.0,
+    "mp3": "emote-floss-son-v01.mp3",
+    "wav": "emote-floss-son-v01.wav"
+  },
+  {
+    "id": "apple",
+    "bpm": 124,
+    "duree_son": 8.15,
+    "duree_emote": 8.3,
+    "mp3": "emote-apple-son-v01.mp3",
+    "wav": "emote-apple-son-v01.wav"
+  }
+]

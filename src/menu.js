@@ -1,5 +1,7 @@
 import { ACTIONS, nomTouche, touchesParDefaut } from './input.js';
 import { NIVEAUX, PLANS } from './levels.js';
+import { VISAGES, PIECES, PALETTES, TENUES, APPARENCE_DEFAUT, estDebloquee, conditionDeblocage, compterPieces,
+  tenue, tenueDisponible, apparenceSurprise, titreBadge } from './garde-robe.js';
 
 const $ = id => document.getElementById(id);
 const fmt = (s) => {
@@ -12,6 +14,19 @@ const fmt = (s) => {
 // ============================================================
 //  Navigation des menus, sélection d'étage, remappage des touches.
 // ============================================================
+const hex = n => '#' + n.toString(16).padStart(6, '0');
+// Onglets du vestiaire : chaque section est une grille de pièces ou un nuancier.
+const ONGLETS = [
+  { id: 'visage', nom: 'Visage', icone: '🙂', sections: [['visages'], ['couleur', 'peau', 'Teint']] },
+  { id: 'cheveux', nom: 'Cheveux', icone: '💇', sections: [['couleur', 'cheveux', 'Couleur des cheveux'], ['pieces', 'moustache', 'Moustache']] },
+  { id: 'chapeau', nom: 'Chapeau', icone: '🧢', sections: [['pieces', 'tete', 'Sur la tête'], ['accent', 'tete', 'Couleur du chapeau']] },
+  { id: 'lunettes', nom: 'Lunettes', icone: '👓', sections: [['pieces', 'yeux', 'Lunettes']] },
+  { id: 'tenue', nom: 'Tenue', icone: '👔', sections: [['couleur', 'chemise', 'Chemise'], ['couleur', 'veste', 'Veste'], ['couleur', 'pantalon', 'Pantalon'], ['badge']] },
+  { id: 'cou', nom: 'Cou & torse', icone: '🎀', sections: [['pieces', 'cou', 'Autour du cou'], ['couleur', 'cravate', 'Couleur de la cravate ou du nœud'], ['pieces', 'torse', 'Par-dessus'], ['accent', 'torse', 'Couleur de la cape']] },
+  { id: 'dos', nom: 'Dos', icone: '🎒', sections: [['pieces', 'dos', 'Sur le dos'], ['accent', 'dos', 'Couleur du sac']] },
+  { id: 'tenues', nom: 'Tenues', icone: '✨', sections: [['tenues']] },
+];
+
 export class Menu {
   constructor(jeu) {
     this.jeu = jeu;
@@ -23,6 +38,7 @@ export class Menu {
     $('btn-speedrun').onclick = () => { this.mode = 'speedrun'; this.ouvrir('menu-niveaux'); };
     $('btn-commandes').onclick = () => this.ouvrir('menu-touches');
     this.installerMulti();
+    this.installerVestiaire();
     $('btn-options').onclick = () => this.ouvrir('menu-options');
     $('btn-quitter').onclick = () => window.close();
     for (const b of document.querySelectorAll('[data-retour]'))
@@ -279,6 +295,93 @@ export class Menu {
       this.jeu.reinitialiserSauvegarde();
     };
     ligne('Progression', 'Étages débloqués, records et touches personnalisées.', bRaz);
+  }
+
+  // ---------------------------------------------------------- vestiaire
+  installerVestiaire() {
+    this.onglet = 'chapeau';
+    $('btn-vestiaire').onclick = () => { this.jeu.ouvrirVestiaire(); this.majVestiaire(); };
+    $('vest-annuler').onclick = () => this.jeu.fermerVestiaire(false);
+    $('vest-garder').onclick = () => this.jeu.fermerVestiaire(true);
+    $('vest-surprise').onclick = () => { this.jeu.essayerTenue(apparenceSurprise(this.jeu.etat)); this.jeu.player.declencherEmote(); this.jeu.audio.start(); this.majVestiaire(); };
+    $('vest-danse').onclick = () => { this.jeu.audio.start(); this.jeu.player.emote = null; this.jeu.player.declencherEmote(); };
+    $('vest-zoom').onclick = () => { const v = this.jeu.vestiaire; v.zoom = v.zoom === 'tete' ? 'corps' : 'tete'; this.majVestiaire(); };
+    $('vest-defaut').onclick = () => { this.jeu.essayerTenue(APPARENCE_DEFAUT); this.majVestiaire(); };
+    // Glisser sur la scène fait tourner le mannequin ; double-clic : rotation automatique.
+    const zone = $('vestiaire-scene'); let glisse = null;
+    zone.onpointerdown = e => { glisse = e.clientX; if (this.jeu.vestiaire) this.jeu.vestiaire.auto = false; try { zone.setPointerCapture(e.pointerId); } catch { /* pointeur déjà relâché */ } };
+    zone.onpointermove = e => { if (glisse == null || !this.jeu.vestiaire) return; this.jeu.vestiaire.tour += (e.clientX - glisse) * .012; glisse = e.clientX; };
+    zone.onpointerup = () => { glisse = null; };
+    zone.ondblclick = () => { if (this.jeu.vestiaire) this.jeu.vestiaire.auto = true; };
+  }
+
+  majVestiaire() {
+    const jeu = this.jeu, v = jeu.vestiaire;
+    if (!v) return;
+    const a = v.brouillon, etat = jeu.etat;
+    const essayer = modif => { jeu.essayerTenue({ ...a, ...modif, couleurs: { ...a.couleurs, ...modif.couleurs } }); this.majVestiaire(); };
+    const { debloquees, total } = compterPieces(etat);
+    $('vest-titre-badge').textContent = titreBadge(a);
+    $('vest-photo').textContent = VISAGES.find(x => x.id === a.visage)?.icone || '🙂';
+    $('vest-compteur').textContent = `${debloquees}/${total} pièces`;
+    $('vest-compteur').title = 'Termine des étages pour débloquer le reste';
+    $('vest-zoom').textContent = v.zoom === 'tete' ? '🧍 Corps entier' : '🔍 Gros plan';
+    $('vest-onglets').innerHTML = '';
+    for (const o of ONGLETS) {
+      const b = document.createElement('button');
+      b.className = 'vest-onglet' + (o.id === this.onglet ? ' actif' : '');
+      b.innerHTML = `<i>${o.icone}</i>${o.nom}`;
+      b.onclick = () => { this.onglet = o.id; if (o.id === 'visage' || o.id === 'lunettes' || o.id === 'cheveux') v.zoom = 'tete'; else v.zoom = 'corps'; this.majVestiaire(); };
+      $('vest-onglets').appendChild(b);
+    }
+    // Chaque essai reconstruit le panneau : on garde la position de défilement de l'onglet.
+    const contenu = $('vest-contenu'), defilement = this.ongletAffiche === this.onglet ? contenu.scrollTop : 0;
+    contenu.innerHTML = '';
+    const titre = t => { const h = document.createElement('div'); h.className = 'vest-section'; h.textContent = t; contenu.appendChild(h); };
+    const grille = (elements, choisi, clic) => {
+      const g = document.createElement('div'); g.className = 'vest-grille';
+      for (const p of elements) {
+        const libre = estDebloquee(p, etat), b = document.createElement('button');
+        b.className = 'vest-carte' + (p.id === choisi ? ' choisi' : '') + (libre ? '' : ' verrou');
+        b.innerHTML = `<i>${libre ? p.icone : '🔒'}</i><span>${p.nom}</span>${libre ? '' : `<small>${conditionDeblocage(p)}</small>`}`;
+        b.disabled = !libre; b.onclick = () => clic(p);
+        g.appendChild(b);
+      }
+      contenu.appendChild(g);
+    };
+    const nuancier = (couleurs, choisie, clic) => {
+      const g = document.createElement('div'); g.className = 'vest-nuancier';
+      for (const c of couleurs) {
+        const b = document.createElement('button');
+        b.className = 'vest-teinte' + (c === choisie ? ' choisi' : '') + (c === null ? ' sans' : '');
+        if (c !== null) b.style.background = hex(c);
+        b.title = c === null ? 'Sans veste' : hex(c); b.onclick = () => clic(c);
+        g.appendChild(b);
+      }
+      contenu.appendChild(g);
+    };
+    for (const [type, cle, libelle] of ONGLETS.find(o => o.id === this.onglet).sections) {
+      if (type === 'visages') { titre('Visage'); grille(VISAGES, a.visage, p => essayer({ visage: p.id })); }
+      else if (type === 'couleur') {
+        if (cle === 'cravate' && !['cravate', 'noeud-papillon'].includes(a.cou)) continue;
+        titre(libelle); nuancier(PALETTES[cle], a[cle], c => essayer({ [cle]: c }));
+      }
+      else if (type === 'pieces') { titre(libelle); grille(PIECES[cle], a[cle], p => essayer({ [cle]: p.id })); }
+      else if (type === 'accent') {
+        const portee = PIECES[cle].find(p => p.id === a[cle]);
+        if (!portee?.teinte) continue;
+        titre(libelle); nuancier(PALETTES.accent, a.couleurs[cle], c => essayer({ couleurs: { [cle]: c } }));
+      } else if (type === 'badge') {
+        titre('Badge');
+        grille([{ id: 'oui', nom: 'Badge au cou', icone: '🪪' }, { id: 'non', nom: 'Incognito', icone: '🥷' }], a.badge ? 'oui' : 'non', p => essayer({ badge: p.id === 'oui' }));
+      } else if (type === 'tenues') {
+        titre('Tenues toutes faites');
+        grille(TENUES.map(t => ({ ...t, debloque: tenueDisponible(t.id, etat) ? undefined : { autre: true } })), null,
+          t => { jeu.essayerTenue(tenue(t.id)); jeu.player.declencherEmote(); jeu.audio.start(); this.majVestiaire(); });
+        for (const c of contenu.querySelectorAll('.vest-carte.verrou small')) c.textContent = 'Pièces encore verrouillées';
+      }
+    }
+    contenu.scrollTop = defilement; this.ongletAffiche = this.onglet;
   }
 }
 

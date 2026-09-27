@@ -7,7 +7,7 @@ import {EMOTES} from '../../src/emotes.js';
 const p=new Player(new THREE.Scene(),{playerStart:{x:0,z:0,yaw:0},obstacles:[]});
 const input=new Entrees(),v=new THREE.Vector3();
 const bones=['root','upper','head','armL','armR','elbowL','elbowR','legL','legR','kneeL','kneeR','footL','footR','mainL','mainR'];
-assert.deepEqual(EMOTES.map(e=>e.id),['tchao','arrogance','moulin','takeL','67','ela-ke-leitada']);
+assert.deepEqual(EMOTES.map(e=>e.id),['tchao','arrogance','moulin','takeL','67','ela-ke-leitada','aura-farming','griddy','floss','apple']);
 function pieds(){
   p.mesh.updateMatrixWorld(true);let sol=Infinity;
   for(const foot of [p.parts.footL,p.parts.footR])foot.traverse(o=>{
@@ -48,7 +48,7 @@ for(const [speed,running,crouch] of [[2.9,false,0],[5,true,0],[1.3,false,1]]){
   for(let f=0;f<180;f++){p.animate(1/60);const sol=pieds();assert(Math.abs(sol)<.004,`Allure ${speed} : semelle à ${sol}`);}
 }
 assert(pireAngle<.24,`Cassure entre images : ${pireAngle}`);
-p.reset();input.clear();p.working={};assert.equal(p.declencherEmote(7),null);assert(p.working);
+p.reset();input.clear();p.working={};assert.equal(p.declencherEmote(EMOTES.length),null);assert(p.working);  // index hors roue
 for(let i=0;i<120;i++)p.animate(1/60);
 const avant=p.parts.armL.rotation.x;p.working=null;p.animate(1/60);
 assert(Math.abs(p.parts.armL.rotation.x-avant)<.3,'Sortie de poste brutale');

@@ -6,7 +6,7 @@ import { NPC } from '../../src/npc.js';
 import { Entrees } from '../../src/input.js';
 import { mesurerVue, bilanVisibilite, directionMenace } from '../../src/perception.js';
 import { mixSpatial, GameAudio } from '../../src/audio.js';
-import { creerInteractions, lancerDiversion, actionAccessible } from '../../src/office.js';
+import { creerInteractions, lancerDiversion, actionAccessible, diversionMusique, DUREE_DIVERSION_MUSIQUE } from '../../src/office.js';
 import { DUREE_TRAVAIL, travailProtege, avancerTravail } from '../../src/travail.js';
 import { EMOTES } from '../../src/emotes.js';
 import { NIVEAUX, PLANS } from '../../src/levels.js';
@@ -87,7 +87,12 @@ const it={source:{x:-18,z:-14}};let calls=0;
 assert.equal(lancerDiversion(it,colleagues,{impression(){calls++;}}),1);
 assert.equal(lancerDiversion(it,colleagues,{impression(){calls++;}}),0);
 assert.equal(calls,1);assert.equal(colleagues[1].diversion,undefined);
-console.log('Bureau : 2 postes libres accessibles par étage ; diversion limitée et alerte préservée.');
+// Emote musicale : seul celui qui entend sans voir, calme, se retourne vers le son.
+const proche=fake(-12),mefiant=fake(-12,.7),loin=fake(10),temoin=fake(-10),boss={...fake(-11),isBoss:true};
+assert.equal(diversionMusique({x:-15,z:-14},[proche,mefiant,loin,temoin,boss],n=>n===temoin,true),1);
+assert.deepEqual([proche.diversion,mefiant.diversion,loin.diversion,temoin.diversion,boss.diversion],
+  [{x:-15,z:-14,t:DUREE_DIVERSION_MUSIQUE},undefined,undefined,undefined,undefined]);
+console.log('Bureau : 2 postes libres accessibles par étage ; diversions (photocopieuse, musique) limitées et alerte préservée.');
 
 // Seuils inchangés par un faux « couvert », vrais effets de la comédie.
 const actual = new NPC(scene,{name:'Test',role:'collègue',x:0,z:0,yaw:0,kind:'seated',scanAmp:0}, {obstacles:[]});

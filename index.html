@@ -223,11 +223,11 @@
     transition:opacity .15s ease, visibility 0s .15s;
     background:radial-gradient(ellipse at center,rgba(8,6,12,.35),rgba(8,6,12,.7))}
   #roue.on{opacity:1;visibility:visible;transition:opacity .15s ease}
-  #roue-disque{position:relative;width:430px;height:430px;
+  #roue-disque{position:relative;width:540px;height:540px;
     transform:scale(.84) rotate(-5deg);
     transition:transform .24s cubic-bezier(.2,1.2,.4,1)}
   #roue.on #roue-disque{transform:none}
-  .roue-case{position:absolute;width:104px;height:104px;margin:-52px 0 0 -52px;
+  .roue-case{position:absolute;width:96px;height:96px;margin:-48px 0 0 -48px;
     border-radius:20px;display:grid;place-items:center;align-content:center;
     background:rgba(20,18,26,.84);border:1px solid rgba(255,255,255,.14);
     transition:transform .13s cubic-bezier(.2,1.4,.4,1),background .13s,border-color .13s,
@@ -270,10 +270,10 @@
   .roue-active #subtitle,.roue-active #toast,.roue-active #guide{visibility:hidden}
   #roue-pointeur{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:50%;
     background:#f5c98f;margin:-3px;box-shadow:0 0 10px #fff9;pointer-events:none}
-  #roue-note{position:absolute;top:calc(50% + 234px);left:50%;transform:translateX(-50%);
+  #roue-note{position:absolute;top:calc(50% + 290px);left:50%;transform:translateX(-50%);
     text-align:center;font-size:12px;color:#d0d5ca;white-space:nowrap}
   @media(max-height:740px){#guide{top:242px;width:250px;padding:10px 14px}
-    #roue-disque{scale:.88}#roue-note{top:calc(50% + 210px)}}
+    #roue-disque{scale:.8}#roue-note{top:calc(50% + 236px)}}
 
   /* ---------------- écran d'attente ---------------- */
   #chargement{position:fixed;inset:0;z-index:50;display:grid;place-items:center;
@@ -367,6 +367,53 @@
   #multi-joueurs{font-size:14px;line-height:1.7;margin:6px 0}
   #multi-statut{min-height:1.4em;margin-top:8px}
   .menu-btn:disabled{opacity:.5;cursor:default}
+  /* ---------------- vestiaire ---------------- */
+  #screen-vestiaire{background:linear-gradient(90deg,transparent 45%,rgba(11,14,18,.55));display:block;padding:0;overflow:hidden}
+  #vestiaire-scene{position:absolute;left:0;top:0;bottom:0;right:min(460px,44vw);cursor:grab;touch-action:none}
+  #vestiaire-scene:active{cursor:grabbing}
+  #vestiaire-aide{position:absolute;left:24px;bottom:20px;font-size:11px;letter-spacing:.6px;color:#d6caba;opacity:.7;pointer-events:none}
+  #vestiaire-panneau{position:absolute;right:18px;top:18px;bottom:18px;width:min(440px,42vw);display:flex;flex-direction:column;
+    gap:10px;padding:16px;background:#171b21ed;border:1px solid rgba(255,255,255,.12);border-radius:14px;
+    box-shadow:0 10px 40px #0007}
+  .vest-badge{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+    background:linear-gradient(135deg,#f6f2e8,#e4dccb);color:#231a0b;border-top:5px solid var(--gold)}
+  #vest-photo{font-size:30px;width:46px;height:46px;display:grid;place-items:center;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1px #0002}
+  .vest-badge small{display:block;font-size:9px;letter-spacing:2px;opacity:.6}
+  .vest-badge b{display:block;font-size:14px;line-height:1.25}
+  .vest-badge>div{flex:1;min-width:0}
+  #vest-compteur{font-size:11px;font-weight:700;padding:4px 8px;border-radius:20px;background:#231a0b;color:var(--gold);white-space:nowrap}
+  #vest-onglets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .vest-onglet{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:8px;cursor:pointer;
+    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#fff;font:inherit;font-size:10.5px}
+  .vest-onglet i{font-style:normal;font-size:18px}
+  .vest-onglet:hover{border-color:rgba(245,184,105,.6)}
+  .vest-onglet.actif{background:rgba(245,184,105,.2);border-color:var(--gold);color:var(--amber)}
+  #vest-contenu{flex:1;overflow-y:auto;padding-right:4px;scrollbar-width:thin}
+  .vest-section{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:#d6caba;margin:12px 0 6px}
+  .vest-section:first-child{margin-top:2px}
+  .vest-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:7px}
+  .vest-carte{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 7px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:11px;line-height:1.2;
+    text-align:center;transition:transform .12s,border-color .12s,background .12s}
+  .vest-carte i{font-style:normal;font-size:26px}
+  .vest-carte:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(245,184,105,.65)}
+  .vest-carte.choisi{background:rgba(245,184,105,.2);border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+  .vest-carte.verrou{opacity:.5;cursor:not-allowed}
+  .vest-carte small{font-size:9.5px;color:var(--amber);opacity:.9}
+  .vest-nuancier{display:flex;flex-wrap:wrap;gap:7px}
+  .vest-teinte{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,.25);transition:transform .12s}
+  .vest-teinte:hover{transform:scale(1.12)}
+  .vest-teinte.choisi{border-color:var(--gold);box-shadow:0 0 0 2px #171b21,0 0 0 4px var(--gold)}
+  .vest-teinte.sans{background:repeating-linear-gradient(45deg,#2a2e35 0 5px,#3a3f47 5px 10px)}
+  .vest-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .vest-action{padding:8px 4px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:11.5px;font-weight:600}
+  .vest-action:hover{background:rgba(245,184,105,.18);border-color:rgba(245,184,105,.6)}
+  .vest-fin{display:flex;gap:8px}
+  .vest-fin .menu-btn{margin:0;width:auto;flex:1;justify-content:center;min-height:42px}
+  .vest-fin .menu-retour{flex:0 0 120px}
+  .cadeau{margin-top:12px;padding:9px 12px;border-radius:8px;background:rgba(245,184,105,.14);border:1px solid rgba(245,184,105,.5);font-size:12.5px}
+  .cadeau span{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -445,7 +492,7 @@
   <div id="chrono-sr">0:00.0</div>
 
   <div id="roue">
-    <div id="roue-note">Souris ou 1–6 · Relâche pour jouer · Centre ou Échap pour annuler</div>
+    <div id="roue-note">Souris ou 1–9 et 0 · Relâche pour jouer · Centre ou Échap pour annuler</div>
     <div id="roue-disque">
       <div id="roue-pointeur"></div>
       <div id="roue-centre">
@@ -483,6 +530,8 @@
           Speedrun <em>les 6 étages d'affilée, au chrono</em></button>
         <button class="menu-btn" id="btn-multi">
           Multijoueur <em>à deux, sur le même réseau</em></button>
+        <button class="menu-btn" id="btn-vestiaire">
+          Vestiaire <em>chapeaux, lunettes, capes et jetpack</em></button>
         <button class="menu-btn" id="btn-commandes">
           Commandes <em>personnaliser les touches</em></button>
         <button class="menu-btn" id="btn-options">
@@ -585,11 +634,36 @@
   </div>
 </div>
 
+<!-- ------------------- vestiaire ------------------- -->
+<div class="screen" id="screen-vestiaire">
+  <div id="vestiaire-scene" title="Glisse pour tourner · double-clic : rotation automatique"></div>
+  <div id="vestiaire-aide">Glisse pour faire tourner · double-clic pour la rotation auto</div>
+  <aside id="vestiaire-panneau">
+    <div class="vest-badge">
+      <div id="vest-photo">🙂</div>
+      <div><small>EMPLOYÉ · LAO D</small><b id="vest-titre-badge"></b></div>
+      <span id="vest-compteur"></span>
+    </div>
+    <nav id="vest-onglets"></nav>
+    <div id="vest-contenu"></div>
+    <div class="vest-actions">
+      <button class="vest-action" id="vest-surprise">🎲 Surprise</button>
+      <button class="vest-action" id="vest-danse">💃 Danser</button>
+      <button class="vest-action" id="vest-zoom"></button>
+      <button class="vest-action" id="vest-defaut">↺ Par défaut</button>
+    </div>
+    <div class="vest-fin">
+      <button class="menu-btn menu-retour" id="vest-annuler">Annuler</button>
+      <button class="menu-btn primaire" id="vest-garder">Enregistrer la tenue</button>
+    </div>
+  </aside>
+</div>
+
 <!-- ------------------- pause ------------------- -->
 <div class="screen" id="screen-pause">
   <div class="card">
-    <h1>Pause</h1>
-    <h2>Souffle un peu. Le bureau peut attendre.</h2>
+    <h1 id="pause-titre">Pause</h1>
+    <h2 id="pause-sous">Souffle un peu. Le bureau peut attendre.</h2>
     <button class="btn" id="btn-resume">Reprendre</button>
     <button class="btn ghost" id="btn-guide" hidden>Passer la prise en main</button>
     <button class="btn ghost" id="btn-pause-options">Options</button>

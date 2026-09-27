@@ -1,4 +1,5 @@
 import { creerNavigation, chemin } from './navigation.js';
+import { remarqueTenue } from './garde-robe.js';
 import { POIGNET_REPOS, POIGNET_CLAVIER } from './emotes.js';
 import { libererArbre } from './resources.js';
 import * as THREE from 'three';
@@ -183,6 +184,7 @@ export class NPC {
     }
     if (!joueurs.includes(game.player)) { this.sawThisFrame = false; this.heardThisFrame = false; }
     const protege = cible.protege;
+    this.dernierJoueur = cible.player;
     let perceived = cible.perceived;
     if (perceived > 0) this.lastSeen.set(cible.player.pos.x, 0, cible.player.pos.z);
 
@@ -261,6 +263,9 @@ export class NPC {
   onChangementEtat(avant, game) {
     if (this.state === 'doute') {
       this.sursaut = 1;                    // petit relèvement de tête
+      // La tenue du vestiaire se remarque (texte seulement, aucun effet sur la détection).
+      const remarque = remarqueTenue(this.dernierJoueur?.apparence);
+      if (remarque && Math.random() < 0.45) this.say(remarque, 2.2);
     } else if (this.state === 'observation') {
       this.sursaut = 1.4;
       game.secousse = Math.max(game.secousse || 0, 0.35);

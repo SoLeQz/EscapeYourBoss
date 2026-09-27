@@ -2,13 +2,15 @@ const {atelier}=require('./anatomie-test.cjs');
 module.exports=async({js,shot,step,wait})=>{
  await step('roue-six',`(async()=>{
   const g=__game;await g.demarrerNiveau(0);g.step=()=>{};g.preparation=false;
-  const ok=(v,m)=>{if(!v)throw Error(m)};ok(g.roueCases.length===6,'Six emotes attendues');
+  const ok=(v,m)=>{if(!v)throw Error(m)};ok(g.roueCases.length===10,'Dix emotes attendues');
   g.ouvrirRoue();g.fermerRoue(true);ok(!g.player.emote,'Le centre déclenche une emote');
   const indices=[],clavier=[];
-  for(let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3;g.ouvrirRoue();g.bougerRoue(Math.cos(a)*180,Math.sin(a)*180);indices.push(g.roueSel);g.fermerRoue(false);g.player.emote=null;g.ouvrirRoue();dispatchEvent(new KeyboardEvent('keydown',{code:'Digit'+(i+1)}));g.fermerRoue(true);ok(g.player.emote,'Touche inactive');clavier.push(g.player.emote.def.id)}
-  ok(indices.join()==='0,1,2,3,4,5','Secteurs décalés');ok(clavier[4]==='67'&&clavier[5]==='ela-ke-leitada','Nouveaux gestes non accessibles');
+  for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5;g.ouvrirRoue();g.bougerRoue(Math.cos(a)*180,Math.sin(a)*180);indices.push(g.roueSel);g.fermerRoue(false);g.player.emote=null;g.ouvrirRoue();dispatchEvent(new KeyboardEvent('keydown',{code:'Digit'+((i+1)%10)}));g.fermerRoue(true);ok(g.player.emote,'Touche inactive');clavier.push(g.player.emote.def.id);g.player.emote=null}
+  ok(indices.join()==='0,1,2,3,4,5,6,7,8,9','Secteurs décalés');ok(clavier.slice(4).join()==='67,ela-ke-leitada,aura-farming,griddy,floss,apple','Nouveaux gestes non accessibles');
   g.player.emote=null;g.ouvrirRoue();dispatchEvent(new KeyboardEvent('keydown',{code:'Numpad6'}));ok(g.roueSel===5,'Pavé numérique inactif');g.fermerRoue(false);
-  g.ouvrirRoue();dispatchEvent(new KeyboardEvent('keydown',{code:'Digit7'}));ok(g.roueSel===-1,'Septième choix fantôme');g.bougerRoue(-156,-90);
+  g.ouvrirRoue();dispatchEvent(new KeyboardEvent('keydown',{code:'Numpad0'}));ok(g.roueSel===9,'Pavé 0 inactif');g.fermerRoue(false);
+  const cases=g.roueCases.map(c=>c.getBoundingClientRect());ok(cases.every((a,i)=>cases.every((b,j)=>i===j||a.right<=b.left+1||b.right<=a.left+1||a.bottom<=b.top+1||b.bottom<=a.top+1)),'Cases de la roue superposées');
+  g.ouvrirRoue();g.bougerRoue(-156,-90);
   return {indices,clavier,note:document.getElementById('roue-note').textContent};
  })()`);
  await step('musique-leitada',`(async()=>{
@@ -19,6 +21,15 @@ module.exports=async({js,shot,step,wait})=>{
   g.player.emote.coupee=true;await new Promise(r=>setTimeout(r,300));ok(!g.audio.musique,'Musique non coupée avec la danse');
   g.player.declencherEmote(4);await new Promise(r=>setTimeout(r,200));ok(!g.audio.musique,'Le 67 doit rester muet');g.player.emote=null;
   return {dureeSon:buffer.duration,canaux:buffer.numberOfChannels,frequence:buffer.sampleRate,ecart,etatAudio:g.audio.ctx.state};
+ })()`);
+ await step('musiques-v06',`(async()=>{
+  const g=__game,ok=(v,m)=>{if(!v)throw Error(m)};const {EMOTES}=await import('./src/emotes.js');const r={};g.state='play';
+  for(const id of ['aura-farming','griddy','floss','apple']){
+   const e=EMOTES.find(x=>x.id===id),b=await g.audio.chargerSon(e.son.fichier);ok(b&&b.duration>5&&b.duration<=e.duree,'MP3 non décodé : '+id);
+   g.player.emote=null;g.player.declencherEmote(EMOTES.indexOf(e));await new Promise(r=>setTimeout(r,400));ok(g.audio.musique?.def.id===id,'Musique absente : '+id);
+   g.player.emote.coupee=true;await new Promise(r=>setTimeout(r,300));ok(!g.audio.musique,'Musique non coupée : '+id);r[id]=+b.duration.toFixed(2);
+  }
+  g.player.emote=null;return r;
  })()`);
  await wait(650);await shot('roue-six.jpg');
  await step('lisibilite-roue',`(()=>{const boxes=__game.roueCases.map(e=>e.getBoundingClientRect());for(let i=0;i<6;i++)for(let j=i+1;j<6;j++){const a=boxes[i],b=boxes[j];if(Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top))throw Error('Cases superposées');}__game.fermerRoue(true);return {cases:boxes.map(b=>({x:b.x,y:b.y,w:b.width,h:b.height}))}})()`);

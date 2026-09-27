@@ -112,18 +112,56 @@ module.exports = async ({ js, shot, step, wait }) => {
     return { hote: 'fail', invite: 'fail' };
   });
   await shot2('multi-defaite-invite.jpg');
+  // Retours de la première partie en ligne : R relançait l'étage chez un seul joueur,
+  // Échap mettait les deux en pause, et sortir de l'étage faisait planter le jeu.
+  const touche = code => `dispatchEvent(new KeyboardEvent('keydown',{code:'${code}',bubbles:true,cancelable:true}))`;
+  await etape('touche-r', async () => {
+    await js2(touche('KeyR')); await wait(600);
+    if (await js2('__game.state') !== 'over' || await js('__game.state') !== 'over') throw Error('R chez l’invité a relancé l’étage');
+    await js(touche('KeyR'));
+    await attendre(js, "__game.state==='play'&&!__game.preparation", 30000);
+    await attendre(js2, "__game.state==='play'&&!__game.preparation", 30000);
+    await attendre(js, '__game.coequipier.mesh.visible', 5000);
+    await attendre(js2, '__game.coequipier.mesh.visible', 5000);
+    // en pleine partie, R ne ramène personne au départ et ne relance rien
+    await js2(touche('KeyR')); await js(touche('KeyR')); await wait(600);
+    if (await js('__game.preparation') || await js2('__game.preparation') || await js2('__game.state') !== 'play')
+      throw Error('R a relancé l’étage en pleine partie');
+    return { invite: 'R ignoré', hote: 'R relance après défaite, ignoré en jeu', coequipiers: 'visibles' };
+  });
+  await etape('menu-echap-local', async () => {
+    const t0 = await js('__game.elapsed');
+    await js2(touche('Escape')); await wait(1000);
+    const invite = await js2(`({menu:!!__game.menuMulti,etat:__game.state,ecran:document.getElementById('screen-pause').classList.contains('on')})`);
+    const hote = await js(`({etat:__game.state,t:__game.elapsed,ecran:document.getElementById('screen-pause').classList.contains('on')})`);
+    if (!invite.menu || invite.etat !== 'play' || !invite.ecran) throw Error('Menu local absent chez l’invité : ' + JSON.stringify(invite));
+    if (hote.etat !== 'play' || hote.ecran || !(hote.t > t0 + .5)) throw Error('Échap de l’invité a arrêté l’hôte : ' + JSON.stringify(hote));
+    await js2(touche('Escape')); await wait(200);
+    if (await js2('__game.menuMulti')) throw Error('Échap ne referme pas le menu');
+    return { invite, hote };
+  });
   await etape('relance-et-victoire', async () => {
+    await js(`__game.lose(__game.npcs[0])`);
+    await attendre(js2, "__game.state==='over'", 5000);
     await js(`document.getElementById('btn-retry').click()`);
     await attendre(js, "__game.state==='play'&&!__game.preparation", 30000);
     await attendre(js2, "__game.state==='play'&&!__game.preparation", 30000);
     await wait(500);
-    // les deux sortent (la séquence d'ascenseur est testée en solo) : victoire commune
-    await js2(`(()=>{const m=__game.multi;m.sortiLocal=true;m.envoiT=0;m.envoyerJoueur(0)})()`);
-    await wait(400);
-    await js(`(()=>{const g=__game,m=g.multi;m.sortiLocal=true;m.routeSortie='stairs';g.verifierSortieMulti()})()`);
-    await attendre(js, "document.getElementById('screen-suite').classList.contains('on')", 5000);
-    await attendre(js2, "document.getElementById('screen-suite').classList.contains('on')", 5000);
-    return { hote: await js("document.getElementById('suite-titre').textContent"), invite: await js2("document.getElementById('btn-suivant').textContent") };
+    await js(`__game.npcs.forEach(n=>{n.gainRate=0;n.suspicion=0})`);  // l'hôte simule les collègues
+    // Vraies séquences de sortie : à deux, la fin de séquence relisait exitSeq après sa remise à zéro.
+    const sortir = id => `(()=>{const g=__game;g.level.ramassables.forEach((o,i)=>g.ramasserObjet(i));
+      const it=g.level.interactables.find(e=>e.id==='${id}')||g.level.interactables[0];
+      g.player.pos.set(it.x,0,it.z);g.tryInteract();return g.exitSeq?.id||null})()`;
+    const routeInvite = await js2(sortir('elevator'));
+    if (!routeInvite) throw Error('Sortie refusée chez l’invité');
+    await attendre(js2, '__game.multi.sortiLocal', 8000);
+    const routeHote = await js(sortir('stairs'));
+    if (!routeHote) throw Error('Sortie refusée chez l’hôte');
+    await attendre(js, "document.getElementById('screen-suite').classList.contains('on')", 8000);
+    await attendre(js2, "document.getElementById('screen-suite').classList.contains('on')", 8000);
+    const erreurs = [...await js('window.__erreurs'), ...await js2('window.__erreurs')];
+    if (erreurs.length) throw Error('Erreur pendant la sortie : ' + erreurs[0]);
+    return { routes: [routeInvite, routeHote], hote: await js("document.getElementById('suite-titre').textContent"), invite: await js2("document.getElementById('btn-suivant').textContent") };
   });
   await shot('multi-victoire-hote.jpg'); await shot2('multi-victoire-invite.jpg');
   await etape('deconnexion', async () => {

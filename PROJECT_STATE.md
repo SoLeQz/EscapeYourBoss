@@ -2044,6 +2044,183 @@ Version 1.7.0 : le contrôle de version est le seul garde-fou contre un ami rest
 sur un ancien zip. Or les stores et le passe (section 30) changent les objets
 partagés : un invité en 1.6.0 face à un hôte à jour se désynchroniserait.
 
+Piège trouvé en sondant un vrai tunnel : Node (et donc Electron) essaie IPv6
+puis IPv4 et abandonne chaque tentative, même la dernière, au bout de 250 ms
+(`autoSelectFamilyAttemptTimeout`). Un relais lointain échouait en « ETIMEDOUT »
+en 266 ms. `rejoindre` laisse désormais 2,5 s par tentative, repli IPv6 → IPv4
+conservé.
+
 Tests : `npm run test:multijoueur` couvre les formats d'adresse et une vraie
 connexion par `127.0.0.1:<port>` depuis une session réglée sur le port par défaut.
 Guide joueur : `docs/MULTIJOUEUR.md`, section « Jouer en ligne ».
+
+## 32. Relance à deux désynchronisée par la touche R — 26 septembre 2026, 1.7.1
+
+Retour de la première partie en ligne : après une défaite, les deux joueurs ne se
+voyaient plus. L'écran d'échec affiche « Réessayer R » ; la touche appelait
+`rejouerNiveau()` directement, sans passer par le réseau. Chez l'hôte, l'étage
+repartait aussitôt (le `pretIndex` de la partie précédente correspondait encore)
+pendant que l'invité restait sur l'écran d'échec. `recommencer()` sert désormais
+au bouton et à la touche, en jeu comme sur les écrans de fin : en solo, relance
+locale ; à deux, l'hôte relance pour les deux, l'invité est invité à attendre.
+
+Même famille : `resume()` n'exigeait pas d'être en pause. Une « reprise » du
+coéquipier reçue sur un écran d'échec, de victoire ou pendant un chargement
+remettait l'état à `play`. Elle est ignorée hors pause.
+
+`--selftest --multi` gagne l'étape `touche-r-et-reprise` : « reprise » reçue sur
+l'écran d'échec, R chez l'invité (rien ne se passe), R chez l'hôte (relance
+commune, chacun voit l'autre). Version 1.7.1 pour que le contrôle de version
+écarte un coéquipier resté sur 1.7.0.
+
+## 33. Retours de la première vraie partie en ligne — 26 septembre 2026, 1.8.0
+
+**Sortie qui fige le jeu.** À deux, la fin de la séquence d'ascenseur ou
+d'escalier remettait `exitSeq` à `null`, puis la vérification « reste près de la
+sortie » lisait `this.exitSeq.id` : exception. Or une exception dans la boucle de
+three.js l'arrête pour de bon. Le joueur sorti restait figé ; si c'était l'hôte,
+plus aucun état du monde n'arrivait et l'invité se figeait aussi. La victoire
+n'arrivant jamais, impossible d'enchaîner l'étage suivant (le bouton de l'hôte
+existait bien). L'autotest simulait la sortie (`sortiLocal = true`) au lieu de la
+jouer. Corrigé, et la boucle d'animation capture désormais une exception : elle
+est signalée (console, `window.__erreurs`) sans arrêter le jeu.
+
+**Échap.** Il mettait la partie en pause pour les deux. À deux, il ouvre
+maintenant un menu local (`menuMulti`) : l'état reste `play`, l'hôte continue de
+simuler, le personnage reste immobile et visible. Les messages `pause`/`reprise`
+disparaissent.
+
+**R en pleine partie.** À deux, R ne fait plus rien pendant l'étage (ni retour au
+départ en gardant les objets, ni relance commune par une touche voisine de E) ;
+après une défaite ou une victoire, l'hôte relance pour les deux.
+
+**Musique des emotes.** `GameAudio.suivreMusiqueDistante` joue la musique de
+l'emote du coéquipier sur une seconde piste, spatialisée (moitié du volume à 9 m).
+`diversionMusique` (`office.js`) : les collègues à 10 m qui entendent sans voir le
+danseur se retournent vers le son 4,5 s, une fois toutes les 25 s par joueur ; un
+collègue méfiant ou le directeur en traque restent insensibles. Côté invité, l'hôte
+l'applique à la réception du message `emote`.
+
+**Tests.** Node : diversion musicale (proche, méfiant, lointain, témoin, directeur en
+traque) et piste du coéquipier (départ, volume à 9 m, coupure). `--selftest --multi` :
+étapes `touche-r`, `menu-echap-local` (l'hôte continue pendant le menu de l'invité)
+et `relance-et-victoire` avec de vraies séquences d'ascenseur et d'escalier, sans
+erreur de page. Version 1.8.0 : nouveau comportement réseau et nouvelle règle de jeu.
+
+## 34. Quatre emotes tendance avec musique — 26 septembre 2026, 1.8.0
+
+Demande : au moins quatre nouvelles emotes « trendy », avec des sons, modélisées
+dans Blender et applicables au personnage. Ajoutées en cases **7, 8, 9 et 0** de la
+roue : **Aura Farming** 🛶 (danseur de proue du Pacu Jalur, 2025), **Griddy** 🥽,
+**Floss** 🦷 et **Apple** 🍏 (Kelley Heyer / Charli XCX). Choix, sources et adaptations :
+`art/emotes/tendances-v06/REFERENCES.md`.
+
+**Sons.** Les musiques des trends sont protégées : aucune n'est téléchargée. Chaque
+emote a une **composition originale** au tempo et dans le style de la danse (lo-fi
+90 BPM, trap 140, électro 128, électroclash 124), synthétisée dans Blender par
+`tools/blender/composer_sons_emotes.py` (numpy + `aud`, MP3 192 kb/s). Script
+déterministe. Contrôle sans écoute : crête −1 dBFS, aucun temps silencieux, attaques
+sur les temps, spectrogrammes ; un vrai trou en fin de mesure (lo-fi) repéré ainsi
+et corrigé. Le remplissage MP3 dépassait la durée de la danse : marge de 0,15 s.
+
+**Animation.** `tools/blender/tendances_v06.py` : grille rythmique commune musique /
+chorégraphie, poses en angles du jeu, contacts par la cinématique inverse de la
+Leitada (`Rig.ik`). `creer_emotes_tendances.py --version v06` construit les scènes,
+embarque la musique et exporte. Relu sur des planches Workbench face/profil
+(`tools/blender/apercu_emotes.py`) ; corrigés en route : volant croisé (signe de
+l'axe x), pomme hors de portée, Floss trop timide puis figé 4 s, pagaie derrière le
+dos, jumelles au niveau du front. Repère utile : le personnage regarde +z et son
+bras « L » est en x < 0.
+
+**Runtime.** `emotes-blender.js` importe les quatre clips ; `emotes.js` les définit
+avec réactions des collègues. Roue à dix cases (disque 540 px, cases 96 px, rayon
+205 px), touche **0** et pavé 0 pour la dixième. Les musiques passent par la même
+mécanique qu'Ela Ké Leitada : piste locale, piste du coéquipier spatialisée et
+diversion des collègues qui entendent sans voir (section 33).
+
+**Tests.** `test:tendances` : runtime identique aux exports, MP3 identiques aux sources,
+chaque musique couverte par sa danse, contacts mesurés dans le jeu pour les quatre
+danses. `test:animations` : 10 scènes, 180 interruptions à 30/60/144 Hz, appuis ±0 mm,
+11,5° max par image. `test:gameplay` : 10 emotes aux poses distinctes. Autotests
+Windows à relancer : `--selftest --personnage --tendances` (dix secteurs sans
+chevauchement, touches 1–9 et 0, quatre MP3 décodés et coupés à l'interruption).
+
+**Take the L à l'envers (retour joueur, même version).** La paume était tournée vers
+le front : vu de face, le pouce partait vers la gauche de l'écran et la lettre se
+lisait « ⅃ ». Mesuré sur le vrai modèle (bout de l'index et du pouce des mains GLB,
+morphs et squelette appliqués), puis corrigé par recherche sur le poignet et le
+pouce : `mainL_y` −1,78 rad (paume vers l'extérieur ; même orientation que 4,5 rad
+avec une rotation plus courte), pouce (2,4 ; 0 ; 1,2). Index vers le haut (0,94),
+pouce horizontal vers la droite de l'écran (1,00). Vérifié aussi par un rendu de face
+rastérisé en Node. `test:tendances` contrôle la lettre à neuf instants, coups de
+jambe compris. Vu de dos, toute lettre paraît inversée : elle est faite pour être lue
+par ceux qu'on nargue.
+
+## 35. Vestiaire : personnaliser Lao D — 27 septembre 2026, 1.8.0
+
+Demande : un outil de customisation dans le menu principal (tenues, têtes…), créatif,
+fun, qui donne envie d'essayer, avec toutes les modélisations dans Blender.
+
+**Ce que voit le joueur.** Menu principal → **Vestiaire**. Lao D pose dans le hall
+d'ascenseur, face à une caméra de studio, et tourne sur lui-même (glisser pour le
+tourner, double-clic pour relancer la rotation). Panneau à droite : badge d'employé
+dont l'intitulé change avec la tenue (« Consultant très cher », « Stagiaire en
+vibes »…), compteur de pièces débloquées, huit onglets (Visage, Cheveux, Chapeau,
+Lunettes, Tenue, Cou & torse, Dos, Tenues), nuanciers, boutons **Surprise** (tirage
+parmi les pièces débloquées + une danse), **Danser**, **Gros plan / Corps entier**,
+**Par défaut**, puis Annuler / Enregistrer (Échap = annuler). La musique des emotes
+joue aussi dans le vestiaire.
+
+- 4 visages (les têtes Blender v02), teint, cheveux, chemise, veste (ou sans veste),
+  pantalon, cravate, badge ou incognito.
+- 23 pièces Blender : 10 couvre-chefs, 4 lunettes, 2 moustaches, nœud papillon,
+  collier de fleurs, gilet fluo, cape, sac banane, sac de livreur, jetpack. Les pièces
+  « teinte » prennent la couleur choisie pour leur emplacement.
+- **Six pièces à gagner** : gilet fluo (étage 2), casquette à hélice (3), lunettes
+  pixel (4), jetpack (5), couronne (6), cape (un speedrun complet). Annoncées au
+  bilan de fin d'étage (« 🎁 Nouveau au vestiaire ») et par un toast.
+- 9 tenues toutes faites (Vendredi décontracté, Agent secret, Directeur en herbe,
+  Pot de départ, Employé du mois…), grisées tant qu'une pièce manque.
+- Les collègues qui **doutent** commentent parfois la tenue (« Ah, c'est la
+  maintenance. », « Il n'y a pas de piste d'envol ici. »). Purement cosmétique :
+  aucune règle de détection ne change.
+- Multijoueur : la tenue part au coéquipier à la connexion et à chaque
+  enregistrement (`{t:'apparence'}`), nettoyée à la réception.
+
+**Blender.** `tools/blender/creer_garde_robe.py` modélise tout sur la maquette exacte
+du joueur (atelier des emotes), dans le repère de l'os porteur (`tete` ou `buste`),
+propriétés `garde_id / garde_os / garde_role / garde_pivot` exportées en extras glTF.
+Placement mesuré, pas deviné : surface du visage par lancer de rayons sur la tête
+« employé » (front, pommettes, tempes), silhouette veste + chemise par rayons autour
+du buste (manches retirées, voisinage 3×3 moyenné). Corrigé pendant la relecture des
+planches : lunettes invisibles (le rayon au centre de l'œil passait par l'orbite et
+touchait l'intérieur du crâne → mesure sur le sourcil et la pommette), vêtements
+hérissés puis flottants (tranche de sommets → rayons), fleurs dans le col en V
+(chemise ajoutée à la référence), visière blanche, bandeau doublé, oreilles de chat en
+pyramides, ruban du melon sous le bord. Sources et planches : `art/garde-robe-v01/`.
+
+**Runtime.** `src/garde-robe.js` : catalogue et règles pures (nettoyage d'une
+apparence abîmée, déblocages, tenues, tirage Surprise, titres, remarques).
+`src/garde-robe-blender.js` : préchargement du GLB au démarrage, fusion par pièce et
+par matériau, pose sur `teteMicro` / `upper`, hélice et flammes animées autour d'un
+pivot commun. `Player.changerApparence` reconstruit le vrai personnage à chaque essai
+(place, orientation et emote conservées ; ressources partagées préservées). La tenue
+sauvegardée (`store.apparence`) est restreinte aux pièces débloquées au lancement.
+
+**Coût.** Tenue d'origine : 0 appel de dessin en plus (lunettes de bureau, cravate et
+sac restent ceux du rig). Pire tenue : +19 appels, +30 k triangles, sur le joueur et
+le coéquipier seulement. Le chignon passe sous le bonnet grâce à deux chevelures
+exclusives préparées au chargement (avec / sans chignon) : pas d'appel en plus.
+
+**Bugs attrapés par les tests.** La cape (deux matériaux) arrivait en groupe de
+maillages dont les extras étaient sur le groupe → lecture remontée au parent. Les
+trois matériaux de l'hélice tournaient chacun avec sa phase → un pivot par partie
+animée. L'étiquette du coéquipier était libérée avec l'ancienne tenue → détachée avant.
+
+**Tests.** `npm run test:garde-robe` : GLB identique à l'export, catalogue ↔ GLB,
+os, budgets, matériaux teintés, placement des 23 pièces sur les 4 visages, couleurs
+par emplacement, chignon, hélice pendant une emote, ressources après 13 changements,
+règles (nettoyage, déblocages, Surprise ×300, tenues, badge, remarques). Toutes les
+suites Node passent. Autotest Windows à lancer : `EscapeYourBoss.exe --selftest
+--vestiaire --out=DOSSIER` (vrais clics, captures corps/gros plan/tenues, rotation à
+la souris, annuler, enregistrer, tenue retrouvée en jeu, images/s).

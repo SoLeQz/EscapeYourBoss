@@ -49,3 +49,23 @@ export function lancerDiversion(it, npcs, audio, hunting = false) {
   }
   return count;
 }
+
+// Emote musicale : les collègues à portée d'oreille qui NE voient PAS le danseur
+// se retournent vers le son quelques secondes (ceux qui le voient réagissent déjà
+// à l'emote elle-même). Danser caché derrière un mur fige leurs regards sur ce mur :
+// le coéquipier passe dans leur dos. Même règle que la photocopieuse : un collègue
+// déjà méfiant ne se laisse pas distraire, le directeur en traque non plus.
+export const PORTEE_MUSIQUE = 10, DUREE_DIVERSION_MUSIQUE = 4.5;
+const REPLIQUES_MUSIQUE = ['C’est quoi cette musique ?', 'Qui met du son à cette heure ?', 'On se croirait en soirée…'];
+export function diversionMusique(source, npcs, voit, hunting = false) {
+  let count = 0;
+  for (const n of npcs) {
+    if (hunting && n.isBoss || n.suspicion >= 0.52) continue;
+    if (Math.hypot(n.pos.x - source.x, n.pos.z - source.z) > PORTEE_MUSIQUE || voit(n)) continue;
+    n.diversion = { x: source.x, z: source.z, t: DUREE_DIVERSION_MUSIQUE };
+    if (Math.random() < 0.5) n.say(REPLIQUES_MUSIQUE[(Math.random() * REPLIQUES_MUSIQUE.length) | 0], 2.2);
+    count++;
+  }
+  return count;
+}
+

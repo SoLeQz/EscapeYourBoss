@@ -61,7 +61,10 @@ const fatigue={upper_x:.62,head_x:.32,armL_x:.12,armR_x:.12,elbowL_x:-.06,elbowR
 const sursaut={upper_x:-.12,head_x:-.23,armL_z:-.8,armR_z:.8,armL_x:-.65,armR_x:-.65,
   elbowL_x:-.85,elbowR_x:-.85,mainL_z:.3,mainR_z:-.3,legL_x:-.18,legR_x:-.18,
   kneeL_x:.36,kneeR_x:.36,footL_x:-.18,footR_x:-.18,bouche:1.8};
-const lettre={armL_x:-1.9,armL_z:.5,elbowL_x:-1.75,doigtsL_x:.10,pouceL_x:1.5,pouceL_z:.6,
+// Le L se lit de face (pour ceux qu'on nargue) : paume vers l'extérieur, index levé,
+// pouce en travers du front vers le centre. Paume vers le front, il se lisait « ⅃ ».
+// Poignet −1,78 rad : même orientation que 4,5 rad, mais une rotation plus courte en montant.
+const lettre={armL_x:-1.9,armL_z:.5,elbowL_x:-1.75,mainL_y:-1.78,doigtsL_x:.10,pouceL_x:2.4,pouceL_z:1.2,
   armR_x:-.2,armR_z:-.2,elbowR_x:-1.25,doigtsR_x:.24,head_x:-.12,head_y:.12};
 function lancerJambe(cote) {
   const left=cote==='L',s=left?1:-1,other=left?'R':'L';
@@ -109,6 +112,11 @@ export const EMOTES=[
   ]),
   emoteBlender({id:'67',nom:'67',icone:'67',apercu:1.61,astuce:'Six… seven. Les paumes en balance.'}),
   emoteBlender({id:'ela-ke-leitada',nom:'Ela Ké Leitada',icone:'🕺',apercu:1.04,astuce:'Main sur la bouche, pouce qui pointe… et un œil sur la montre.'}),
+  // v06 : tendances Blender, musiques originales (art/emotes/tendances-v06).
+  emoteBlender({id:'aura-farming',nom:'Aura Farming',icone:'🛶',apercu:3.9,astuce:'Proue de pirogue, regard lointain. L’aura se cultive.'}),
+  emoteBlender({id:'griddy',nom:'Griddy',icone:'🥽',apercu:2.1,astuce:'Talon, talon… et les jumelles devant les yeux.'}),
+  emoteBlender({id:'floss',nom:'Floss',icone:'🦷',apercu:1.1,astuce:'Les bras devant, puis derrière. Les hanches à contresens.'}),
+  emoteBlender({id:'apple',nom:'Apple',icone:'🍏',apercu:2.1,astuce:'Mains sur les hanches, la pomme en l’air, puis le volant.'}),
 ];
 
 export function reactionEmote(npc,def) {
@@ -119,6 +127,10 @@ export function reactionEmote(npc,def) {
     :def.id==='ela-ke-leitada'?['Pourquoi tu me pointes du pouce ?','Oui, il est bientôt l’heure. Et alors ?']
     :def.id==='moulin'?['Je te comprends.','Encore une réunion et je fais pareil.']
     :def.id==='takeL'?['C’est pour moi, le L ?','Très mature.']
+    :def.id==='aura-farming'?['Tu farmes de l’aura au lieu des tickets ?','Même le directeur n’a pas autant d’aura.']
+    :def.id==='griddy'?['C’est pour voir les deadlines de plus près ?','Un Griddy en open space. Audacieux.']
+    :def.id==='floss'?['On n’est plus en 2018…','Le fil dentaire, c’est après le déjeuner.']
+    :def.id==='apple'?['Une pomme ? Il en reste au coin café.','Tu conduis jusqu’où, comme ça ?']
     :['Je n’ai rien vu.','Tu me l’apprends demain ?','Les RH vont adorer.'];
   return choix[(Math.random()*choix.length)|0];
 }

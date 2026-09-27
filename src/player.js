@@ -1,6 +1,9 @@
 import { animerMainsBlender } from './anatomie-blender.js';
 import * as THREE from 'three';
 import { makeCharacter, animerVisage, HEIGHT, COU } from './characters.js';
+import { nettoyerApparence, optionsPersonnage } from './garde-robe.js';
+import { animerGardeRobe } from './garde-robe-blender.js';
+import { libererArbre } from './resources.js';
 import { collide } from './level.js';
 import { EMOTES, adoucir, POIGNET_REPOS, POIGNET_CLAVIER } from './emotes.js';
 
@@ -13,32 +16,14 @@ export function amortir(v, cible, taux, dt) {
 
 // Lao D — l'employé qui veut juste rentrer chez lui.
 export class Player {
-  // `look` : apparence du coéquipier en multijoueur (même silhouette, autres couleurs).
-  constructor(scene, level, look = null) {
+  // `apparence` : tenue du vestiaire (garde-robe.js). Le coéquipier reçoit la sienne.
+  constructor(scene, level, apparence = null) {
     this.level = level;
+    this.scene = scene;
     this.decalage = { x: 0, z: 0 };   // multijoueur : point de départ à côté de l'autre joueur
-    const { group, parts } = makeCharacter({
-      chemise: 0xf2ead8, pantalon: 0x555a66, cheveux: 0x14100d, peau: 0xf1c096,
-      veste: 0x4c5464, cravate: 0x82333d,
-      lunettes: true, sac: true, badge: true, ...look,
-    });
-    this.mesh = group;
-    this.parts = parts;
+    this.construire(apparence);
     this.mesh.position.set(level.playerStart.x, 0, level.playerStart.z);
     this.mesh.rotation.y = level.playerStart.yaw;
-    scene.add(this.mesh);
-
-    // contour (BackSide agrandi) affiché quand on chauffe
-    this.outline = this.mesh.clone(true);
-    this.outlineMat = new THREE.MeshBasicMaterial({
-      color: 0xffd24a, side: THREE.BackSide, transparent: true, opacity: 0.9, depthWrite: false,
-    });
-    this.outline.traverse(o => { if (o.isMesh) { o.material = this.outlineMat; o.castShadow = false; } });
-    this.outline.scale.setScalar(1.07);
-    this.outline.visible = false;
-    scene.add(this.outline);
-    this._srcNodes = []; this.mesh.traverse(o => this._srcNodes.push(o));
-    this._dstNodes = []; this.outline.traverse(o => this._dstNodes.push(o));
 
     this.pos = new THREE.Vector3(level.playerStart.x, 0, level.playerStart.z);
     this.vel = new THREE.Vector3();
@@ -68,6 +53,28 @@ export class Player {
     this.emoteCb = null;
     this._pointAppui = new THREE.Vector3();
     this.tempsAnimation = 0;
+  }
+
+  // Modèle, contour et appuis d'une apparence. Rappelé par changerApparence().
+  construire(apparence) {
+    this.apparence = nettoyerApparence(apparence);
+    const { group, parts } = makeCharacter(optionsPersonnage(this.apparence));
+    this.mesh = group;
+    this.parts = parts;
+    this.scene.add(this.mesh);
+
+    // contour (BackSide agrandi) affiché quand on chauffe
+    this.outline = this.mesh.clone(true);
+    this.outlineMat = new THREE.MeshBasicMaterial({
+      color: 0xffd24a, side: THREE.BackSide, transparent: true, opacity: 0.9, depthWrite: false,
+    });
+    this.outline.traverse(o => { if (o.isMesh) { o.material = this.outlineMat; o.castShadow = false; } });
+    this.outline.scale.setScalar(1.07);
+    this.outline.visible = false;
+    this.scene.add(this.outline);
+    this._srcNodes = []; this.mesh.traverse(o => this._srcNodes.push(o));
+    this._dstNodes = []; this.outline.traverse(o => this._dstNodes.push(o));
+
     // Points de la semelle en repère cheville, calculés une fois, jamais de
     // parcours de géométrie pendant l'animation. Appui exact du modèle courant.
     this._appuis = [parts.footL,parts.footR].map(foot=>{
@@ -83,6 +90,18 @@ export class Player {
       });
       return {foot,points:[...points.values()]};
     });
+  }
+
+  // Vestiaire et multijoueur : nouvelle tenue, même place, même pose.
+  changerApparence(apparence) {
+    const position = this.mesh.position.clone(), rotation = this.mesh.rotation.y, visible = this.mesh.visible;
+    const emote = this.emote;
+    this.outline.removeFromParent(); this.outlineMat.dispose();
+    libererArbre(this.mesh);
+    this.construire(apparence);
+    this.mesh.position.copy(position); this.mesh.rotation.y = rotation; this.mesh.visible = visible;
+    this.emote = emote;
+    this.animate(0);
   }
 
   hauteurPose(hauteur) {
@@ -399,6 +418,7 @@ export class Player {
     animerVisage(p, dt, { tension: Math.max(this.menace || 0, this.stress * 0.6), respire:false });
     if(jeuActeur)jeuActeur.def.visage(p,jeuActeur.t/jeuActeur.def.duree,jeuActeur.poids);
     animerMainsBlender(p,jeuActeur,this.workBlend,this.workT||0);
+    if (p._animGarde?.length) animerGardeRobe(p._animGarde, this.tempsAnimation, Math.min(1, this.speed / 5));
 
     // respiration : plus ample quand le stress monte
     const souffle = 1 + Math.sin(this.tempsAnimation * (3 + this.stress * 4)) *

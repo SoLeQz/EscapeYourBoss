@@ -11,7 +11,7 @@ export class GameAudio {
   constructor() {
     this.ctx = null; this.enabled = true; this.typeT = 0;
     this.listener = { x: 0, z: 0 }; this.yaw = 0;
-    this.sons = new Map(); this.musique = null;
+    this.sons = new Map(); this.musique = null; this.musiqueDistante = null;
   }
   listen(pos, yaw) { this.listener = { x: pos.x, z: pos.z }; this.yaw = yaw; }
   connectSpatial(node, pos) {
@@ -140,28 +140,43 @@ export class GameAudio {
   // Suit l’emote en cours : démarre à la bonne position, se recale si le
   // jeu a pris du retard, s’éteint en fondu si l’emote est coupée ou finie.
   // `emote` : { def, t } ou null.
-  suivreMusique(emote) {
-    const son = emote?.def.son, m = this.musique;
-    if (!this.ctx || !son) { if (m) this.couperMusique(); return; }
+  // Musique de l'emote du joueur. Celle du coéquipier (multijoueur) passe par
+  // une seconde piste, placée à sa position : on l'entend danser, de loin ou de près.
+  suivreMusique(emote) { this.suivrePiste('musique', emote, null); }
+  suivreMusiqueDistante(emote, pos) { this.suivrePiste('musiqueDistante', emote, pos); }
+  suivrePiste(cle, emote, pos) {
+    const son = emote?.def.son, m = this[cle];
+    if (!this.ctx || !son) { if (m) this.couperMusique(0.18, cle); return; }
     const buffer = this.sons.get(son.fichier);
-    if (!buffer) { this.chargerSon(son.fichier); if (m) this.couperMusique(); return; }
+    if (!buffer) { this.chargerSon(son.fichier); if (m) this.couperMusique(0.18, cle); return; }
     if (buffer instanceof Promise) return;
     const position = emote.t - son.debut;
     if (m && m.def === emote.def &&
-        Math.abs(this.ctx.currentTime - m.depart - position) < 0.12) return;
-    if (m) this.couperMusique(0.03);
+        Math.abs(this.ctx.currentTime - m.depart - position) < 0.12) { this.placerPiste(m, pos); return; }
+    if (m) this.couperMusique(0.03, cle);
     if (position < 0 || position >= buffer.duration) return;
     const src = this.ctx.createBufferSource(), gain = this.ctx.createGain();
+    const pan = pos ? this.ctx.createStereoPanner() : null;
     src.buffer = buffer; gain.gain.value = 0.75;
-    src.connect(gain).connect(this.master);
-    src.onended = () => { src.disconnect(); gain.disconnect(); };
+    (pan ? src.connect(pan).connect(gain) : src.connect(gain)).connect(this.master);
+    src.onended = () => { src.disconnect(); gain.disconnect(); pan?.disconnect(); };
     src.start(0, position);
-    this.musique = { def: emote.def, src, gain, depart: this.ctx.currentTime - position };
+    this[cle] = { def: emote.def, src, gain, pan, depart: this.ctx.currentTime - position };
+    this.placerPiste(this[cle], pos);
   }
-  couperMusique(fondu = 0.18) {
-    const m = this.musique; if (!m) return;
-    this.musique = null;
+  // Une musique porte plus loin qu'un bruit de bureau : moitié du volume à 9 m.
+  placerPiste(m, pos) {
+    if (!pos || !m.pan) return;
+    const dx = pos.x - this.listener.x, dz = pos.z - this.listener.z, d = Math.hypot(dx, dz);
     const t = this.ctx.currentTime;
+    m.pan.pan.setTargetAtTime(mixSpatial(pos, this.listener, this.yaw).pan, t, 0.05);
+    m.gain.gain.setTargetAtTime(0.75 / (1 + (d / 9) ** 2), t, 0.05);
+  }
+  couperMusique(fondu = 0.18, cle = 'musique') {
+    const m = this[cle]; if (!m) return;
+    this[cle] = null;
+    const t = this.ctx.currentTime;
+    m.gain.gain.cancelScheduledValues?.(t);
     m.gain.gain.setValueAtTime(m.gain.gain.value, t);
     m.gain.gain.linearRampToValueAtTime(0, t + fondu);
     m.src.stop(t + fondu + 0.02);

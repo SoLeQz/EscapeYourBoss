@@ -19,7 +19,7 @@ cp -r dist/EscapeYourBoss-win32-x64/. /mnt/c/Users/<toi>/EscapeYourBoss/
 ```
 
 **Vérifier la copie lancée :** le menu doit afficher la version de `package.json`
-(`Version 1.7.0`) et la roue proposer six emotes. Reconstruire `dist/` ne met pas
+(`Version 1.8.0`), un bouton **Vestiaire**, et la roue proposer dix emotes. Reconstruire `dist/` ne met pas
 à jour une copie située ailleurs : il faut copier le contenu du paquet, comme
 ci-dessus.
 
@@ -116,6 +116,8 @@ src/
   player.js       déplacement, accroupi, stress, cycle de marche
   npc.js          perception, machine à états, patrouilles
   characters.js   anatomie des personnages, sprites d'interface
+  garde-robe.js   vestiaire : catalogue, déblocages, tenues, badge (règles pures)
+  garde-robe-blender.js  pièces Blender du vestiaire posées sur le rig
   ui.js / minimap.js / audio.js
 ```
 
@@ -315,6 +317,16 @@ bureau du directeur.
   des portes.
 
 ## Journal des versions
+
+### Vestiaire (1.8.0)
+
+Menu principal → **Vestiaire** : visage, couleurs et 23 pièces modélisées dans
+Blender (`tools/blender/creer_garde_robe.py`, sources dans `art/garde-robe-v01/`),
+six à débloquer en jouant, neuf tenues toutes faites. Le mannequin est le vrai
+personnage du jeu, reconstruit à chaque essai (`Player.changerApparence`) ; la
+tenue est sauvegardée et envoyée au coéquipier (`{t:'apparence'}`). Purement
+cosmétique : la détection ne change pas. `npm run test:garde-robe` ; autotest
+Windows `--selftest --vestiaire`.
 
 ### Multijoueur (1.6.0)
 

@@ -6,7 +6,7 @@ module.exports = async ({ js, shot, step, wait }) => {
     const {HUMOUR}=await import('./src/humour.js');
     const version=await window.jeuAssets.version(),decor=etatDecorBlender();
     if(version!==${JSON.stringify(require('../package.json').version)})throw Error('Mauvaise version : '+version);
-    if(EMOTES.length!==4)throw Error('La roue contient '+EMOTES.length+' emotes');
+    if(EMOTES.length!==10)throw Error('La roue contient '+EMOTES.length+' emotes');
     if(Object.keys(decor).length!==4+HUMOUR.length)throw Error('Décor Blender absent');
     if(document.getElementById('version-jeu').textContent!=='Version '+version)throw Error('Version non affichée');
     return {version,emotes:EMOTES.map(e=>e.nom||e.name||e.id),decor};

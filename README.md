@@ -73,7 +73,7 @@ et des ombres plus nettes.
     <td width="50%"><img src="docs/captures/etage-12.jpg" alt="Étage 12 avec deux objets à récupérer" width="100%"><br>
       <sub><b>Étage 12, 21:00.</b> Ton badge et ton portable traînent à l'autre bout de l'étage. La réunion se termine dans 62 secondes.</sub></td>
     <td width="50%"><img src="docs/captures/roue-emotes.jpg" alt="La roue d'emotes" width="100%"><br>
-      <sub><b>Six emotes</b>, dont <i>67</i> et <i>Ela Ké Leitada</i>. Tant qu'à partir, autant partir avec style.</sub></td>
+      <sub><b>Dix emotes</b>, dont <i>67</i>, <i>Ela Ké Leitada</i>, <i>Aura Farming</i>, <i>Griddy</i>, <i>Floss</i> et <i>Apple</i>, avec leur musique. Tant qu'à partir, autant partir avec style.</sub></td>
   </tr>
 </table>
 
@@ -94,6 +94,15 @@ et des ombres plus nettes.
 - **Un bureau qui a de l'humour.** Affiches internes, trophée de l'employé du
   mois décerné à la machine à café, sablier de « réunion express », tampon
   « départ à l'heure » en attente de validation depuis 18 h…
+- **Un vestiaire.** Depuis le menu principal, habille Lao D : quatre visages,
+  teint, cheveux, chemise, veste et pantalon, et une vingtaine de pièces
+  modélisées dans Blender — casquette, bonnet, chapeau melon, oreilles de chat,
+  lunettes aviateur ou 3D, moustache guidon, nœud papillon, collier de fleurs,
+  sac de livreur… Certaines se gagnent en jouant : gilet fluo, casquette à hélice,
+  lunettes pixel, jetpack, couronne de l'employé du mois, cape du speedrun. Neuf
+  tenues toutes faites, un bouton **Surprise**, un badge dont l'intitulé change
+  avec la tenue, et des collègues qui ne se privent pas de commenter. Ton
+  coéquipier te voit comme tu t'es habillé.
 
 <table>
   <tr>
@@ -150,7 +159,10 @@ Depuis la version 1.6.0, tu peux t'évader **avec un ami, sur le même réseau**
 **Les règles sont simples :** si l'un de vous se fait repérer, vous retournez
 tous les deux à votre poste. L'étage est gagné quand vous êtes sortis tous les
 deux. Les objets à récupérer sont communs, et la photocopieuse, les postes et les
-emotes marchent pour chacun.
+emotes marchent pour chacun. La musique d'une emote s'entend chez les deux et
+attire les regards des collègues qui l'entendent sans voir le danseur : de quoi
+faire diversion pendant que l'autre passe. Échap n'ouvre le menu que chez toi :
+la partie continue.
 
 **Pas sur le même réseau ?** L'hôte ouvre un tunnel [playit.gg](https://playit.gg)
 vers le port TCP 47800, et son ami tape l'adresse du tunnel (`nom.ply.gg:12345`)
@@ -171,7 +183,7 @@ toucher.
 | `Shift` | courir : rapide, mais bruyant, et ça fait monter le stress |
 | `Ctrl` (maintenir) ou `C` (bascule) | s'accroupir |
 | `E` | interagir : sorties, photocopieuse, s'asseoir à un poste ou le quitter |
-| `T` (maintenir) | roue d'emotes : choisis à la souris ou avec `1`–`6`, relâche pour jouer |
+| `T` (maintenir) | roue d'emotes : choisis à la souris ou avec `1`–`9` et `0`, relâche pour jouer |
 | Souris · molette | caméra · zoom |
 | `V` · `B` | afficher/masquer les cônes de vision · les noms des collègues |
 | `M` · `R` · `Échap` | couper le son · recommencer · pause |

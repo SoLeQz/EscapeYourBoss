@@ -1,6 +1,6 @@
 # Jouer à deux (réseau local ou en ligne)
 
-Escape your boss 1.7.0 se joue à deux, **en coopération**, sur le même réseau (même
+Escape your boss 1.8.0 se joue à deux, **en coopération**, sur le même réseau (même
 Wi-Fi ou même box) ou **en ligne** grâce à un tunnel playit.gg. Pas de serveur à
 installer : l'un des deux joueurs **héberge** la partie depuis le jeu, l'autre la
 **rejoint**.
@@ -71,10 +71,20 @@ de bord, ou ferme l'agent, quand vous ne jouez pas.
 - **Si l'un de vous se fait repérer, vous perdez tous les deux.**
 - Les objets à récupérer (badge, portable…) sont **communs** : un seul suffit.
 - Photocopieuse, postes de travail et emotes fonctionnent pour les deux.
+- **Chacun garde sa tenue du vestiaire** : ton coéquipier te voit comme tu t'es
+  habillé (et inversement), y compris si tu changes de tenue pendant que vous êtes
+  connectés.
+- **La musique d'une emote s'entend chez les deux**, plus fort quand on est près du
+  danseur. Les collègues qui l'entendent **sans voir le danseur** se retournent vers
+  le son pendant 4,5 s : danse caché derrière un mur pendant que ton coéquipier passe
+  dans leur dos. Une fois toutes les 25 s par joueur ; un collègue déjà méfiant, ou le
+  directeur en traque, ne se laisse pas distraire.
 - L'étage est gagné quand **vous êtes sortis tous les deux**. Le premier sorti
-  attend l'autre et peut le regarder faire.
-- **Échap** met la partie en pause **pour les deux**. Seul l'hôte relance ou choisit
-  l'étage suivant.
+  attend l'autre et peut le regarder faire. L'hôte lance ensuite l'étage suivant.
+- **Échap** ouvre le menu **chez toi seulement** : la partie continue pour ton
+  coéquipier, et ton personnage reste où il est, visible.
+- **R** ne sert qu'après la fin de l'étage : l'hôte relance pour les deux. En pleine
+  partie, pas de retour au point de départ.
 
 ## Si ça ne se connecte pas
 
@@ -99,13 +109,13 @@ partie.
 Le dépôt est prêt (`.gitignore` exclut `node_modules/` et `dist/`) :
 
 ```bash
-git init && git add . && git commit -m "Escape your boss 1.7.0"
+git init && git add . && git commit -m "Escape your boss 1.8.0"
 git remote add origin https://github.com/<toi>/escape-your-boss.git
 git push -u origin main
 ```
 
 Le jeu compilé n'est pas dans le dépôt. Pour ton ami, le plus simple est une
-**Release** : sur GitHub → *Releases* → *Draft a new release* → tag `v1.7.0` →
+**Release** : sur GitHub → *Releases* → *Draft a new release* → tag `v1.8.0` →
 glisse `dist/EscapeYourBoss-win64.zip` dans les fichiers → *Publish*. Ton ami
 télécharge le zip depuis la page Releases.
 
@@ -120,6 +130,8 @@ Ton ami peut aussi compiler lui-même (Node.js 20+ requis) :
 - `electron/preload.cjs` : pont `jeuReseau` (aucun accès réseau direct au rendu).
 - `src/multijoueur.js` : posture des joueurs (20 Hz). L'hôte envoie l'état du monde
   (chrono, objets, postes, collègues) à 15 Hz. Événements : `lancer`, `pret`,
-  `objet`, `action`, `emote`, `dire`, `perdu`, `gagne`, `pause`, `reprise`, `menu`.
+  `objet`, `action`, `emote`, `dire`, `perdu`, `gagne`, `menu`, `apparence` (tenue du
+  vestiaire, à la connexion et à l'enregistrement ; nettoyée à la réception). Pas de pause commune :
+  Échap n'ouvre qu'un menu local (`menuMulti`), l'hôte continue de simuler.
 - `src/npc.js` : perception de tous les joueurs de `game.joueurs` (solo inchangé).
 - Autotest de bout en bout à deux fenêtres : `EscapeYourBoss.exe --selftest --multi --out=DOSSIER`.

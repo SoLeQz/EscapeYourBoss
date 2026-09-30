@@ -242,7 +242,7 @@ sans rien toucher.
   protection chacun, qui ne se rechargent pas. Une jauge te prévient à 3 secondes
   de la fin.
 - **Fouille.** Les canards de débogage, les rumeurs et les passages secrets
-  restent acquis même si le directeur te rattrape.
+  restent acquis même si le directeur te rattrape. Bellek !
 
 Tes progrès, tes records, tes touches et tes options sont sauvegardés dans
 `%APPDATA%\EscapeYourBoss\progression.json`.

@@ -1,7 +1,7 @@
 {
   "name": "escape-your-boss",
   "productName": "EscapeYourBoss",
-  "version": "1.11.0",
+  "version": "1.14.1",
   "description": "Escape your boss — jeu d'infiltration de bureau (Electron + Three.js)",
   "main": "electron/main.cjs",
   "author": "nicleena",
@@ -27,9 +27,11 @@
     "test:tendances": "node --import ./tests/personnages/resolveur.mjs tests/tendances/verifier.mjs",
     "test:garde-robe": "node --import ./tests/personnages/resolveur.mjs tests/garde-robe/verifier.mjs",
     "test:etages": "node --import ./tests/personnages/resolveur.mjs tests/etages/verifier.mjs && node --import ./tests/personnages/resolveur.mjs tests/etages/interactions.mjs",
+    "test:interface": "node --import ./tests/personnages/resolveur.mjs tests/interface/verifier.mjs && node tests/interface/machine-a-sous.mjs",
     "test:multijoueur": "node tests/multijoueur/reseau.mjs && node --import ./tests/personnages/resolveur.mjs tests/multijoueur/simulation.mjs",
     "paquet:win": "npm run build:win && python3 -c \"import shutil;shutil.make_archive('dist/EscapeYourBoss-win64','zip','dist','EscapeYourBoss-win32-x64')\"",
-    "test": "node tools/verifier.mjs"
+    "test": "node tools/verifier.mjs",
+    "test:departements": "node --import ./tests/personnages/resolveur.mjs tests/departements/verifier.mjs"
   },
   "devDependencies": {
     "electron": "^33.0.0",

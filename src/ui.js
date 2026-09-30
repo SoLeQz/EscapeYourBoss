@@ -3,6 +3,7 @@ import { projeterRepere } from './reperes.js';
 import { directionMenace } from './perception.js';
 import { DUREE_TRAVAIL, ALERTE_TRAVAIL, travailProtege } from './travail.js';
 import { nomTouche } from './input.js';
+import { astuce, etageDuTitre } from './intranet.js';
 const $ = id => document.getElementById(id);
 
 export class UI {
@@ -14,7 +15,7 @@ export class UI {
       prompt: $('prompt'), subtitle: $('subtitle'), state: $('state-chip'),
       vignette: $('vignette'), flash: $('flash'),
       start: $('screen-start'), fail: $('screen-fail'), win: $('screen-win'),
-      pause: $('screen-pause'), suite: $('screen-suite'), vestiaire: $('screen-vestiaire'),
+      pause: $('screen-pause'), suite: $('screen-suite'), vestiaire: $('screen-vestiaire'), arcade: $('screen-arcade'),
       failLine: $('fail-line'), winStats: $('win-stats'), failCount: $('fail-count'),
       toast: $('toast'),
     };
@@ -34,12 +35,13 @@ export class UI {
       el.textContent = nomTouche(touches[el.dataset.touche]?.find(Boolean));
   }
 
-  loading(titre, detail = 'Encore quelques instants avant de prendre la fuite.') {
+  // L'afficheur de l'ascenseur descend d'étage en étage ; une astuce RH patiente avec toi.
+  loading(titre, detail = astuce()) {
     const voile = $('chargement');
     if (!voile) return;
     voile.classList.toggle('parti', !titre);
     voile.setAttribute('aria-hidden', String(!titre));
-    if (titre) $('chargement-etape').textContent = titre;
+    if (titre) { $('chargement-etape').textContent = titre; $('chargement-afficheur').textContent = etageDuTitre(titre); }
     $('chargement-note').textContent = detail;
     $('chargement-reessayer').hidden = true;
   }
@@ -58,7 +60,8 @@ export class UI {
     const pct = Math.round((1 - seq.t / seq.total) * 100);
     this.changed('sortie', pct, v => $('sortie-fill').style.transform = `scaleX(${v / 100})`);
     this.changed('sortie-texte', `${seq.id}:${Math.ceil(seq.t)}`, () => {
-      $('sortie-texte').textContent = `${seq.id === 'elevator' ? 'Ascenseur en approche' : 'Départ par les escaliers'} · ${Math.ceil(seq.t)} s`;
+      const libelles = { elevator: 'Ascenseur en approche', stairs: 'Porte coupe-feu', nacelle: 'Nacelle en descente', toboggan: 'Toboggan' };
+      $('sortie-texte').textContent = `${libelles[seq.id] || 'Départ'} · ${Math.ceil(seq.t)} s`;
     });
   }
 
@@ -67,9 +70,11 @@ export class UI {
     const fin = protege && protection <= ALERTE_TRAVAIL;
     const pct = Math.round((protege ? protection / DUREE_TRAVAIL : v) * 100);
     this.changed('detection', pct, n => this.el.detFill.style.transform = `scaleX(${n / 100})`);
-    const hue = protege ? (fin ? 40 : 150) : Math.round(55 - 55 * Math.min(1, v / 0.9));
-    this.changed('hue', hue, h => this.el.detFill.style.background =
-      `linear-gradient(90deg, hsl(${h} 95% 55%), hsl(${Math.max(0, h - 12)} 100% 62%))`);
+    // États nommés plutôt qu'un dégradé : vert discret, jaune doute, rouge observé.
+    const niveau = protege ? (fin ? 'Protection : fin' : 'Protégé') : etat === 'repere' ? 'Repéré'
+      : etat === 'observation' ? 'Observé' : etat === 'doute' || v > 0.22 ? 'Doute' : 'Discret';
+    this.changed('det-etat', niveau, t => { const e = $('det-etat'); if (e) e.textContent = t; });
+    this.el.detWrap.classList.toggle('doute', !protege && niveau === 'Doute');
     this.el.detWrap.classList.toggle('pulse', !protege && v > 0.6);
     this.el.detWrap.classList.toggle('protege', protege);
     this.el.detWrap.classList.toggle('protection-fin', fin);
@@ -205,8 +210,11 @@ export class UI {
     this.subT = dur;
   }
 
-  toast(titre, detail, dur = 2.4) {
-    this.el.toast.innerHTML = `<b>${titre}</b>` + (detail ? ` <span>${detail}</span>` : '');
+  // Notification interne. `type` : info (défaut), alerte, succes, trouvaille.
+  toast(titre, detail, dur = 2.4, type = 'info') {
+    const icones = { info: 'cloche', alerte: 'alerte', succes: 'coche', trouvaille: 'canard' };
+    this.el.toast.className = type === 'info' ? 'on' : 'on ' + type;
+    this.el.toast.innerHTML = `<svg class="picto toast-picto" aria-hidden="true"><use href="#p-${icones[type] || 'cloche'}"/></svg><b>${titre}</b>` + (detail ? `<span>${detail}</span>` : '');
     this.el.toast.style.opacity = 1;
     this.toastT = dur;
   }
@@ -227,13 +235,13 @@ export class UI {
     }
     if (this.toastT > 0) {
       this.toastT -= dt;
-      if (this.toastT <= 0) this.el.toast.style.opacity = 0;
+      if (this.toastT <= 0) { this.el.toast.style.opacity = 0; this.el.toast.classList.remove('on'); }
     }
   }
 
   show(which) {
     if (which) document.getElementById('objectifs').classList.remove('on');
-    for (const k of ['start', 'fail', 'win', 'pause', 'suite', 'vestiaire']) {
+    for (const k of ['start', 'fail', 'win', 'pause', 'suite', 'vestiaire', 'arcade']) {
       this.el[k].classList.toggle('on', k === which);
       this.el[k].inert = k !== which;
       this.el[k].setAttribute('aria-hidden', String(k !== which));

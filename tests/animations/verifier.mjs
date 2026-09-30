@@ -7,7 +7,7 @@ import {EMOTES} from '../../src/emotes.js';
 const p=new Player(new THREE.Scene(),{playerStart:{x:0,z:0,yaw:0},obstacles:[]});
 const input=new Entrees(),v=new THREE.Vector3();
 const bones=['root','upper','head','armL','armR','elbowL','elbowR','legL','legR','kneeL','kneeR','footL','footR','mainL','mainR'];
-assert.deepEqual(EMOTES.map(e=>e.id),['tchao','arrogance','moulin','takeL','67','ela-ke-leitada','aura-farming','griddy','floss','apple']);
+assert.deepEqual(EMOTES.map(e=>e.id),['tchao','arrogance','moulin','takeL','67','ela-ke-leitada','aura-farming','griddy','floss']);
 function pieds(){
   p.mesh.updateMatrixWorld(true);let sol=Infinity;
   for(const foot of [p.parts.footL,p.parts.footR])foot.traverse(o=>{
@@ -18,13 +18,17 @@ function pieds(){
 let pireSol=0,pireAngle=0;
 for(const [index,e] of EMOTES.entries()){
   const debut=e.echantillon(0),fin=e.echantillon(1);
-  for(const k of Object.keys(debut))assert(Math.abs(debut[k]-fin[k])<1e-10,'Une scène doit revenir à sa pose neutre');
+  for(const k of Object.keys(debut))if(!/^(root|upper|head|arm[LR]|elbow[LR]|main[LR]|leg[LR]|knee[LR]|foot[LR]|doigts[LR]|pouce[LR])_[xyz]$/.test(k))assert(Math.abs(debut[k]-fin[k])<1e-10,`${e.id} : ${k} doit revenir au repos`);
+  for(const bone of [...bones,'doigtsL','doigtsR','pouceL','pouceR']){
+    const quat=pose=>new THREE.Quaternion().setFromEuler(new THREE.Euler(...['x','y','z'].map(a=>pose[bone+'_'+a]||0)));
+    assert(quat(debut).angleTo(quat(fin))<1e-6,`${e.id} : orientation finale ${bone} incorrecte`);
+  }
   p.reset();input.clear();p.declencherEmote(index);let previous=null;
   for(let f=0;f<Math.ceil((e.duree+.3)*120);f++){
     p.update(1/120,input,0);
-    const values=bones.flatMap(k=>p.parts[k].rotation.toArray().slice(0,3));
-    assert(values.every(Number.isFinite));
-    if(previous)pireAngle=Math.max(pireAngle,...values.map((val,i)=>Math.abs(val-previous[i])));
+    const values=bones.map(k=>p.parts[k].quaternion.clone());
+    assert(values.every(q=>q.toArray().every(Number.isFinite)));
+    if(previous)pireAngle=Math.max(pireAngle,...values.map((q,i)=>q.angleTo(previous[i])));
     previous=values;
     if(p.emote?.poids>.99){const sol=pieds();pireSol=Math.max(pireSol,Math.abs(sol));assert(sol>-.012&&sol<.012,`${e.id} : appui à ${sol}`);}
   }

@@ -62,6 +62,8 @@ export class Player {
     const { group, parts } = makeCharacter(optionsPersonnage(this.apparence));
     this.mesh = group;
     this.parts = parts;
+    // lacet d'abord, puis bascule : allongé dans le hamac (siesteBlend), le corps pivote sur place
+    this.mesh.rotation.order = 'YXZ';
     this.scene.add(this.mesh);
 
     // contour (BackSide agrandi) affiché quand on chauffe
@@ -141,6 +143,7 @@ export class Player {
     this.inclinaison = 0; this.inCover = false; this.crispation = 0; this.menace = 0;
     this.exitPose = null; this.workBlend = 0;
     this.emote = null; this.working = null; this.workT = 0; this._bob = 0; this.deguisement = null;
+    this.sieste = null; this.siesteBlend = 0; this._lit = null;
     this._lastStepSign = 1;
     // sinon on réapparaît figé dans la foulée où on s'est fait prendre
     Object.assign(this._pose, {
@@ -159,7 +162,12 @@ export class Player {
     if (input.actif('gauche')) ix -= 1;
     if (input.actif('droite')) ix += 1;
 
-    const len = Math.hypot(ix, iz);
+    let len = Math.hypot(ix, iz);
+    // Dans le hamac : une direction ou l'accroupi réveille (main.js lève le joueur).
+    if (this.sieste) {
+      if (len > 0.01 || input.actif('accroupir')) this.sieste.reveil = true;
+      ix = iz = 0; len = 0; input.bascules.accroupir = false;
+    }
     this.moving = len > 0.01;
     if (this.moving || input.actif('accroupir') || input.bascules.accroupir) this.working = null;
     // On ne danse pas en marchant : dès que le joueur redonne une
@@ -405,6 +413,18 @@ export class Player {
         p[key].rotation[axis]+=(angles[i]-p[key].rotation[axis])*k;
     }
 
+    // Micro-sieste (sieste.js) : allongé sur le dos dans le creux du hamac, les
+    // mains derrière la tête, le buste et les jambes relevés comme la toile.
+    this.siesteBlend = amortir(this.siesteBlend || 0, this.sieste ? 1 : 0, 6, dt);
+    if (this.siesteBlend > 0.01) {
+      const k = this.siesteBlend, souffle = Math.sin(this.tempsAnimation * 1.7) * 0.02;
+      const sieste = { upper: [.3 + souffle, 0, 0], head: [-.12, .22, 0], legL: [-.3, 0, .07], legR: [-.2, 0, -.05],
+        kneeL: [.4, 0, 0], kneeR: [.18, 0, 0], footL: [.45, 0, 0], footR: [.4, 0, 0],
+        armL: [-2.7, 0, -.55], armR: [-2.7, 0, .55], elbowL: [-2.05, 0, 0], elbowR: [-2.05, 0, 0] };
+      for (const [key, angles] of Object.entries(sieste)) for (const [i, axis] of ['x', 'y', 'z'].entries())
+        p[key].rotation[axis] += (angles[i] - p[key].rotation[axis]) * k;
+    }
+
     // Une interruption fige le temps de la scène et rend la main en 180 ms.
     // L'animation coupée ne continue pas à lancer une nouvelle pose pendant le fondu.
     let jeuActeur = null;
@@ -442,8 +462,22 @@ export class Player {
       else if (this.exitPose.id !== 'elevator') this.mesh.position.y -= .2*u;
       if (this.exitPose.id === 'toboggan') { p.upper.rotation.x -= .45 * u; p.legL.rotation.x = p.legR.rotation.x = -1.1 * u; }
     }
-    this.mesh.rotation.y = this.yaw;
-    if(!this.exitPose && this.workBlend<.005)this.ajusterAppui();
+    this.mesh.rotation.set(0, this.yaw, 0);
+    if (this.siesteBlend > 0.005 && this._lit) this.poserDansHamac(this.siesteBlend);
+    else this._lit = this.sieste ? this.sieste.it.lit : null;
+    if(!this.exitPose && this.workBlend<.005 && this.siesteBlend<.005)this.ajusterAppui();
+  }
+
+  // Le bassin se loge au creux de la toile, les pieds vers le bout libre, la tête
+  // sur l'oreiller. Le dos est à 0,12 m sous l'origine du modèle couché.
+  poserDansHamac(k) {
+    const L = this._lit, dx = L.x - L.tete.x, dz = L.z - L.tete.z, n = Math.hypot(dx, dz) || 1;
+    const ux = dx / n, uz = dz / n, lacet = Math.atan2(ux, uz);
+    const cible = new THREE.Vector3(L.x + ux * HEIGHT.hip, L.y + 0.12, L.z + uz * HEIGHT.hip);
+    this.mesh.position.lerp(cible, k);
+    let d = lacet - this.yaw; d = Math.atan2(Math.sin(d), Math.cos(d));
+    this.mesh.rotation.set(-Math.PI / 2 * k, this.yaw + d * k, 0);
+    this.parts.root.position.y = HEIGHT.hip;
   }
 
   ajusterAppui() {

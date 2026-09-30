@@ -1,0 +1,39 @@
+{
+  "source": "mains-v02.blend",
+  "blender": "5.2.2 LTS",
+  "fichier": "mains-v03.glb",
+  "nouveau_morph": "Cercle",
+  "poses_existantes_identiques": true,
+  "mesures": [
+    {
+      "main": "L",
+      "contact_metres": 0.0005034467606387207,
+      "autres_doigts_ecart": 0.0,
+      "bout_index": [
+        -0.06199999526143074,
+        -0.050702840089797974,
+        0.01880749873816967
+      ],
+      "bout_pouce": [
+        -0.06200000271201134,
+        -0.05020260810852051,
+        0.018750695511698723
+      ]
+    },
+    {
+      "main": "R",
+      "contact_metres": 0.0005034467605835897,
+      "autres_doigts_ecart": 0.0,
+      "bout_index": [
+        0.06200000271201134,
+        -0.050702840089797974,
+        0.01880749873816967
+      ],
+      "bout_pouce": [
+        0.06200000271201134,
+        -0.05020260810852051,
+        0.018750695511698723
+      ]
+    }
+  ]
+}

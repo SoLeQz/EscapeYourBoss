@@ -6,7 +6,7 @@ module.exports = async ({ js, shot, step, wait }) => {
     const {HUMOUR}=await import('./src/humour.js');
     const version=await window.jeuAssets.version(),decor=etatDecorBlender();
     if(version!==${JSON.stringify(require('../package.json').version)})throw Error('Mauvaise version : '+version);
-    if(EMOTES.length!==10)throw Error('La roue contient '+EMOTES.length+' emotes');
+    if(EMOTES.length!==9)throw Error('La roue contient '+EMOTES.length+' emotes');
     if(Object.keys(decor).length!==4+HUMOUR.length)throw Error('Décor Blender absent');
     const {etatMobilier}=await import('./src/accessoires-blender.js');
     if(Object.keys(etatMobilier()).length!==26)throw Error('Mobilier Blender v02 absent');
@@ -24,6 +24,7 @@ module.exports = async ({ js, shot, step, wait }) => {
     for(const fichier of ['bureau-v01.glb','chaise-v01.glb','escalier-v01.glb','porte-escalier-v01.glb'])if(!objets[fichier])throw Error('Modèle absent de la partie : '+fichier);
     return {etat:g.state,obstacles:g.level.obstacles.length,objets};
   })()`);
+  if(process.argv.includes('--departements')) return require('./departements-test.cjs')({js,shot,step,wait});
   if(process.argv.includes('--humour')) return require('./humour-test.cjs')({js,shot,step,wait});
   if(process.argv.includes('--textures')) return require('./textures-test.cjs')({js,shot,step,wait});
   if(process.argv.includes('--passage')) {

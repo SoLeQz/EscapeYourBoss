@@ -112,11 +112,10 @@ export const EMOTES=[
   ]),
   emoteBlender({id:'67',nom:'67',icone:'67',apercu:1.61,astuce:'Six… seven. Les paumes en balance.'}),
   emoteBlender({id:'ela-ke-leitada',nom:'Ela Ké Leitada',icone:'🕺',apercu:1.04,astuce:'Main sur la bouche, pouce qui pointe… et un œil sur la montre.'}),
-  // v06 : tendances Blender, musiques originales (art/emotes/tendances-v06).
-  emoteBlender({id:'aura-farming',nom:'Aura Farming',icone:'🛶',apercu:3.9,astuce:'Proue de pirogue, regard lointain. L’aura se cultive.'}),
-  emoteBlender({id:'griddy',nom:'Griddy',icone:'🥽',apercu:2.1,astuce:'Talon, talon… et les jumelles devant les yeux.'}),
-  emoteBlender({id:'floss',nom:'Floss',icone:'🦷',apercu:1.1,astuce:'Les bras devant, puis derrière. Les hanches à contresens.'}),
-  emoteBlender({id:'apple',nom:'Apple',icone:'🍏',apercu:2.1,astuce:'Mains sur les hanches, la pomme en l’air, puis le volant.'}),
+  // v07 : courbes Blender ; références musicales documentées, clips sans son.
+  emoteBlender({id:'aura-farming',nom:'Aura Farming',icone:'🛶',apercu:2.19,astuce:'Proue de pirogue, regard lointain. L’aura se cultive.'}),
+  emoteBlender({id:'griddy',nom:'Griddy',icone:'🥽',apercu:2.6,astuce:'Talon, talon… et les jumelles devant les yeux.'}),
+  emoteBlender({id:'floss',nom:'Floss',icone:'🦷',apercu:1.76,astuce:'Les bras devant, puis derrière. Les hanches à contresens.'}),
 ];
 
 export function reactionEmote(npc,def) {
@@ -130,7 +129,6 @@ export function reactionEmote(npc,def) {
     :def.id==='aura-farming'?['Tu farmes de l’aura au lieu des tickets ?','Même le directeur n’a pas autant d’aura.']
     :def.id==='griddy'?['C’est pour voir les deadlines de plus près ?','Un Griddy en open space. Audacieux.']
     :def.id==='floss'?['On n’est plus en 2018…','Le fil dentaire, c’est après le déjeuner.']
-    :def.id==='apple'?['Une pomme ? Il en reste au coin café.','Tu conduis jusqu’où, comme ça ?']
     :['Je n’ai rien vu.','Tu me l’apprends demain ?','Les RH vont adorer.'];
   return choix[(Math.random()*choix.length)|0];
 }

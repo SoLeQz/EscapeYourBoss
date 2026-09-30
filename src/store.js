@@ -9,6 +9,7 @@
 
 import { nettoyerSecrets } from './secrets.js';
 import { NIVEAUX } from './levels.js';
+import { nettoyerCantine } from './machine-a-sous-regles.js';
 
 export const DEFAUT = {
   canards: {}, secrets: [], campagne: 2,
@@ -17,6 +18,7 @@ export const DEFAUT = {
   touches: null,             // null = valeurs d'usine
   options: { echelle: 1.0, son: true, cones: true, noms: true, sensibilite: 1, mouvementReduit: false, aide: true },
   apparence: null,           // tenue du vestiaire (garde-robe.js) ; null = Lao D d'origine
+  cantine: null,             // borne « Juste 5 minutes » : solde fictif, mise, réglages
 };
 
 let memoire = null;          // filet si l'écriture disque échoue
@@ -29,6 +31,7 @@ function fusionner(brut) {
   if (brut.touches && typeof brut.touches === 'object') d.touches = brut.touches;
   if (brut.options && typeof brut.options === 'object') Object.assign(d.options, brut.options);
   if (brut.apparence && typeof brut.apparence === 'object') d.apparence = brut.apparence;  // nettoyée à l'usage
+  d.cantine = nettoyerCantine(brut.cantine);
   Object.assign(d, nettoyerSecrets(brut, NIVEAUX.map(n => n.id)));
   // Les records de la campagne à six étages restent consultables séparément.
   if (brut.campagne !== 2 && d.records.speedrun != null) {

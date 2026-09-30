@@ -1,0 +1,90 @@
+{
+  "rangement-rh": {
+    "triangles": 992,
+    "objets": 28
+  },
+  "poste-rh": {
+    "triangles": 188,
+    "objets": 7
+  },
+  "rangement-finance": {
+    "triangles": 660,
+    "objets": 15
+  },
+  "poste-finance": {
+    "triangles": 196,
+    "objets": 11
+  },
+  "rangement-support": {
+    "triangles": 960,
+    "objets": 24
+  },
+  "poste-support": {
+    "triangles": 172,
+    "objets": 5
+  },
+  "rangement-studio": {
+    "triangles": 1584,
+    "objets": 36
+  },
+  "poste-studio": {
+    "triangles": 308,
+    "objets": 7
+  },
+  "rangement-archives": {
+    "triangles": 2368,
+    "objets": 80
+  },
+  "poste-archives": {
+    "triangles": 220,
+    "objets": 5
+  },
+  "rangement-juridique": {
+    "triangles": 880,
+    "objets": 20
+  },
+  "poste-juridique": {
+    "triangles": 132,
+    "objets": 3
+  },
+  "rangement-marketing": {
+    "triangles": 1040,
+    "objets": 28
+  },
+  "poste-marketing": {
+    "triangles": 88,
+    "objets": 2
+  },
+  "rangement-logistique": {
+    "triangles": 500,
+    "objets": 13
+  },
+  "poste-logistique": {
+    "triangles": 64,
+    "objets": 2
+  },
+  "rangement-it": {
+    "triangles": 1792,
+    "objets": 98
+  },
+  "poste-it": {
+    "triangles": 192,
+    "objets": 6
+  },
+  "rangement-direction": {
+    "triangles": 648,
+    "objets": 18
+  },
+  "poste-direction": {
+    "triangles": 72,
+    "objets": 2
+  },
+  "vitrine-direction": {
+    "triangles": 240,
+    "objets": 6
+  },
+  "moodboard": {
+    "triangles": 476,
+    "objets": 13
+  }
+}

@@ -22,13 +22,15 @@ export const DISCRETION_CARTON = { immobile: 0.06, marche: 0.45 };
 export const VITESSE_CARTON = 0.8;
 export const PORTEE_CANARD = 1.0;
 const PORTEE_ROBOT = 0.75, VITESSE_ROBOT = 0.45;
-const SIESTE = 20, RECHARGE_CAFE = 25;
+const RECHARGE_CAFE = 25;
+// L'étagère pivote en 1,2 s ; personne ne doit se trouver dans l'encadrement pour la refermer.
+const DUREE_ETAGERE = 1.2, MARGE_ENCADREMENT = 0.4;
 
 const MARQUEURS = {
   distributeur: ['DISTRIBUTEUR', 'Diversion à retardement'], disjoncteur: ['DISJONCTEUR', `Lumière coupée ${DUREE_OBSCURITE} s`],
   carton: ['CARTON', 'Cachette mobile'], cafe: ['MACHINE À CAFÉ', 'Endurance au maximum'],
 };
-const TYPES = new Set(['distributeur', 'disjoncteur', 'carton', 'cafe', 'passage', 'sieste', 'arcade', 'bouton']);
+const TYPES = new Set(['distributeur', 'disjoncteur', 'carton', 'cafe', 'passage', 'sieste', 'arcade', 'bouton', 'observation']);
 const REPLIQUES_DISTRIBUTEUR = ['Qui tape sur le distributeur ?', 'Encore coincé, ce truc…', 'Il a encore mangé une pièce ?'];
 const REPLIQUES_NOIR = ['Qui a éteint ?!', 'Hé ! On n’y voit rien !', 'C’est une coupure ?'];
 
@@ -62,7 +64,7 @@ export class Interactifs {
       it.utilise = false; it.etat = 'pret'; it.t = 0; it.porteDistant = false;
       if (it.groupe) it.groupe.visible = true;
       if (it.type === 'carton') this.poserCarton(it, it.origine.x, it.origine.z, it.yaw);
-      if (it.type === 'passage') { it.ouvert = false; it.obstacle.noClip = false; it.obstacle.seeThrough = false; if (it.roles.porte) it.roles.porte.rotation.y = 0; }
+      if (it.type === 'passage') { it.ouvert = false; it.decouvert = false; it.obstacle.noClip = false; it.obstacle.seeThrough = false; if (it.roles.porte) it.roles.porte.rotation.y = 0; }
       if (it.type === 'bouton' && it.roles.bouton) it.roles.bouton.position.y = it.roles.bouton.userData.y0 ?? (it.roles.bouton.userData.y0 = it.roles.bouton.position.y);
       if (it.type === 'disjoncteur' && it.roles.levier) it.roles.levier.rotation.x = 0;
     }
@@ -85,7 +87,8 @@ export class Interactifs {
   // ---------------------------------------------------------- interactions
   accessibles(player) {
     return this.liste.filter(it => {
-      if (it.type === 'passage' && it.ouvert) return false;
+      // L'étagère se manœuvre du côté où l'on se trouve.
+      if (it.type === 'passage' && it.cotes) Object.assign(it, this.coteProche(it, player));
       if (it.type === 'carton' && it.porte) return it.porte === player;
       // le carton entoure son propre point d'interaction : la distance suffit
       if (it.type === 'carton') return !it.porteDistant && Math.hypot(it.x - player.pos.x, it.z - player.pos.z) < it.r &&
@@ -98,13 +101,43 @@ export class Interactifs {
     if (it.type === 'distributeur') return it.utilise ? 'Distributeur en panne (merci)' : it.label;
     if (it.type === 'disjoncteur') return it.utilise ? 'Disjoncteur déjà basculé' : it.label;
     if (it.type === 'cafe') return it.t > 0 ? `Café en cours · ${Math.ceil(it.t)} s` : it.label;
-    if (it.type === 'sieste') return it.utilise ? 'Déjà reposé' : it.label;
+    if (it.type === 'sieste') return player.sieste?.it === it ? 'Se lever du hamac' : it.label;
+    if (it.type === 'passage') return it.ouvert ? 'Refermer l’étagère' : this.dansPiece(it, player) ? 'Pousser l’étagère' : it.label;
     return it.label;
+  }
+  coteProche(it, player) {
+    return it.cotes.reduce((m, c) => Math.hypot(c.x - player.pos.x, c.z - player.pos.z) < Math.hypot(m.x - player.pos.x, m.z - player.pos.z) ? c : m);
+  }
+  dansPiece(it, acteur) {
+    const b = it.piece;
+    return !!b && acteur.pos.x > b.x1 && acteur.pos.x < b.x2 && acteur.pos.z > b.z1 && acteur.pos.z < b.z2;
+  }
+  // Qui se tient dans l'encadrement de l'étagère (joueurs, coéquipiers, collègues) ?
+  encadrementOccupe(it) {
+    const o = it.obstacle, m = MARGE_ENCADREMENT;
+    const acteurs = [this.jeu.player, ...(this.jeu.coequipiers?.values() || []), ...(this.jeu.npcs || [])];
+    return acteurs.some(a => a?.pos && a.pos.x > o.x1 - m && a.pos.x < o.x2 + m && a.pos.z > o.z1 - m && a.pos.z < o.z2 + m);
+  }
+  // Ouvre ou referme l'étagère : la collision et la vue suivent tout de suite,
+  // l'animation (mettreAJour) rattrape.
+  basculerPassage(it, ouvert) {
+    it.ouvert = ouvert;
+    it.obstacle.noClip = ouvert; it.obstacle.seeThrough = ouvert;
+    this.level.nav = undefined;
+    this.jeu.minimap && (this.jeu.minimap.fondNiveau = null);
+  }
+  // Le directeur en traque connaît le coup du livre rouge : si Lao D s'est enfermé
+  // dans la salle, il marche jusqu'à l'étagère (puis mettreAJour l'ouvre).
+  cibleTraque(proie) {
+    const it = this.liste.find(a => a.type === 'passage' && !a.ouvert && a.cotes);
+    return it && this.dansPiece(it, proie) ? it.cotes[0] : null;
   }
 
   interagir(it, player = this.jeu.player) {
     const { audio, ui } = this.jeu;
     switch (it.type) {
+      case 'observation':
+        if(player===this.jeu.player)ui.toast(it.titre,it.texte,7);this.jeu.decouvrir?.(it.secret);return;
       case 'distributeur':
         if (it.utilise) { ui.toast('Le distributeur boude', 'Une diversion par étage.'); return; }
         it.utilise = true; it.etat = 'moteur'; it.t = DELAI_DISTRIBUTEUR;
@@ -140,26 +173,28 @@ export class Interactifs {
         this.jeu.decouvrir?.('cafe');
         return;
       case 'passage':
-        if (it.ouvert) return;
-        it.ouvert = true; it.t = 0;
-        it.obstacle.noClip = true; it.obstacle.seeThrough = true; this.level.nav = undefined;
-        this.jeu.minimap && (this.jeu.minimap.fondNiveau = null);
-        audio.door(it);
-        ui.toast('Une pièce secrète !', 'La salle de sieste clandestine… et son toboggan d’évacuation.', 4);
+        if (it.ouvert) {
+          if (this.encadrementOccupe(it)) { if (player === this.jeu.player) ui.toast('Quelqu’un est dans le passage', 'L’étagère ne se referme pas sur un collègue.'); return; }
+          this.basculerPassage(it, false); audio.door(it);
+          if (player === this.jeu.player) ui.toast('Étagère refermée', this.dansPiece(it, player) ? 'Personne ne te voit d’ici. Pousse l’étagère pour ressortir.' : 'La salle de sieste redevient une bibliothèque.', 3);
+          return;
+        }
+        this.basculerPassage(it, true); audio.door(it);
+        if (!it.decouvert) {
+          it.decouvert = true;
+          ui.toast('Une pièce secrète !', 'La salle de sieste clandestine… et son toboggan d’évacuation.', 4);
+        }
         this.jeu.decouvrir?.('salle-secrete');
         return;
       case 'sieste':
-        if (it.utilise) return;
-        it.utilise = true;
-        audio.ronflement(it);
-        if (!this.jeu.hunting) this.jeu.timeLeft = Math.max(1, this.jeu.timeLeft - SIESTE);
-        ui.flash?.();
-        ui.toast('Zzz…', this.jeu.hunting ? 'Pas le moment de dormir.' : `Tu t’es assoupi ${SIESTE} secondes. La réunion, elle, a continué.`, 4);
-        this.jeu.decouvrir?.('sieste');
+        // Posture locale (sieste.js) : chacun dort dans son propre jeu.
+        if (player === this.jeu.player) this.jeu.basculerSieste?.(it);
         return;
       case 'arcade':
+        // La borne fait tourner « Juste 5 minutes » (machine-a-sous.js).
         it.t = 4; audio.arcade(it);
-        ui.toast('ESCAPE YOUR BOSS — 1985', 'MEILLEUR SCORE : LAO D · 999 999. Imbattable.');
+        if (this.jeu.ouvrirMachine) this.jeu.ouvrirMachine(it);
+        else ui.toast('JUSTE 5 MINUTES', 'La borne clignote : INSÉRER UN TICKET RESTAURANT.');
         this.jeu.decouvrir?.('arcade');
         return;
       case 'bouton':
@@ -231,10 +266,7 @@ export class Interactifs {
         diversionDistributeur(it.source, this.jeu.npcs, this.jeu.hunting);
       }
       if (it.type === 'cafe' && it.t > 0) it.t = Math.max(0, it.t - dt);
-      if (it.type === 'passage' && it.ouvert && it.roles.porte && it.t < 1) {
-        it.t = Math.min(1, it.t + dt / 1.2);
-        it.roles.porte.rotation.y = Math.PI / 2 * (1 - (1 - it.t) ** 3);
-      }
+      if (it.type === 'passage') this.animerEtagere(it, dt, distant);
       if (it.type === 'bouton' && it.roles.bouton) {
         if (it.t > 0) it.t = Math.max(0, it.t - dt);
         it.roles.bouton.position.y = it.roles.bouton.userData.y0 - (it.t > 0 ? 0.02 : 0);
@@ -258,6 +290,21 @@ export class Interactifs {
         c.pris = true; this.montrerCanard(c, false); audio.couac(c);
         this.jeu.ramasserCanard?.(c);
       }
+    }
+  }
+
+  animerEtagere(it, dt, distant) {
+    const cible = it.ouvert ? 1 : 0;
+    if (it.roles.porte && it.t !== cible) {
+      it.t = cible ? Math.min(1, it.t + dt / DUREE_ETAGERE) : Math.max(0, it.t - dt / DUREE_ETAGERE);
+      const u = it.ouvert ? 1 - (1 - it.t) ** 3 : it.t ** 3;
+      it.roles.porte.rotation.y = Math.PI / 2 * u;
+    }
+    // Le directeur en traque tire lui-même le livre rouge.
+    const boss = this.jeu.hunting && !distant && !it.ouvert && it.cotes && (this.jeu.npcs || []).find(n => n.isBoss);
+    if (boss && Math.hypot(boss.pos.x - it.cotes[0].x, boss.pos.z - it.cotes[0].z) < 1.3) {
+      this.basculerPassage(it, true); this.jeu.audio.door(it);
+      boss.say?.('Le coup du livre rouge ? Sérieusement ?', 2.6);
     }
   }
 
@@ -306,23 +353,43 @@ export class Interactifs {
     it.ecran = { cv, tex, plan, t: 0, image: -1 };
     this.animerArcade(it, 0);
   }
+  // Écran d'attraction de la borne : trois rouleaux de « Juste 5 minutes »
+  // (même dessin simplifié en pixels que les symboles de la machine).
   animerArcade(it, dt) {
     const e = it.ecran; e.t += dt; if (it.t > 0) it.t = Math.max(0, it.t - dt);
-    const image = Math.floor(e.t * 10); if (image === e.image) return; e.image = image;
+    const image = Math.floor(e.t * 12); if (image === e.image) return; e.image = image;
     const g = e.cv.getContext('2d');
-    g.fillStyle = '#0a0f2c'; g.fillRect(0, 0, 128, 96);
-    for (let i = 0; i < 18; i++) { g.fillStyle = i % 3 ? '#3450a0' : '#8fb0ff'; g.fillRect((i * 37 + image * (1 + i % 3)) % 128, (i * 23) % 96, 1, 1); }
-    g.fillStyle = '#ffd23a'; g.font = 'bold 11px monospace'; g.textAlign = 'center';
-    g.fillText('ESCAPE', 64, 22); g.fillText('YOUR BOSS', 64, 35);
-    // Lao D (pixel) court vers la droite, poursuivi par le directeur
-    const x = (image * 3) % 150 - 20;
-    g.fillStyle = '#f1c096'; g.fillRect(x, 58, 6, 6); g.fillStyle = '#4c5464'; g.fillRect(x, 64, 6, 10);
-    g.fillStyle = '#e6b288'; g.fillRect(x - 26, 56, 7, 7); g.fillStyle = '#2b3140'; g.fillRect(x - 26, 63, 7, 11);
-    g.fillStyle = it.t > 0 ? '#49f28a' : (image % 10 < 6 ? '#ff3d8b' : '#0a0f2c');
-    g.font = 'bold 9px monospace';
-    g.fillText(it.t > 0 ? 'HI-SCORE LAO D 999999' : 'INSERT COIN', 64, 90);
+    g.fillStyle = '#1c0833'; g.fillRect(0, 0, 128, 96);
+    for (let y = 2; y < 96; y += 6) for (let x = (y / 6) % 2 ? 3 : 0; x < 128; x += 6) { g.fillStyle = '#2a1147'; g.fillRect(x, y, 1, 1); }
+    g.fillStyle = '#ffffff'; g.font = 'bold 8px monospace'; g.textAlign = 'center';
+    g.fillText('JUSTE', 64, 10);
+    g.fillStyle = '#ffd23a'; g.font = 'bold 12px monospace'; g.fillText('5 MINUTES', 64, 22);
+    // symboles simplifiés : canard, réveil, sortie, agrafeuse, badge
+    const dessins = [
+      (x, y) => { g.fillStyle = '#ffd21f'; g.fillRect(x + 3, y + 8, 14, 8); g.fillRect(x + 8, y + 3, 7, 7); g.fillStyle = '#ff8a1c'; g.fillRect(x + 15, y + 5, 4, 3); },
+      (x, y) => { g.fillStyle = '#e5332a'; g.fillRect(x + 3, y + 3, 14, 14); g.fillStyle = '#fff'; g.fillRect(x + 6, y + 6, 8, 8); g.fillStyle = '#111'; g.fillRect(x + 9, y + 7, 2, 5); },
+      (x, y) => { g.fillStyle = '#14a052'; g.fillRect(x + 1, y + 4, 18, 12); g.fillStyle = '#fff'; g.fillRect(x + 6, y + 6, 3, 8); g.fillRect(x + 11, y + 9, 5, 2); },
+      (x, y) => { g.fillStyle = '#e5332a'; g.fillRect(x + 2, y + 7, 16, 5); g.fillStyle = '#3a3f45'; g.fillRect(x + 1, y + 13, 18, 4); },
+      (x, y) => { g.fillStyle = '#fff'; g.fillRect(x + 4, y + 2, 12, 16); g.fillStyle = '#234b49'; g.fillRect(x + 4, y + 2, 12, 4); g.fillStyle = '#f1c096'; g.fillRect(x + 7, y + 8, 5, 5); },
+    ];
+    const gagne = it.t > 0;
+    for (let c = 0; c < 3; c++) {
+      const x0 = 17 + c * 33, arret = gagne || image % 48 > 18 + c * 6;
+      g.fillStyle = '#0d0617'; g.fillRect(x0 - 2, 28, 28, 50);
+      g.fillStyle = gagne ? '#ffd23a' : '#ff3d8b'; g.fillRect(x0 - 2, 27, 28, 1); g.fillRect(x0 - 2, 78, 28, 1);
+      const decal = arret ? 0 : (image * 7) % 20;
+      for (let k = -1; k < 3; k++) {
+        const idx = gagne ? 0 : Math.abs(c * 7 + k * 3 + (arret ? Math.floor(image / 48) * 5 : Math.floor(image / 3))) % dessins.length;
+        dessins[idx](x0 + 2, 32 + k * 20 + decal);
+      }
+      g.fillStyle = '#0d0617'; g.fillRect(x0 - 2, 22, 28, 6); g.fillRect(x0 - 2, 79, 28, 6);
+    }
+    g.fillStyle = gagne ? '#6cf09f' : (image % 12 < 7 ? '#ff3d8b' : '#1c0833');
+    g.font = 'bold 8px monospace';
+    g.fillText(gagne ? 'GROS GAIN !' : 'INSÉRER UN TICKET RESTO', 64, 91);
     e.tex.needsUpdate = true;
   }
+
 
   // ---------------------------------------------------------- multijoueur
   // L'hôte fait autorité : un état compact dans chaque instantané du monde.
@@ -354,9 +421,9 @@ export class Interactifs {
           this.placer(it.groupe, acteur.pos.x, acteur.pos.z, acteur.yaw);
           if (it.roles.yeux) it.roles.yeux.visible = true;
         } else if (it.porte || it.x !== v.x || it.z !== v.z) this.poserCarton(it, v.x, v.z, it.yaw);
-      } else if (it.type === 'passage' && v.ouvert && !it.ouvert) {
-        it.ouvert = true; it.t = 0; it.obstacle.noClip = it.obstacle.seeThrough = true;
-        this.level.nav = undefined; this.jeu.minimap && (this.jeu.minimap.fondNiveau = null);
+      } else if (it.type === 'passage' && !!v.ouvert !== !!it.ouvert) {
+        this.jeu.audio.door?.(it);
+        this.basculerPassage(it, !!v.ouvert); if (v.ouvert) it.decouvert = true;
       } else if (it.type === 'disjoncteur' && v.u && it.roles.levier) it.roles.levier.rotation.x = 1.2;
     });
     s.r?.forEach((v, i) => { const r = this.robots[i]; if (r) { r.pos = { x: v[0], z: v[1] }; r.yawR = v[2]; this.placer(r.groupe, v[0], v[1], v[2]); } });

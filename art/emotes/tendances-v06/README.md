@@ -1,5 +1,9 @@
 # Emotes Blender v06 — Aura Farming, Griddy, Floss, Apple
 
+> Archive de production : Apple a été retirée de la roue et de `assets/`. Son
+> fichier Blender, ses exports et sa composition sont conservés ici uniquement
+> pour garder cette version reproductible. Le dossier `art/` est exclu des paquets.
+
 Quatre tendances ajoutées à la roue en 1.8.0 (cases **7, 8, 9 et 0**), chacune avec
 **sa musique originale**. Mêmes principes que les v01–v05 : animation par clés dans
 Blender sur la maquette exacte du joueur, contacts posés par cinématique inverse,

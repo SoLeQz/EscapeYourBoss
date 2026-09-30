@@ -337,7 +337,8 @@ export class NPC {
       if (this.huntT <= 0 || !this.huntPath) {
         this.huntT = 1.2;
         const proie = (game.joueurs || [game.player]).reduce((m, j) => !m || Math.hypot(j.pos.x - this.pos.x, j.pos.z - this.pos.z) < Math.hypot(m.pos.x - this.pos.x, m.pos.z - this.pos.z) ? j : m, null);
-        const cible = { x: proie.pos.x, z: proie.pos.z };
+        // enfermé dans la salle de sieste : il va d'abord tirer le livre rouge (interactifs.js)
+        const cible = game.interactifs?.cibleTraque?.(proie) || { x: proie.pos.x, z: proie.pos.z };
         if (this.level.nav === undefined) this.level.nav = creerNavigation(this.level.obstacles);
         this.huntPath = chemin(this.level.nav, this.pos, cible) || [cible];
         this.huntIdx = 0;

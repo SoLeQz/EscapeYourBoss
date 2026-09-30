@@ -1,3 +1,4 @@
+import { departementDuNiveau } from './departements.js';
 // ============================================================
 //  Plans d'étage et progression
 //
@@ -469,10 +470,22 @@ export const NIVEAUX = [
   },
 ];
 
+for (const n of NIVEAUX) {
+  const d=departementDuNiveau(n);n.departement=d.id;
+  // Le pan central reçoit désormais l'identité du service : retirer l'ancienne
+  // affiche qui occupait le même plan, pour éviter deux textes superposés.
+  if(n.affiches)n.affiches=n.affiches.filter(a=>a[3]!==3.68);
+  if(d.id==='direction')n.affiches=[['identite-direction',2.4,1.2,-9,2.3,-15.9,0]];
+  n.titre=n.titre.replace(/Étage \d+/, 'Étage '+d.etage)+' · '+d.court;
+}
+
 export const RONDES_PAR_PLAN = RONDES;
 
 // Collègues d'un niveau, placés selon l'orientation de l'étage (repere.js).
 export function pnjDuNiveau(niv) {
   const repere = repereDuNiveau(niv);
-  return niv.pnj(PLANS[niv.plan]).map(cfg => repere.pnj(cfg));
+  return niv.pnj(PLANS[niv.plan]).map(cfg => repere.pnj({...cfg,
+    role:cfg.role==='collègue'?departementDuNiveau(niv).court:cfg.role,
+    lines:cfg.role==='sécurité'?cfg.lines:[departementDuNiveau(niv).replique,...cfg.lines],
+  }));
 }

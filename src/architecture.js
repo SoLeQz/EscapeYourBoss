@@ -1,3 +1,4 @@
+import { departementDuNiveau } from './departements.js';
 import { uvBoiteMetrique } from './uv.js';
 import { poserDecorBlender } from './decor-blender.js';
 import * as THREE from 'three';
@@ -217,8 +218,7 @@ export function construireEscalier(root, MAT, niveau, obstacles, porteSalleSud) 
   }
   panneauGraphique(g, 'escaliers', 1.4, 0.7, 8, 3.04, 12.16, Math.PI);
   panneauGraphique(g, 'evacuation', 1.5, 0.75, 4.24, 1.85, 12.65, Math.PI / 2);
-  const etage = niveau.titre.match(/Étage (\d+)/)?.[1] || '23';
-  panneauGraphique(g, etage, 1.6, 0.8, 8, -0.2, 17.635, Math.PI);
+  panneauGraphique(g, 'identite-'+departementDuNiveau(niveau).id, 1.6, 0.8, 8, -0.2, 17.635, Math.PI);
   // Réseau apparent du noyau, raccords et éclairage de service sans PointLight.
   for (const x of [4.4, 4.56]) {
     tube([x, -3.6, 17.5], [x, 3.45, 17.5], 0.025, MAT.alu);

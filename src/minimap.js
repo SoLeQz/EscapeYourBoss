@@ -1,4 +1,5 @@
-// Mini-carte 2D : murs, bureaux, cônes de vision, sorties.
+// Mini-carte 2D, dessinée comme un plan d'évacuation d'immeuble : fond papier,
+// murs à l'encre, sorties en vert, « vous êtes ici » en rouge (interface.css).
 export class Minimap {
   constructor(canvas, level) {
     this.cv = canvas;
@@ -24,11 +25,11 @@ export class Minimap {
     this.fond.width = this.cv.width; this.fond.height = this.cv.height;
     const g = this.fond.getContext('2d');
     g.scale(this.fond.width / this.w, this.fond.height / this.h);
-    g.fillStyle = 'rgba(18,16,22,0.82)';
+    g.fillStyle = '#f3f1ea';
     g.fillRect(0, 0, this.w, this.h);
 
-    // zones : couloir et hall d'ascenseur, placés selon l'orientation de l'étage
-    g.fillStyle = 'rgba(255,225,180,0.07)';
+    // zones : couloir et hall d'ascenseur (chemin d'évacuation), selon l'orientation de l'étage
+    g.fillStyle = 'rgba(20,160,82,0.12)';
     const R = this.level.repere;
     for (const zone of [{ x1: 4, x2: 12, z1: -16, z2: 16 }, { x1: 12, x2: 20, z1: -4, z2: 6 }]) {
       const b = R ? R.boite(zone) : zone;
@@ -37,9 +38,9 @@ export class Minimap {
 
     // obstacles
     for (const o of this.level.obstacles) {
-      if (o.h >= 2.5) g.fillStyle = o.seeThrough ? 'rgba(150,215,235,0.55)' : 'rgba(210,198,180,0.78)';
-      else if (o.kind === 'desk') g.fillStyle = 'rgba(200,150,95,0.55)';
-      else g.fillStyle = 'rgba(130,150,170,0.42)';
+      if (o.h >= 2.5) g.fillStyle = o.seeThrough ? 'rgba(70,150,190,0.7)' : '#1b2627';
+      else if (o.kind === 'desk') g.fillStyle = 'rgba(173,120,70,0.55)';
+      else g.fillStyle = 'rgba(90,100,105,0.4)';
       g.fillRect(this.px(o.x1), this.pz(o.z1),
         Math.max(1, (o.x2 - o.x1) * this.sx), Math.max(1, (o.z2 - o.z1) * this.sz));
     }
@@ -56,10 +57,10 @@ export class Minimap {
     // sorties
     for (const it of this.level.interactables) {
       if (it.secret && !game.interactifs?.liste.some(a => a.type === 'passage' && a.ouvert)) continue;
-      g.fillStyle = it.id === 'elevator' ? '#4ade80' : '#60c8f0';
-      g.beginPath(); g.arc(this.px(it.x), this.pz(it.z), 4, 0, 7); g.fill();
-      g.fillStyle = '#0c0c10';
-      g.font = 'bold 7px system-ui';
+      g.fillStyle = '#14a052';
+      g.fillRect(this.px(it.x) - 5, this.pz(it.z) - 5, 10, 10);
+      g.fillStyle = '#ffffff';
+      g.font = 'bold 8px Bahnschrift, system-ui';
       g.textAlign = 'center';
       g.fillText(({elevator:'A', stairs:'E', nacelle:'N', toboggan:'T'})[it.id], this.px(it.x), this.pz(it.z) + 2.5);
     }
@@ -79,15 +80,15 @@ export class Minimap {
         g.arc(x, z, r, Math.atan2(Math.cos(a0), Math.sin(a0)), Math.atan2(Math.cos(a1), Math.sin(a1)), true);
         g.closePath();
         g.fillStyle = s > 0.02
-          ? `rgba(${255},${Math.round(200 - 200 * s)},${Math.round(90 - 90 * s)},${0.16 + s * 0.3})`
-          : 'rgba(255,225,150,0.14)';
+          ? `rgba(217,${Math.round(150 - 90 * s)},${Math.round(60 - 20 * s)},${0.2 + s * 0.3})`
+          : 'rgba(217,160,60,0.16)';
         g.fill();
       }
 
       g.beginPath(); g.arc(x, z, 3.4, 0, 7);
-      g.fillStyle = n.isBoss ? '#ff5a4a' : (s > 0.45 ? '#ffd24a' : '#e9e6df');
+      g.fillStyle = n.isBoss ? '#6d2a8a' : (s > 0.45 ? '#d9412b' : '#6f7875');
       g.fill();
-      if (n.isBoss) { g.strokeStyle = '#fff'; g.lineWidth = 1; g.stroke(); }
+      if (n.isBoss) { g.strokeStyle = '#1b2627'; g.lineWidth = 1.2; g.stroke(); }
     }
 
     // coéquipier (multijoueur) : même flèche, en orange
@@ -105,8 +106,9 @@ export class Minimap {
     g.beginPath();
     g.moveTo(0, -6); g.lineTo(4.2, 4); g.lineTo(0, 1.6); g.lineTo(-4.2, 4);
     g.closePath();
-    g.fillStyle = game.player.crouch > 0.5 ? '#8be9fd' : '#5cf07a';
+    g.fillStyle = '#d9412b';
     g.fill();
+    g.strokeStyle = game.player.crouch > 0.5 ? '#1b2627' : '#ffffff'; g.lineWidth = 1.2; g.stroke();
     g.restore();
 
     // Au-dessus des cônes et des personnages : les objectifs ne peuvent
@@ -114,14 +116,14 @@ export class Minimap {
     for(const [i,o] of this.level.ramassables.entries()) {
       if(o.pris)continue;
       const x=this.px(o.x),y=this.pz(o.z);
-      g.fillStyle='rgba(255,212,135,.18)';g.beginPath();g.arc(x,y,11,0,Math.PI*2);g.fill();
-      g.fillStyle='#ffd487';g.strokeStyle='#171b21';g.lineWidth=2;
+      g.fillStyle='rgba(215,162,77,.25)';g.beginPath();g.arc(x,y,11,0,Math.PI*2);g.fill();
+      g.fillStyle='#d7a24d';g.strokeStyle='#1b2627';g.lineWidth=2;
       g.beginPath();g.moveTo(x,y-8);g.lineTo(x+8,y);g.lineTo(x,y+8);g.lineTo(x-8,y);g.closePath();g.fill();g.stroke();
       g.fillStyle='#171b21';g.font='bold 9px system-ui';g.textAlign='center';g.textBaseline='middle';
       g.fillText(String(i+1),x,y+.5);g.textBaseline='alphabetic';
     }
 
-    g.strokeStyle = 'rgba(255,255,255,0.18)';
+    g.strokeStyle = 'rgba(27,38,39,0.25)';
     g.lineWidth = 1;
     g.strokeRect(0.5, 0.5, this.w - 1, this.h - 1);
   }

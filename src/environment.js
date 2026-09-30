@@ -1,3 +1,5 @@
+import { departementDuNiveau } from './departements.js';
+import { CELLULES_DEPARTEMENTS, dessinerDepartement } from './graphisme-departements.js';
 import { uvBoiteMetrique } from './uv.js';
 import { partager } from './resources.js';
 import * as THREE from 'three';
@@ -9,8 +11,8 @@ import { poserDecorBlender } from './decor-blender.js';
 // Aucun texte généré aléatoirement, aucun chargement réseau.
 const INK = '#234b49', PAPER = '#eee9db', GOLD = '#d7a24d', RUST = '#ad563c';
 const CELLS = ['marque', 'cinq', 'pause', 'planning', 'direction', 'reunion',
-  'hall', 'impression', 'cafe', 'annonces', 'projet', 'carnet', '23', '19', '12', 'service', 'escaliers', 'evacuation', ...HUMOUR.map(h=>h.id),
-  'sieste', 'canards', 'travaux', 'afterwork', 'informatique', '9', '7', '4', '2'];
+  'hall', 'impression', 'cafe', 'annonces', 'projet', 'carnet', 'service', 'escaliers', 'evacuation', ...HUMOUR.map(h=>h.id),
+  'sieste', 'canards', 'travaux', 'afterwork', 'informatique', ...CELLULES_DEPARTEMENTS];
 const ATLAS_H = Math.ceil(CELLS.length / 4) * 256;
 let assets;
 
@@ -32,7 +34,9 @@ function creerAtlas() {
     };
     const footer = label => { line(28, 218, 456); text(label, 28, 242, 11); };
     const humour = HUMOUR.find(h=>h.id===id);
-    if (humour) {
+    if (dessinerDepartement(c,id)) {
+      // Cellule du département, même atlas et même filtrage que la marque.
+    } else if (humour) {
       const clair=id==='humour-cafe', encre=clair?PAPER:INK;
       if(clair)rect(0,0,512,256,INK);
       rect(0,0,512,9,GOLD);
@@ -169,6 +173,7 @@ function bibliothequeMateriaux() {
   assets = { atlas: creerAtlas(), petrole: std(INK), ocre: std(GOLD), terre: std(RUST),
     ivoire: std(PAPER), sombre: std('#253536'), solPause: std('#726652'), terreau: std('#302b24'),
     feuille: new THREE.MeshStandardMaterial({ color: '#42674b', roughness: 0.83, side: THREE.DoubleSide }) };
+  assets.ecran=new THREE.MeshBasicMaterial({map:assets.atlas.map});
   for (const mat of Object.values(assets)) partager(mat);
   return assets;
 }
@@ -187,13 +192,15 @@ export function panneauGraphique(parent, id, w, h, x, y, z, yaw = 0) {
   for (let i = 0; i < uv.count; i++) uv.setXY(i,
     (col * 512 + 2 + (miroirTexte ? 1 - uv.getX(i) : uv.getX(i)) * 508) / 2048,
     1 - (row * 256 + 2 + (1 - uv.getY(i)) * 252) / ATLAS_H);
-  const m = new THREE.Mesh(geo, bibliothequeMateriaux().atlas);
+  const A=bibliothequeMateriaux();
+  const m = new THREE.Mesh(geo, id.startsWith('ecran-')?A.ecran:A.atlas);
   m.position.set(x, y, z); m.rotation.y = yaw; m.receiveShadow = true;
   parent.add(m); return m;
 }
 
 export function habillerBureau(root, MAT, plan, niveau) {
-  const A = bibliothequeMateriaux();
+  const d=departementDuNiveau(niveau);
+  const A = {...bibliothequeMateriaux(),petrole:MAT.deptAccent,terre:MAT.deptSecondaire,ocre:MAT.deptSecondaire};
   const box = (w, h, d, mat, x, y, z, cast = true) => {
     const m = new THREE.Mesh(uvBoiteMetrique(new THREE.BoxGeometry(w, h, d)), mat);
     m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; root.add(m); return m;
@@ -229,7 +236,7 @@ export function habillerBureau(root, MAT, plan, niveau) {
   // Un grand repère éditorial au sud, plutôt que des affiches minuscules
   // dispersées sur tous les murs.
   box(4.3, 2.2, 0.03, A.sombre, -9, 2.15, 15.97, false);
-  sign('marque', 4.2, 2.1, -9, 2.15, 15.945, Math.PI);
+  sign((d.decouverte==='sud'?'tableau-':'identite-')+d.id, 4.2, 2.1, -9, 2.15, 15.945, Math.PI);
   sign('cinq', 2.5, 1.25, -1.3, 2.15, 15.94, Math.PI);
   // Panneaux acoustiques en retrait derrière le tableau de travail.
   for (let i = 0; i < 9; i++) box(0.055, 2.7, 0.055, MAT.bois, -13.8 + i * 0.6, 1.77, -15.94, false);
@@ -239,7 +246,7 @@ export function habillerBureau(root, MAT, plan, niveau) {
   const pans = []; debut = -16;
   for (const [a, b] of [...ouvertures, [16, 16]]) { if (a - debut > 4) pans.push([debut, a]); debut = b; }
   const grand = pans.sort((a, b) => (b[1] - b[0]) - (a[1] - a[0]))[0];
-  if (grand) sign('annonces', 2.4, 1.2, 3.675, 2.14, (grand[0] + grand[1]) / 2, -Math.PI / 2);
+  if (grand) sign('identite-'+d.id, 2.4, 1.2, 3.675, 2.14, (grand[0] + grand[1]) / 2, -Math.PI / 2);
   for (const [a, b] of ouvertures) sign('hall', 1.5, 0.75, 3.65, 3.02, (a + b) / 2, -Math.PI / 2);
 
   // Accueil en chêne à l'est : le centre reste dégagé pour l'ascenseur.
@@ -247,8 +254,7 @@ export function habillerBureau(root, MAT, plan, niveau) {
     box(0.025, 3.35, zb - za, A.sombre, 19.95, 1.7, (za + zb) / 2, false);
     for (let z = za; z < zb; z += 0.16) box(0.055, 3.25, 0.06, MAT.bois, 19.92, 1.7, z, false);
   }
-  const etage = niveau.titre.match(/Étage (\d+)/)?.[1] || '23';
-  sign(etage, 1.6, 0.8, 19.85, 2.1, 4.73, -Math.PI / 2);
+  sign('identite-'+d.id, 1.6, 0.8, 19.85, 2.1, 4.73, -Math.PI / 2);
   if(niveau.id!==1) sign('cafe', 1.5, 0.75, 19.85, 2.3, -2.15, -Math.PI / 2);
   if (!niveau.sorties.includes('elevator')) sign('service', 1.1, 0.55, 19.61, 1.8, 1.5, -Math.PI / 2);
 
@@ -267,9 +273,9 @@ export function habillerBureau(root, MAT, plan, niveau) {
   const bossZ = plan.bossSalle === 'nord' ? -15.96 : 15.96;
   const yaw = bossZ < 0 ? 0 : Math.PI;
   box(5.3, 2.45, 0.025, A.petrole, 15.4, 1.85, bossZ, false);
-  sign('marque', 3.5, 1.75, 15.4, 2.02, bossZ - Math.sign(bossZ) * 0.022, yaw);
+  sign((d.decouverte==='direction'?'tableau-':'identite-')+d.id, 3.5, 1.75, 15.4, 2.02, bossZ - Math.sign(bossZ) * 0.022, yaw);
   const reunionZ = plan.bossSalle === 'nord' ? 15.94 : -15.94;
-  if(![4,6].includes(niveau.id)) sign('planning', 2.8, 1.4, 15.5, 2.0, reunionZ, reunionZ < 0 ? 0 : Math.PI);
+  if(![4,6].includes(niveau.id)) sign('tableau-'+d.id, 2.8, 1.4, 15.5, 2.0, reunionZ, reunionZ < 0 ? 0 : Math.PI);
 
   // Îlots textiles sous les coins détente ; aucun objet dans les rondes.
   if (plan.detente) {

@@ -33,6 +33,8 @@ assert.deepEqual(readFileSync(new URL('../../assets/mobilier-v02.glb',import.met
   'Le mobilier du jeu doit être l’export du .blend');
 for(const [id,info] of Object.entries(mobilier)) assert(info.triangles>100 && info.triangles<5000,id+' : géométrie inattendue');
 console.log('Mobilier v02 chargé :',Object.keys(mobilier).length,'modèles,',Math.round(Object.values(mobilier).reduce((s,m)=>s+m.triangles,0)),'triangles');
+const { prechargerDepartements } = await import('../../src/accessoires-blender.js');
+await prechargerDepartements(async nom=>{const b=readFileSync(new URL('../../assets/'+nom,import.meta.url));return b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)});
 // Chaque meuble tient dans l'obstacle de sa version codée (level.js), à 5 cm près :
 // ce qu'on voit est ce qui bloque. Largeur x, profondeur z, dans le repère du modèle.
 {

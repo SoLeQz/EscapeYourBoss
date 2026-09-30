@@ -678,6 +678,9 @@ export function setSeated(parts) {
 // ------------------------------------------------------------
 const spriteCache = new Map();
 
+// Signalétique au-dessus des têtes : « ? » dans un rond jaune (doute),
+// « ! » dans un triangle d'avertissement rouge (observation). Même langage
+// que les pictogrammes de l'interface (index.html, #p-alerte).
 export function makeIconSprite(text, color = '#ffd24a', size = 1) {
   const key = text + color;
   let tex = spriteCache.get(key);
@@ -685,12 +688,21 @@ export function makeIconSprite(text, color = '#ffd24a', size = 1) {
     const cv = document.createElement('canvas');
     cv.width = cv.height = 128;
     const g = cv.getContext('2d');
-    g.font = 'bold 96px system-ui, sans-serif';
+    g.lineJoin = 'round';
+    if (text === '!') {
+      g.beginPath(); g.moveTo(64, 10); g.lineTo(122, 112); g.lineTo(6, 112); g.closePath();
+      g.fillStyle = '#16181a'; g.fill();
+      g.beginPath(); g.moveTo(64, 24); g.lineTo(110, 105); g.lineTo(18, 105); g.closePath();
+      g.fillStyle = color; g.fill();
+      g.fillStyle = '#ffffff';
+    } else {
+      g.beginPath(); g.arc(64, 64, 56, 0, Math.PI * 2); g.fillStyle = '#16181a'; g.fill();
+      g.beginPath(); g.arc(64, 64, 48, 0, Math.PI * 2); g.fillStyle = color; g.fill();
+      g.fillStyle = '#16181a';
+    }
+    g.font = 'bold 78px Bahnschrift, "Arial Narrow", sans-serif';
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.lineWidth = 12; g.strokeStyle = 'rgba(0,0,0,0.75)';
-    g.strokeText(text, 64, 68);
-    g.fillStyle = color;
-    g.fillText(text, 64, 68);
+    g.fillText(text, 64, text === '!' ? 78 : 68);
     tex = new THREE.CanvasTexture(cv);
     tex.colorSpace = THREE.SRGBColorSpace;
     spriteCache.set(key, partager(tex));
@@ -702,45 +714,53 @@ export function makeIconSprite(text, color = '#ffd24a', size = 1) {
   s.renderOrder = 20;
   return s;
 }
-
+// Nom au-dessus des personnages : un ruban d'étiqueteuse (Dymo), le rôle dessous.
 export function makeLabelSprite(text, sub = '') {
   const cv = document.createElement('canvas');
   cv.width = 512; cv.height = 128;
   const g = cv.getContext('2d');
-  g.textAlign = 'center';
-  g.font = 'bold 50px system-ui,-apple-system,sans-serif';
-  g.lineWidth = 8; g.strokeStyle = 'rgba(0,0,0,0.7)';
-  g.strokeText(text, 256, 56);
-  g.fillStyle = '#ffffff';
-  g.fillText(text, 256, 56);
+  g.font = 'bold 44px Bahnschrift, "Arial Narrow", sans-serif';
+  const titre = String(text).toUpperCase();
+  const w = Math.min(500, g.measureText(titre).width + 44);
+  g.fillStyle = 'rgba(22,24,26,0.94)';
+  roundRect(g, 256 - w / 2, 8, w, 62, 6); g.fill();
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = '#f4f4f0';
+  g.fillText(titre, 256, 41);
   if (sub) {
-    g.font = '30px system-ui,sans-serif';
-    g.lineWidth = 6;
+    g.font = '600 28px Bahnschrift, "Segoe UI", sans-serif';
+    g.lineWidth = 6; g.strokeStyle = 'rgba(0,0,0,0.7)';
     g.strokeText(sub, 256, 100);
-    g.fillStyle = '#ffd9a0';
+    g.fillStyle = '#f5e65b';
     g.fillText(sub, 256, 100);
   }
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: tex, depthTest: false, depthWrite: false, transparent: true, opacity: 0.85, toneMapped: false,
+    map: tex, depthTest: false, depthWrite: false, transparent: true, opacity: 0.9, toneMapped: false,
   }));
   s.scale.set(1.6, 0.4, 1);
   s.renderOrder = 19;
   return s;
 }
-
+// Réplique : un message de la messagerie interne, carré, bordé d'encre.
 export function makeBubbleSprite(text) {
   const cv = document.createElement('canvas');
   cv.width = 512; cv.height = 160;
   const g = cv.getContext('2d');
-  g.fillStyle = 'rgba(255,253,245,0.96)';
-  roundRect(g, 8, 8, 496, 110, 22); g.fill();
-  g.beginPath(); g.moveTo(230, 116); g.lineTo(256, 152); g.lineTo(282, 116); g.fill();
-  g.fillStyle = '#23262c';
-  g.font = 'bold 34px system-ui,-apple-system,sans-serif';
+  g.fillStyle = '#1b2627';
+  g.fillRect(6, 6, 500, 116);
+  g.beginPath(); g.moveTo(222, 120); g.lineTo(256, 156); g.lineTo(264, 120); g.fill();
+  g.fillStyle = '#f8f5ee';
+  g.fillRect(12, 12, 488, 104);
+  g.beginPath(); g.moveTo(230, 114); g.lineTo(255, 142); g.lineTo(258, 114); g.fill();
+  g.fillStyle = '#d9412b'; g.fillRect(12, 12, 8, 104);
+  g.fillStyle = '#1b2627';
+  g.font = '600 32px "Segoe UI", system-ui, sans-serif';
   g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(text, 256, 64);
+  let t = String(text);
+  while (g.measureText(t).width > 460 && t.length > 4) t = t.slice(0, -2) + '…';
+  g.fillText(t, 262, 64);
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({

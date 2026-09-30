@@ -1,3 +1,4 @@
+import { DEPARTEMENTS } from './departements.js';
 // ============================================================
 //  Secrets et canards de débogage (1.9).
 //
@@ -8,11 +9,12 @@
 // ============================================================
 
 export const SECRETS = [
+  ...DEPARTEMENTS.map(d=>({id:'departement-'+d.id,nom:d.secret,icone:'🔎',indice:d.indice,texte:d.chute})),
   { id: 'salle-secrete', nom: 'Salle de sieste clandestine', icone: '🛋️', indice: 'Certaines bibliothèques cachent plus que des livres.' },
   { id: 'toboggan', nom: 'Toboggan du fondateur', icone: '🛝', indice: 'Sortir sans ascenseur ni escalier.' },
   { id: 'nacelle', nom: 'Vue plongeante', icone: '🪟', indice: 'Descendre avec le laveur de vitres.' },
   { id: 'bouton', nom: 'Il ne fallait pas', icone: '🔴', indice: 'C’était pourtant écrit en gros.' },
-  { id: 'arcade', nom: 'Meilleur score', icone: '🕹️', indice: 'Une borne qui date de 1985.' },
+  { id: 'arcade', nom: 'Juste 5 minutes', icone: '🎰', indice: 'Une borne qui paie en tickets restaurant.', texte: 'La borne de la salle de sieste fait tourner une machine à sous. Taux de redistribution : 96,4 %. Taux de retour au travail : 0 %.' },
   { id: 'sieste', nom: 'Micro-sieste', icone: '💤', indice: 'Cinq minutes. Promis.' },
   { id: 'carton', nom: 'Solid Lao D', icone: '📦', indice: 'Un carton, c’est discret. Tant qu’il ne bouge pas.' },
   { id: 'disjoncteur', nom: 'Qui a éteint ?', icone: '💡', indice: 'Certaines armoires électriques méritent un détour.' },

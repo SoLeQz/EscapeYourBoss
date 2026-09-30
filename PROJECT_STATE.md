@@ -2,7 +2,7 @@
 
 > Document de reprise. Il décrit ce qui existe, **pourquoi** c'est fait comme ça,
 > ce qui a déjà été essayé et raté, et ce qui reste ouvert.
-> Dernière mise à jour : 27 septembre 2026 (coopération 2–4 joueurs, §40).
+> Dernière mise à jour : 30 septembre 2026 (identité des dix départements, §43).
 > Les mesures du 20 septembre restent des références historiques ; voir §9 pour la nouvelle passe.
 
 ---
@@ -2454,5 +2454,200 @@ d'yeux. Relus : étages 1, 5 et 7 (retourné), orientation et pose correctes de 
 meuble. Corrections issues de la planche : cadre d'horloge couché puis cadran masqué,
 pieds de cloison qui dépassaient de l'obstacle.
 
-**Validation.** Les 18 suites Node passent (`npm test`). Autotest Windows à relancer :
+**Validation.** Les 17 suites Node passent (`npm test`). Autotest Windows à relancer :
 `--selftest --decor` (contrôle aussi la présence des 26 modèles).
+
+
+## 42. Refonte des emotes dans Blender — 1.12.0
+
+**Demande.** Rendre Aura Farming, Griddy et Floss plus fidèles aux trends, retirer
+Apple, retrouver les vrais sons. Le Floss demandé est celui de Fortnite.
+
+**Animation.** Courbes v07 dans `tools/blender/tendances_v07.py`, scènes éditables
+et exports 60 Hz sous `art/emotes/tendances-v07/`. Aura remplace la pagaie inventée
+par des isolations de poignets et des gestes plus calmes ; Griddy alterne talons,
+rebonds et B’s devant les yeux ; Floss suit six balancements avec des passages
+intermédiaires autour des hanches. Les anciens essais restent archivés.
+
+**Mains.** `mains-v03.glb` ajoute une pose Cercle, créée dans Blender : contact
+index-pouce à 0,5 mm, trois autres doigts identiques à Ouvert. Basis et les quatre
+anciens morphs sont conservés exactement. Script, scène, rendu et mesures :
+`tools/blender/ajouter_main_cercle.py`, `art/personnages/anatomie-v03/`. Les anciens
+clips n’ont pas de canal Cercle et gardent une valeur nulle.
+
+**Lecture.** Les exports restent la source de toutes les poses. Le lecteur utilise
+des quaternions entre échantillons et pour le fondu : des angles exportés à 2π ou
+4π décrivent la même orientation, mais leur interpolation composante par composante
+faisait tourner les poignets pendant une transition. Les tests comparent donc les
+orientations réelles, tout en gardant le seuil de variation angulaire.
+
+**Roue et livraison.** Neuf emotes, touches 1–9 ; 0 ne déclenche plus Apple. Ses
+assets actifs et les anciens exports v06 remplacés sont retirés du paquet.
+La version change pour que les partenaires coopératifs utilisent le même catalogue.
+
+**Audio : partie non aboutie de la demande.** Les enregistrements de référence
+sont identifiés : Young Black & Rich (Melly Mike), Right Foot Creep (YoungBoy Never
+Broke Again) et la musique Floss de Fortnite. Aucun fichier original assorti d’une
+autorisation de redistribution n’a été trouvé. Les trois nouvelles emotes sont
+muettes ; les pistes synthétiques v06 sont archivées, pas présentées comme de vrais
+sons de trend. Ela Ké Leitada conserve l’extrait déjà fourni. Sources et procédure
+d’intégration ultérieure : `docs/EMOTES_ET_REFERENCES.md`.
+
+**Validation.** Les 17 suites Node passent (relances ciblées après correction du
+test de relevé des pointes de pied). 162 interruptions à 30/60/144 Hz, contacts des
+semelles, continuité des orientations, trajectoires des mains et provenance vérifiés.
+Parcours Windows `--selftest --personnage --tendances --rapide` : 25 étapes réussies,
+aucune erreur JavaScript. Roue vérifiée avec ses neuf sélections ; captures et rapport
+sous `art/emotes/tendances-v07/validation-windows/`. Les tests de lisibilité comparent
+les disques et les libellés après animation CSS, pas leurs coins rectangulaires.
+
+
+## 43. Identité des dix départements — 1.13.0, 30 septembre 2026
+
+**Diagnostic et conservation.** Les cinq plans, les rondes, les sorties et le kit
+Blender v02 sont conservés. La répétition venait des mêmes casiers, des trois
+écrans mélangés dans chaque service et de la palette pétrole/ocre universelle.
+Direction détaillée, palettes et histoires : `docs/art/DEPARTEMENTS.md`.
+
+**Identités.** RH (23), Finance (22), Support (19), Studio produit (18), Archives
+(12), Juridique (11), Marketing (9), Services généraux (7), IT (4), Direction (2).
+Les anciens numéros répétés 23/19/12 deviennent 22/18/11 à leur seconde apparition ;
+les identifiants 1–10 et les sauvegardes restent identiques.
+
+**Blender.** Complément de 22 modèles, 13 772 triangles, export de ~1,4 Mo :
+`art/departements-v01/`, `assets/departements-v01.glb`, générateur
+`tools/blender/creer_departements.py`. Dix variantes de rangement et dix accessoires
+de poste, un moodboard et une vitrine. Le mobilier partagé reste chargé une fois ;
+le nouveau cache suit le contrat ACC_* existant. La Direction utilise les vitrines
+à la place des piles de cartons ; hauteur d'appui des canards conservée à 1,27 m.
+
+**Habillage.** `src/departements.js` centralise palettes, lumières, répliques et
+histoires. `graphisme-departements.js` dessine 30 cellules dans l'atlas commun ;
+les écrans partagent une matière non éclairée. `habillage-departements.js` compose
+les motifs au sol et le rythme mural, sans volume dans les rondes. Matières teintées
+en cache par bibliothèque de base, sans modifier cette dernière. La moquette
+réutilise sa texture et ses normales : un programme commun emploie sa luminance
+pour retirer la dominante verte qui écrasait les nouvelles palettes. Lumières
+existantes seulement, aucune source supplémentaire. Deux affiches anciennes
+superposées aux nouveaux panneaux ont été retirées après revue Windows.
+
+**Exploration.** Dix observations, à différents endroits selon le service, utilisent
+la touche d'interaction, la vérification de distance/visibilité et le carnet existants.
+Elles sont partageables en coopération et relisibles au menu après découverte :
+22 découvertes au total. Les invités lisent localement le texte ; l'hôte valide et
+partage la découverte. Aucun effet de furtivité ou diversion ajouté à ces observations.
+
+**Validation.** Les 18 suites Node passent. Relances ciblées après la dernière
+correction visuelle : départements, étages et transitions. Empreintes de collision
+inchangées, 47 canards/objets correctement posés, 112 points atteignables, 8 premières
+secondes sûres sur les dix départs. Budgets inchangés : 110 lots / 270 000 triangles ;
+mesuré avec les modèles chargés : 66–75 lots et ~149 000–218 000 triangles.
+Revue Windows des dix étages : 26 étapes réussies, aucune erreur JavaScript,
+textures dans la limite de 4096 pixels, transitions terminées en état jouable.
+Captures et rapport sous `tests/departements/windows/`.
+
+**Livraison.** 1.13.0 Windows ; notes dans `docs/releases/v1.13.0.md`. Le ZIP et les
+notes sont destinés aux Téléchargements, avec mise à jour du dossier habituel
+`C:\Users\nicol\EscapeYourBoss` après sauvegarde de la version précédente.
+
+## 44. Interface « Méridien Connect » et borne « Juste 5 minutes » — 1.14.0, 30 septembre 2026
+
+**Diagnostic.** Les menus étaient des piles de boutons arrondis sur fond sombre,
+identiques d'un écran à l'autre, sans rapport avec l'immeuble ; le HUD alignait
+des panneaux noirs interchangeables ; les écrans de fin (pause, échec, étage
+franchi) étaient des cartes colorées génériques. Conservé : toute la logique des
+menus, les identifiants du DOM (tests Electron et multijoueur), les réglages
+existants, la roue d'emotes, la mini-carte et ses données.
+
+**Direction.** Trois voix, une seule par élément (`docs/art/INTERFACE.md`) :
+l'intranet Méridien (papier, pétrole, formulaires, tampons), la signalétique de
+l'immeuble (vert sortie de secours, pictogrammes, afficheurs ambre, plan
+d'évacuation) et le feutre de Lao D (rouge, surligneur, post-it). Seul le bouton
+vert fait avancer vers la sortie. Polices système Windows uniquement (Bahnschrift,
+Segoe UI, Consolas, Ink Free). L'humour entoure l'information : chaque bouton garde
+un intitulé clair et une note explicite ; les blagues vivent dans les
+notifications, indicateurs, codes de formulaire et pieds de page (`src/intranet.js`).
+
+**Écrans.** Portail d'accueil (logo sortie de secours, index des applications,
+badge collaborateur, fil de notifications, indicateurs sur la vraie progression,
+horloge bloquée à 17:59), tableau des étages avec fiche du service, Service
+informatique (réglages + commandes en onglets), Bruits de couloir (carnet),
+Départ groupé (multijoueur), Service du dress code (vestiaire), statut d'absence
+(pause), invitation « point rapide » (échec), ticket de pointeuse (étage franchi),
+afficheur d'ascenseur (chargement). HUD : agenda de l'étage aux couleurs du
+service, risque « juste 5 minutes » à états nommés, suivi bien-être, liste « À
+faire avant de partir », parcours d'intégration (empilés dans `#colonne-gauche`),
+plan d'évacuation, pense-bête, notifications internes, étiquettes Dymo dans la
+scène. 36 pictogrammes SVG au trait dans `index.html`. Styles : `interface.css`.
+
+**Borne « Juste 5 minutes ».** Dans la salle de sieste secrète, la borne d'arcade
+ouvre une machine à sous à l'ergonomie Hacksaw Gaming (studio fictif Massicot
+Gaming) : écran d'accueil à fiches, barre basse (menu, son, solde, mise, gain,
+tours rapides, automatique, gros bouton rond), achat de bonus à gauche,
+anticipation, lignes animées, paliers de célébration, tours gratuits avec canards
+scotchés, table des gains en montants réels, règles, historique. En solo l'étage
+attend (état `arcade`) ; en coopération la partie continue. Monnaie fictive (TR),
+aucun achat réel. Règles pures : `src/machine-a-sous-regles.js` ; symboles dessinés
+en canvas : `src/machine-a-sous-symboles.js` ; interface : `src/machine-a-sous.js`,
+`machine-a-sous.css` ; sons synthétisés dans `src/audio.js` ; solde dans la
+sauvegarde (`cantine`). Mesuré sur 10 millions de tours : 96,4 % de
+redistribution, un tour gagnant sur 3,7, une Pause café tous les 354 tours ;
+achats 95,1 % et 96,1 %.
+
+**Vérification.** Nouvelle suite `npm run test:interface` (contenu, identifiants,
+pictogrammes, chaque classe produite par le code a un style, règles et
+redistribution de la machine) ; `tests/etages/interactions.mjs` adapté. Banc
+d'aperçu `tools/apercu/` (serveur + cale du pont Electron + scénarios). Revue
+visuelle faite depuis WSL avec Chromium sans fenêtre et les polices Windows ;
+le rendu logiciel étant lent, la cale termine les transitions CSS avant la photo.
+Revue Windows à lancer : `EscapeYourBoss.exe --selftest --interface --out=DOSSIER`
+(`electron/interface-test.cjs`, 19 photos dont la borne jusqu'à la fin d'un bonus).
+
+**Incident.** Quatre captures Edge sans fenêtre lancées en parallèle depuis WSL ont
+cassé l'interopérabilité Windows de WSL (`UtilAcceptVsock ... accept4 failed 110`) ;
+l'accès aux fichiers `/mnt/c` fonctionne encore. Correction côté Windows :
+`wsl --shutdown`, et fermer les éventuels `msedge.exe` sans fenêtre (profils
+`%TEMP%\eyb-apercu-*`). Ne lancer qu'une capture Edge à la fois.
+
+**Livraison.** 1.14.0 Windows ; notes dans `docs/releases/v1.14.0.md`. ZIP et notes
+dans les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.14.0`, et dossier
+habituel `C:\Users\nicol\EscapeYourBoss` remplacé après sauvegarde de la 1.13.0
+(`EscapeYourBoss-sauvegarde-1.13.0-20260930-024623`). Les 19 suites Node passent.
+
+## 45. Borne qui gelait — 1.14.1, 30 septembre 2026
+
+**Symptôme (retour joueur).** La machine à sous « ne fonctionne pas correctement et
+on ne sait pas en sortir ». Sauvegarde du joueur : tours rapides actifs, 26 tours à
+une seconde d'intervalle, puis fermeture forcée du jeu.
+
+**Cause.** Chaque rouleau posait un minuteur de secours (fin + 250 ms) et un
+`transitionend` sans identité de tour. En tours rapides, ou en rappuyant sur
+Espace, le tour suivant démarrait avant ce minuteur : l'ancien minuteur arrêtait le
+nouveau rouleau à sa place, la promesse du nouveau tour ne se résolvait jamais,
+`occupee` restait vrai. Conséquence : « Quitter » grisé, Échap limité à « passer
+l'animation », borne inquittable. En plus : Échap sans effet sur les fenêtres de
+bonus, « Continuer » inactif pendant le décompte, bouton Quitter caché par l'écran
+d'accueil de la borne.
+
+**Correction** (`src/machine-a-sous.js`). Numéro d'animation par rouleau ; un
+`transitionend` n'est compté que s'il vient de la bande et de `transform` ; rouleaux
+sautés posés immédiatement. Sortie toujours possible (`demanderSortie`) : Échap, la
+touche d'interaction ou le bouton (au-dessus de tout, jamais désactivé) jouent le
+tour ou le bonus en accéléré, versent les gains puis ferment ; filet à 3 s qui règle
+d'office. Les gains d'un tour sont tenus sur une `ardoise` et versés une seule fois ;
+`garde()` arrête net les animations d'un tour déjà réglé. La borne se ferme si
+l'étage se termine ou change pendant qu'on joue (coopération). Le rendu 3D est coupé
+tant que la borne, opaque, est ouverte.
+
+**Vérification.** Banc Chromium avec la boucle de jeu active (`?vivant=1` dans la
+cale), vrais clics et vraies touches. Critère : après 6 s d'un même tour, on lâche le
+clavier 12 s ; une borne saine termine seule (le rendu logiciel ralentit les
+minuteurs sous une rafale de touches, ce n'est pas un gel). Version 1.14.0 livrée :
+gel au 9e tour, Échap sans effet. Version corrigée : 61 tours rapides sans gel,
+achats de bonus au clic, à Espace et à Échap jusqu'au bout, toutes les sorties
+fermantes. 19 suites Node validées. Autotest Windows : nouvelle étape
+`borne-echap-en-plein-tour`.
+
+**Livraison.** 1.14.1 Windows ; notes `docs/releases/v1.14.1.md`. ZIP et notes dans
+les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.14.1`, dossier
+habituel remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.14.0-20260930-135614`).

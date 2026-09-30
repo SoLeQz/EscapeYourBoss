@@ -6,7 +6,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {verifierConteneurGLB} from './personnage-glb.js';
 import {partager,libererArbre} from './resources.js';
 export const FICHIERS_ANATOMIE=Object.freeze(Object.fromEntries(
-  ['tete-employe','tete-direction','tete-chignon','tete-securite','mains'].map(n=>[n,n+'-v02.glb'])));
+  ['tete-employe','tete-direction','tete-chignon','tete-securite','mains'].map(n=>[n,n+(n==='mains'?'-v03.glb':'-v02.glb')])));
 const controles=new Set(['head','regard','paupiere','bouche','mainL','mainR','doigtsL','doigtsR','pouceL','pouceR']);
 const matieres=new Set(['peau','cheveux','blancOeil','iris','pupille','reflet','monture']);
 const cache=new Map();let chargement;
@@ -113,11 +113,11 @@ export function animerMainsBlender(parts,emote=null,travail=0,temps=0){
     const left=/(doigts|pouce)L:/.test(m.name),id=emote?.def.id,w=emote?.poids||0;
     const t=emote?emote.t/emote.def.duree:0;
     const transition=Math.min(1,t/.16)*Math.min(1,(1-t)/.14);
-    const values={Poing:travail*(.08+.035*Math.sin(temps*22+(left?0:1.8))),Index:0,Ouvert:0,Pouce:0};
+    const values={Poing:travail*(.08+.035*Math.sin(temps*22+(left?0:1.8))),Index:0,Ouvert:0,Pouce:0,Cercle:0};
     if(emote?.def.sourceBlender){
       const pose=emote.def.echantillon(t),side=left?'L':'R';
-      // Les clips antérieurs aux mains v02 n'ont pas de canal Pouce.
-      for(const nom of ['Poing','Index','Ouvert','Pouce'])values[nom]+=((pose['main'+side+'_'+nom]??0)-values[nom])*w;
+      // Les clips anciens restent compatibles : Pouce (v02) et Cercle (v03) valent 0 lorsqu’absents.
+      for(const nom of ['Poing','Index','Ouvert','Pouce','Cercle'])values[nom]+=((pose['main'+side+'_'+nom]??0)-values[nom])*w;
     }
     if(id==='takeL'&&left)values.Index=w*transition;
     if(id==='tchao'&&!left)values.Ouvert=w*transition;

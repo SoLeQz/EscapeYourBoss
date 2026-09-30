@@ -1,0 +1,453 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":847,\"premierNiveau\":691,\"rendu\":12,\"total\":4504},\"pnj\":4,\"obstacles\":57}"
+    },
+    {
+      "name": "version-livree",
+      "result": {
+        "version": "1.13.0",
+        "emotes": [
+          "Démission",
+          "Encore un mail",
+          "Réunion KO",
+          "Take the L",
+          "67",
+          "Ela Ké Leitada",
+          "Aura Farming",
+          "Griddy",
+          "Floss"
+        ],
+        "decor": {
+          "bureau": {
+            "fichier": "bureau-v01.glb",
+            "pieces": 6,
+            "triangles": 2704
+          },
+          "chaise": {
+            "fichier": "chaise-v01.glb",
+            "pieces": 4,
+            "triangles": 3068
+          },
+          "escalier": {
+            "fichier": "escalier-v01.glb",
+            "pieces": 5,
+            "triangles": 12012
+          },
+          "porte": {
+            "fichier": "porte-escalier-v01.glb",
+            "pieces": 3,
+            "triangles": 1212
+          },
+          "tropheeCafe": {
+            "fichier": "trophee-cafe-v01.glb",
+            "pieces": 4,
+            "triangles": 427
+          },
+          "cascadePapier": {
+            "fichier": "cascade-papier-v01.glb",
+            "pieces": 2,
+            "triangles": 200
+          },
+          "coneChef": {
+            "fichier": "cone-chef-v01.glb",
+            "pieces": 5,
+            "triangles": 251
+          },
+          "sablierReunion": {
+            "fichier": "sablier-reunion-v01.glb",
+            "pieces": 4,
+            "triangles": 752
+          },
+          "tourDossiers": {
+            "fichier": "tour-dossiers-v01.glb",
+            "pieces": 4,
+            "triangles": 564
+          },
+          "tamponSortie": {
+            "fichier": "tampon-sortie-v01.glb",
+            "pieces": 4,
+            "triangles": 316
+          }
+        }
+      }
+    },
+    {
+      "name": "preparer-revue",
+      "result": {
+        "etat": "play",
+        "obstacles": 57,
+        "objets": {
+          "bureau-v01.glb": 6,
+          "chaise-v01.glb": 13,
+          "trophee-cafe-v01.glb": 1,
+          "escalier-v01.glb": 1,
+          "porte-escalier-v01.glb": 1
+        }
+      }
+    },
+    {
+      "name": "kit-departements",
+      "result": {
+        "poste-finance": {
+          "triangles": 196
+        },
+        "rangement-marketing": {
+          "triangles": 1040
+        },
+        "rangement-support": {
+          "triangles": 960
+        },
+        "poste-support": {
+          "triangles": 172
+        },
+        "rangement-logistique": {
+          "triangles": 500
+        },
+        "poste-juridique": {
+          "triangles": 132
+        },
+        "rangement-finance": {
+          "triangles": 660
+        },
+        "poste-logistique": {
+          "triangles": 64
+        },
+        "rangement-juridique": {
+          "triangles": 880
+        },
+        "vitrine-direction": {
+          "triangles": 240
+        },
+        "poste-it": {
+          "triangles": 192
+        },
+        "rangement-rh": {
+          "triangles": 992
+        },
+        "rangement-studio": {
+          "triangles": 1584
+        },
+        "rangement-archives": {
+          "triangles": 2368
+        },
+        "rangement-it": {
+          "triangles": 1792
+        },
+        "rangement-direction": {
+          "triangles": 648
+        },
+        "poste-studio": {
+          "triangles": 308
+        },
+        "poste-marketing": {
+          "triangles": 88
+        },
+        "poste-rh": {
+          "triangles": 188
+        },
+        "poste-archives": {
+          "triangles": 220
+        },
+        "moodboard": {
+          "triangles": 476
+        },
+        "poste-direction": {
+          "triangles": 72
+        }
+      }
+    },
+    {
+      "name": "departement-1",
+      "result": {
+        "id": 1,
+        "departement": "rh",
+        "titre": "Étage 23 — 18:00 · RH",
+        "lots": 66,
+        "triangles": 175521,
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-1",
+      "result": {
+        "id": "departement-rh",
+        "texte": "Le ficus est employé du mois : jamais en retard, jamais en congé. Son entretien annuel : un verre d’eau."
+      }
+    },
+    {
+      "name": "departement-2",
+      "result": {
+        "id": 2,
+        "departement": "finance",
+        "titre": "Étage 22 — 18:20 · Finance",
+        "lots": 68,
+        "triangles": 170638,
+        "transition": {
+          "index": 1,
+          "ms": 5245.5
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-2",
+      "result": {
+        "id": "departement-finance",
+        "texte": "Le bénéfice plonge de 98 %. Le conseil recommande de retourner l’écran. Prévision désormais excellente."
+      }
+    },
+    {
+      "name": "departement-3",
+      "result": {
+        "id": 3,
+        "departement": "support",
+        "titre": "Étage 19 — 18:45 · Support clients",
+        "lots": 67,
+        "triangles": 197639,
+        "transition": {
+          "index": 2,
+          "ms": 805.7999999970198
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-3",
+      "result": {
+        "id": "departement-support",
+        "texte": "Ticket ouvert en 1998. Le client est toujours premier dans la file. Le robot lui souhaite une excellente journée."
+      }
+    },
+    {
+      "name": "departement-4",
+      "result": {
+        "id": 4,
+        "departement": "studio",
+        "titre": "Étage 18 — 19:30 · Studio produit",
+        "lots": 69,
+        "triangles": 205916,
+        "transition": {
+          "index": 3,
+          "ms": 1784.7999999970198
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-4",
+      "result": {
+        "id": "departement-studio",
+        "texte": "Chaise sans assise, version finale_finale_8. Test utilisateur : « On ne voit plus le temps assis passer. »"
+      }
+    },
+    {
+      "name": "departement-5",
+      "result": {
+        "id": 5,
+        "departement": "archives",
+        "titre": "Étage 12 — 20:15 · Archives",
+        "lots": 69,
+        "triangles": 216558,
+        "transition": {
+          "index": 4,
+          "ms": 1046.5999999940395
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-5",
+      "result": {
+        "id": "departement-archives",
+        "texte": "Dossier 404 : formulaire de recherche du formulaire de recherche. La dernière page demande de recommencer page 1."
+      }
+    },
+    {
+      "name": "departement-6",
+      "result": {
+        "id": 6,
+        "departement": "juridique",
+        "titre": "Étage 11 — 21:00 · Juridique",
+        "lots": 70,
+        "triangles": 195586,
+        "transition": {
+          "index": 5,
+          "ms": 1007.5
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-6",
+      "result": {
+        "id": "departement-juridique",
+        "texte": "Article 18 : toute sortie est autorisée sous réserve d’avoir obtenu l’autorisation de demander une autorisation."
+      }
+    },
+    {
+      "name": "departement-7",
+      "result": {
+        "id": 7,
+        "departement": "marketing",
+        "titre": "Étage 9 — 21:30 · Marketing",
+        "lots": 76,
+        "triangles": 193556,
+        "transition": {
+          "index": 6,
+          "ms": 1040.4000000059605
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-7",
+      "result": {
+        "id": "departement-marketing",
+        "texte": "NOUVEAU : RIEN™, maintenant en format familial. 0 % de contenu, 100 % de marge. La boîte est vendue séparément."
+      }
+    },
+    {
+      "name": "departement-8",
+      "result": {
+        "id": 8,
+        "departement": "logistique",
+        "titre": "Étage 7 — 22:00 · Services généraux",
+        "lots": 73,
+        "triangles": 152154,
+        "transition": {
+          "index": 7,
+          "ms": 942.7000000029802
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-8",
+      "result": {
+        "id": "departement-logistique",
+        "texte": "Caisse FRAGILE : contient le moral de l’équipe. Ne pas secouer. Livraison reportée à lundi depuis trois ans."
+      }
+    },
+    {
+      "name": "departement-9",
+      "result": {
+        "id": 9,
+        "departement": "it",
+        "titre": "Étage 4 — 22:40 · IT / Tech",
+        "lots": 76,
+        "triangles": 200396,
+        "transition": {
+          "index": 8,
+          "ms": 1357.199999988079
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-9",
+      "result": {
+        "id": "departement-it",
+        "texte": "Les voyants rouges ont été débranchés. Disponibilité : 100 %. Le serveur fonctionne uniquement quand quelqu’un le regarde."
+      }
+    },
+    {
+      "name": "departement-10",
+      "result": {
+        "id": 10,
+        "departement": "direction",
+        "titre": "Étage 2 — 23:15 · Direction",
+        "lots": 72,
+        "triangles": 148822,
+        "transition": {
+          "index": 9,
+          "ms": 1870
+        },
+        "textureMax": 16384
+      }
+    },
+    {
+      "name": "decouverte-10",
+      "result": {
+        "id": "departement-direction",
+        "texte": "Trophée « Parti à l’heure », édition 1998. Aucun lauréat. Le socle attend encore son héros."
+      }
+    },
+    {
+      "name": "lecture-panneaux",
+      "result": [
+        [
+          512,
+          320
+        ],
+        [
+          512,
+          320
+        ],
+        [
+          512,
+          320
+        ],
+        [
+          384,
+          384
+        ],
+        [
+          320,
+          96
+        ],
+        [
+          320,
+          96
+        ],
+        [
+          2048,
+          3584
+        ],
+        [
+          128,
+          256
+        ],
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          128
+        ],
+        [
+          512,
+          128
+        ]
+      ]
+    },
+    {
+      "name": "camera-jouable",
+      "result": {
+        "titre": "Étage 4 — 22:40 · IT / Tech",
+        "etat": "play",
+        "voile": "parti"
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

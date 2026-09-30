@@ -137,6 +137,7 @@ export class Multijoueur {
       r: p.running ? 1 : 0, m: p.moving ? 1 : 0, v: r3(p.speed),
       e: e && !e.coupee ? EMOTES.indexOf(e.def) : -1, et: e ? r3(e.t) : 0,
       w: p.working ? { id: p.working.id, x: r3(p.working.x), z: r3(p.working.z), restant: r3(p.working.restant) } : null,
+      sz: p.sieste ? this.jeu.interactifs?.liste.indexOf(p.sieste.it) ?? -1 : -1,
       s: this.sortiLocal ? 1 : 0, xp: p.exitPose ? { id: p.exitPose.id, p: r3(p.exitPose.progress), dist: p.exitPose.dist, descente: p.exitPose.descente } : null });
   }
 
@@ -153,6 +154,9 @@ export class Multijoueur {
     // Poste de travail : même règle de protection que pour le joueur local.
     const poste = s.w && this.jeu.actionsBureau.find(a => a.id === s.w.id && a.type === 'travail');
     c.working = poste?.restant > 0 && Math.hypot(s.x - poste.x, s.z - poste.z) < .25 ? poste : null;
+    // micro-sieste : le coéquipier s'allonge dans le même hamac (pose dans player.js)
+    const hamac = s.sz >= 0 ? this.jeu.interactifs?.liste[s.sz] : null;
+    c.sieste = hamac?.lit ? (c.sieste?.it === hamac ? c.sieste : { it: hamac, t: 0 }) : null;
     c.exitPose = s.xp ? { id: s.xp.id, progress: s.xp.p, dist: s.xp.dist, descente: s.xp.descente, dir: this.jeu.level?.interactables.find(i => i.id === s.xp.id)?.dir } : null;
     if (s.e >= 0 && (!c.emote || c.emote.coupee || c.emote.def !== EMOTES[s.e])) {
       c.emote = null; c.declencherEmote(s.e); if (c.emote) c.emote.t = s.et;

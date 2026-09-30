@@ -13,7 +13,7 @@ def euler_jeu(q):
  return [math.atan2(m[2][1],m[1][1]),y,0]
 def exporter(out):
  out=Path(out);out.mkdir(parents=True,exist_ok=False);s=bpy.context.scene;fps=60;duration=float(s['emote_duree']);controls={o['emote_controle']:o for o in bpy.data.objects if 'emote_controle' in o};expr=bpy.data.objects['Expressions'];frames=[];version=s.get('emote_version','v01')
- expressions=EXPRESSION+[k for k in ['mainL_Pouce','mainR_Pouce'] if k in expr]  # v01 : pas de canal Pouce, réexport identique
+ expressions=EXPRESSION+[k for k in ['mainL_Pouce','mainR_Pouce','mainL_Cercle','mainR_Cercle'] if k in expr]  # v01 : pas de canal Pouce, réexport identique
  channels=[b+'_'+axis for b in BONES for axis in 'xyz']+['deplacement_x','deplacement_y','deplacement_z']+expressions
  for i in range(round(duration*fps)+1):
   s.frame_set(s.frame_start+round(i*s.render.fps/fps));row=[]

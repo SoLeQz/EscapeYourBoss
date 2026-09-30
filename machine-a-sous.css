@@ -1,0 +1,243 @@
+/* =====================================================================
+   « Juste 5 minutes » — machine à sous de la borne d'arcade
+   Ergonomie inspirée des jeux Hacksaw Gaming (barre basse sombre, gros
+   bouton rond, achat de bonus à gauche, célébrations par palier) ; habillage
+   aux couleurs de la borne Blender (violet, rose, jaune) et trame BD.
+   ===================================================================== */
+#screen-arcade{display:block;padding:0;overflow:hidden;background:#12081f;z-index:12}
+.mas{--case:min(14.6vh,8.6vw);--violet:#3a1566;--violet-fonce:#1c0833;--rose:#ff3d8b;--jaune:#ffd23a;--vert:#14a052;
+  position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;color:#fff;font-family:var(--f-texte);user-select:none}
+.mas-fond{position:absolute;inset:0;z-index:-1;background:
+  radial-gradient(circle at 50% 42%,rgba(255,61,139,.26),transparent 58%),
+  radial-gradient(rgba(255,255,255,.07) 1.4px,transparent 1.6px) 0 0/14px 14px,
+  var(--violet-fonce)}
+#screen-arcade.en-bonus .mas-fond{background:radial-gradient(circle at 50% 42%,rgba(255,170,40,.32),transparent 60%),radial-gradient(rgba(255,255,255,.08) 1.4px,transparent 1.6px) 0 0/14px 14px,#3a1a08}
+
+/* ---------------- titre ---------------- */
+.mas-haut{position:relative;display:grid;place-items:center;padding:14px 0 6px}
+.mas-logo,.mas-intro-logo{display:flex;flex-direction:column;align-items:center;line-height:.82;transform:rotate(-2deg)}
+.mas-logo-l1,.mas-logo-l2{font-family:var(--f-signal);font-weight:700;font-stretch:75%;text-transform:uppercase;
+  color:var(--jaune);-webkit-text-stroke:0;paint-order:stroke fill;text-shadow:4px 4px 0 var(--rose),0 0 0 #000}
+.mas-logo-l1{font-size:30px;letter-spacing:.2em;color:#fff;text-shadow:3px 3px 0 #111}
+.mas-logo-l2{font-size:62px;letter-spacing:.01em;-webkit-text-stroke:3px #111}
+.mas-logo-studio{margin-top:8px;font:700 11px/1 var(--f-signal);letter-spacing:.24em;text-transform:uppercase;color:#c9a9ee;transform:rotate(2deg)}
+.mas-quitter{position:absolute;right:18px;top:16px;z-index:40;display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,0,0,.45);
+  color:#fff;border:2px solid rgba(255,255,255,.35);border-radius:22px;font:700 13px/1 var(--f-signal);text-transform:uppercase;letter-spacing:.06em}
+.mas-quitter .picto{width:16px;height:16px}
+.mas-quitter:hover{background:rgba(0,0,0,.7);border-color:#fff}
+.mas-quitter kbd{padding:2px 5px 1px;background:transparent;box-shadow:none;border:1px solid rgba(255,255,255,.45);border-radius:4px;min-width:0;font:700 10px/1 var(--f-machine);letter-spacing:0;color:#e9dcf7}
+
+/* ---------------- centre : achat bonus, rouleaux, affiches ---------------- */
+.mas-centre{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:26px;min-height:0;padding:0 24px}
+.mas-gauche,.mas-droite{display:flex;flex-direction:column;gap:18px;align-items:center}
+.mas-gauche{justify-self:end}.mas-droite{justify-self:start}
+.mas-achat{display:flex;flex-direction:column;align-items:center;justify-content:center;width:148px;height:148px;border-radius:50%;
+  background:var(--jaune);color:#111;border:5px solid #111;box-shadow:0 6px 0 #111,0 0 0 6px rgba(255,210,58,.25);
+  font-family:var(--f-signal);text-transform:uppercase;transform:rotate(-8deg);transition:transform .15s}
+.mas-achat span{font-size:18px;font-weight:700;letter-spacing:.08em}
+.mas-achat b{font-size:36px;line-height:.9;font-stretch:78%}
+.mas-achat small{margin-top:4px;font:700 13px var(--f-machine)}
+.mas-achat:hover:not(:disabled){transform:rotate(-4deg) scale(1.05)}
+.mas-achat:disabled{filter:grayscale(1) brightness(.6);cursor:default}
+.mas-info-gains,.mas-affiche{display:flex;flex-direction:column;align-items:center;min-width:140px;padding:10px 14px;background:rgba(0,0,0,.35);
+  border:2px dashed rgba(255,255,255,.28);border-radius:10px;text-align:center}
+.mas-info-gains span,.mas-affiche span{font:700 12px var(--f-signal);text-transform:uppercase;letter-spacing:.14em;color:#c9a9ee}
+.mas-info-gains b,.mas-affiche b{font:700 30px/1 var(--f-signal);font-stretch:80%;text-transform:uppercase;color:var(--jaune)}
+.mas-affiche small{font:13px/1.3 var(--f-texte);color:#e6d8f7}
+.mas-affiche.vert b{color:#6cf09f}
+
+.mas-cadre{position:relative;padding:12px;background:#111;border-radius:14px;box-shadow:0 0 0 5px var(--rose),0 0 0 10px #111,0 18px 50px rgba(0,0,0,.6)}
+.mas-grille{position:relative;display:flex;background:#0d0617;border-radius:6px;overflow:hidden}
+.mas-rouleau{position:relative;width:var(--case);height:calc(var(--case) * 4);overflow:hidden;
+  background:linear-gradient(#1f0d38,#2b1150 50%,#1f0d38);box-shadow:inset 1px 0 0 rgba(255,255,255,.07),inset -1px 0 0 rgba(0,0,0,.6)}
+.mas-rouleau::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(rgba(0,0,0,.45),transparent 14%,transparent 86%,rgba(0,0,0,.45))}
+.mas-bande{display:flex;flex-direction:column;will-change:transform}
+.mas-rouleau.tourne .mas-bande{filter:blur(1.2px) brightness(.9)}
+.mas-rouleau.anticipe{box-shadow:inset 0 0 0 4px var(--jaune),inset 0 0 40px rgba(255,210,58,.6);animation:anticipe .35s steps(2) infinite}
+@keyframes anticipe{50%{box-shadow:inset 0 0 0 4px #fff,inset 0 0 50px rgba(255,210,58,.9)}}
+.mas-case{position:relative;flex:none;width:var(--case);height:var(--case);padding:8%;display:grid;place-items:center;transition:opacity .2s,filter .2s}
+.mas-case svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+.mas-case.arrive{animation:atterrir .28s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes atterrir{from{transform:translateY(-10%)}}
+.mas-multi{position:absolute;right:4%;top:4%;min-width:38%;padding:3% 6%;background:var(--rose);color:#fff;border:3px solid #111;border-radius:30px;
+  font:700 calc(var(--case) * .17)/1 var(--f-signal);font-stretch:85%;text-align:center;text-shadow:2px 2px 0 #111;transform:rotate(8deg)}
+.mas-grille.resultat .mas-case:not(.gagne){opacity:.28;filter:grayscale(.7)}
+.mas-case.gagne{animation:gagne .7s ease-in-out infinite alternate}
+@keyframes gagne{from{transform:scale(1)}to{transform:scale(1.1)}}
+.mas-case.sortie-pose{animation:sortie .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes sortie{50%{transform:scale(1.22)}}
+.mas-case.sortie-gagne{animation:gagne .45s ease-in-out infinite alternate;filter:drop-shadow(0 0 16px #6cf09f)}
+.mas-lignes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.mas-lignes polyline{fill:none;stroke-width:9;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 3px #111) drop-shadow(0 0 1px #111);animation:tracer .5s ease-out both;stroke-dasharray:2000;stroke-dashoffset:2000}
+@keyframes tracer{to{stroke-dashoffset:0}}
+.mas-lignes .l0{stroke:#ffd23a}.mas-lignes .l1{stroke:#ff3d8b}.mas-lignes .l2{stroke:#6cf09f}.mas-lignes .l3{stroke:#5bc8ff}.mas-lignes .l4{stroke:#ff9a3c}
+.mas-collants{position:absolute;inset:0;pointer-events:none}
+.mas-colle{position:absolute;left:calc(var(--c) * var(--case));top:calc(var(--r) * var(--case));width:var(--case);height:var(--case);
+  background:rgba(13,6,23,.35);animation:scotcher .3s cubic-bezier(.3,1.6,.5,1) both}
+.mas-colle .mas-case{animation:none}
+@keyframes scotcher{from{transform:scale(1.25);opacity:0}}
+.scotch{position:absolute;left:-6%;top:6%;width:62%;height:16%;background:rgba(236,218,170,.82);transform:rotate(-24deg);
+  box-shadow:0 1px 2px rgba(0,0,0,.4);clip-path:polygon(2% 0,98% 6%,100% 100%,0 94%)}
+.mas-compteur{position:absolute;left:0;right:0;top:-54px;display:flex;justify-content:center;align-items:baseline;gap:22px;padding:8px 14px;background:#111;
+  border:3px solid var(--jaune);border-radius:10px;font:700 14px/1 var(--f-signal);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.mas-compteur b{color:var(--jaune);font-size:20px}
+.mas-compteur-nom{color:#ffb24a}
+.mas-message{position:absolute;left:50%;bottom:-40px;transform:translateX(-50%);min-height:26px;padding:4px 16px;white-space:nowrap;
+  font:700 16px/1.3 var(--f-signal);text-transform:uppercase;letter-spacing:.04em;color:#d8c6ef;opacity:.8}
+.mas-message.visible{color:#fff;opacity:1;background:rgba(0,0,0,.55);border-radius:14px}
+.mas-message b{color:var(--jaune);font-size:1.25em}
+.mas-message i{font-style:normal;color:var(--rose)}
+
+/* ---------------- barre basse (façon Hacksaw) ---------------- */
+.mas-barre{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;height:104px;padding:0 22px;
+  background:rgba(4,2,8,.86);border-top:1px solid rgba(255,255,255,.1)}
+.mas-barre-gauche,.mas-barre-droite{display:flex;align-items:center;gap:14px}
+.mas-barre-droite{justify-self:end}
+.mas-valeur{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.mas-valeur span{font:700 11px/1 var(--f-signal);text-transform:uppercase;letter-spacing:.16em;color:#a99bb8}
+.mas-valeur b{font:700 22px/1 var(--f-machine);color:#fff}
+.mas-valeur small{font:700 10px var(--f-signal);color:#a99bb8;letter-spacing:.1em}
+.mas-mise-bloc{flex-direction:row;align-items:center;gap:8px;padding-left:12px;border-left:1px solid rgba(255,255,255,.12)}
+.mas-mise-bouton{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:0 4px;background:none;border:0;color:#fff}
+.mas-mise-bouton:hover b{color:var(--jaune)}
+.mas-mise-bouton span{font:700 11px/1 var(--f-signal);text-transform:uppercase;letter-spacing:.16em;color:#a99bb8}
+.mas-mise-bouton b{font:700 22px/1 var(--f-machine)}
+.mas-mise-bouton small{font:700 10px var(--f-signal);color:#a99bb8}
+.mas-gain-bloc{align-items:center}
+.mas-gain-bloc b{font-size:34px;color:var(--jaune)}
+.mas-rond{display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.06);color:#fff;border:2px solid rgba(255,255,255,.38);
+  transition:background .12s,border-color .12s,transform .12s}
+.mas-rond:hover:not(:disabled){background:rgba(255,255,255,.16);border-color:#fff}
+.mas-rond:disabled{opacity:.3;cursor:default}
+.mas-rond.petit{width:46px;height:46px}.mas-rond.petit .picto{width:22px;height:22px}
+.mas-rond.mini{width:34px;height:34px}.mas-rond.mini .picto{width:16px;height:16px}
+.mas-rond.moyen{width:62px;height:62px;font:700 13px var(--f-signal);letter-spacing:.06em}
+.mas-rond.actif{background:var(--jaune);color:#111;border-color:var(--jaune)}
+.mas-tourner{position:relative;display:grid;place-items:center;width:96px;height:96px;border-radius:50%;background:#fff;color:#111;border:0;
+  box-shadow:0 0 0 5px rgba(255,255,255,.18),0 6px 18px rgba(0,0,0,.5);transition:transform .12s}
+.mas-tourner .picto{width:52px;height:52px;transition:transform .3s}
+.mas-tourner:hover .picto{transform:rotate(90deg)}
+.mas-tourner:active{transform:scale(.94)}
+.mas-tourner.auto{background:var(--jaune)}
+.mas-tourner.auto .picto{opacity:.25}
+.mas-tourner-compte{position:absolute;font:700 26px/1 var(--f-machine)}
+.mas .mas-tourner:focus-visible,.mas button:focus-visible{outline:3px solid var(--jaune);outline-offset:3px}
+
+/* ---------------- célébrations : GROS GAIN, MÉGA GAIN… ---------------- */
+.mas-celebration{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:rgba(8,3,16,.78);cursor:pointer;overflow:hidden}
+.mas-palier{font:700 min(12vw,120px)/.9 var(--f-signal);font-stretch:75%;text-transform:uppercase;color:var(--jaune);
+  -webkit-text-stroke:5px #111;paint-order:stroke fill;text-shadow:8px 8px 0 var(--rose);animation:palier .5s cubic-bezier(.3,1.7,.5,1) both}
+.mas-celebration.n-mega .mas-palier{color:#ff7ab4;text-shadow:8px 8px 0 #7c1bd1}
+.mas-celebration.n-epique .mas-palier{color:#72e4ff;text-shadow:8px 8px 0 #1b4fd1}
+.mas-celebration.n-max .mas-palier{color:#6cf09f;text-shadow:8px 8px 0 #0b6e36}
+@keyframes palier{from{transform:scale(2.4) rotate(-8deg);opacity:0}}
+.mas-somme{font:700 min(7vw,72px)/1 var(--f-machine);color:#fff;-webkit-text-stroke:3px #111;paint-order:stroke fill}
+.mas-celebration small{font:700 13px var(--f-signal);text-transform:uppercase;letter-spacing:.2em;color:#c9a9ee;animation:clignote 1s steps(2) infinite}
+@keyframes clignote{50%{opacity:.35}}
+.mas-confettis{position:absolute;inset:0;pointer-events:none}
+.mas-confettis i{position:absolute;top:-60px;width:26px;height:26px;animation:tomber linear infinite}
+.mas-confettis .feuille{width:22px;height:30px;background:#fff;box-shadow:inset 0 -4px 0 #ddd}
+.mas-confettis .postit{background:#f7e36d}
+.mas-confettis .postit.rose{background:#f2a3c0}
+.mas-confettis .trombone{width:10px;height:30px;border:3px solid #cfd6dc;border-radius:6px}
+@keyframes tomber{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* ---------------- panneaux (menu, mise, auto, achat, fenêtres) ---------------- */
+.mas-panneau{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:rgba(4,2,8,.72)}
+.mas-panneau-boite{position:relative;width:min(560px,92vw);max-height:84vh;overflow-y:auto;padding:26px 26px 22px;background:#16101f;
+  border:2px solid rgba(255,255,255,.18);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);scrollbar-width:thin}
+.mas-panneau-boite.large{width:min(920px,94vw)}
+.mas-panneau-boite h2{font:700 30px/1 var(--f-signal);font-stretch:80%;text-transform:uppercase;letter-spacing:.02em;color:var(--jaune);margin-bottom:6px}
+.mas-panneau-sous{margin-bottom:16px;color:#bcaecb;font-size:14px}
+.mas-fermer{position:absolute;right:14px;top:14px;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);
+  color:#fff;border:2px solid rgba(255,255,255,.3)}
+.mas-fermer .picto{width:18px;height:18px}
+.mas-choix-mise,.mas-choix-auto{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mas-choix-mise button,.mas-choix-auto button{padding:14px 4px;border-radius:10px;background:rgba(255,255,255,.07);color:#fff;border:2px solid rgba(255,255,255,.2);
+  font:700 17px var(--f-machine)}
+.mas-choix-mise button:hover,.mas-choix-auto button:hover,.mas-choix-mise button.actif{background:var(--jaune);color:#111;border-color:var(--jaune)}
+.mas-case-a-cocher{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14px;color:#e6d8f7;cursor:pointer}
+.mas-case-a-cocher input{width:20px;height:20px;accent-color:var(--jaune)}
+.mas-achats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mas-carte-achat{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 14px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.18);
+  border-radius:14px;text-align:center}
+.mas-carte-achat.super{border-color:var(--rose);background:rgba(255,61,139,.1)}
+.mas-carte-achat svg{width:96px;height:96px;margin-bottom:6px}
+.mas-carte-achat b{font:700 22px/1 var(--f-signal);font-stretch:85%;text-transform:uppercase}
+.mas-carte-achat p{font-size:13px;line-height:1.4;color:#d4c6e4;min-height:54px}
+.mas-carte-achat button{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;padding:10px;border-radius:30px;background:var(--jaune);color:#111;border:3px solid #111;
+  font:700 17px var(--f-machine)}
+.mas-carte-achat button span{font:700 26px/1 var(--f-signal)}
+.mas-carte-achat button:hover:not(:disabled){transform:scale(1.03)}
+.mas-carte-achat button:disabled{filter:grayscale(1);opacity:.5}
+.mas-confirmation{margin:14px 0 18px;font-size:17px;line-height:1.5;color:#efe6fa}
+.mas-confirmation b{color:var(--jaune)}
+.mas-oui-non{display:flex;gap:12px;justify-content:center}
+.mas-oui-non button{display:flex;align-items:center;gap:8px;padding:12px 22px;border-radius:30px;border:3px solid #111;font:700 17px var(--f-signal);text-transform:uppercase}
+.mas-oui-non .picto{width:18px;height:18px}
+.mas-oui-non .non{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.35)}
+.mas-oui-non .oui{background:var(--jaune);color:#111}
+.mas-mention{margin-top:14px;font-size:12.5px;line-height:1.45;color:#a99bb8}
+.mas-onglets{display:flex;gap:6px;margin:0 50px 18px 0;flex-wrap:wrap}
+.mas-onglets button{padding:9px 14px;border-radius:20px;background:rgba(255,255,255,.07);color:#e6d8f7;border:2px solid rgba(255,255,255,.18);
+  font:700 13px var(--f-signal);text-transform:uppercase;letter-spacing:.06em}
+.mas-onglets button.actif{background:#fff;color:#111;border-color:#fff}
+.mas-table-gains{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.mas-ligne-gain{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:10px}
+.mas-ligne-gain svg{width:64px;height:64px;flex:none}
+.mas-ligne-gain dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;font:14px var(--f-machine)}
+.mas-ligne-gain dt{color:#a99bb8}.mas-ligne-gain dd{text-align:right;color:#fff}
+.mas-speciaux{display:grid;gap:10px;margin-top:14px}
+.mas-speciaux>div{display:flex;align-items:center;gap:14px;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:10px}
+.mas-speciaux svg{width:70px;height:70px;flex:none}
+.mas-speciaux p{font-size:14px;line-height:1.45;color:#e6d8f7}
+.mas-reglages{display:flex;flex-direction:column;gap:4px}
+.mas-regles p{margin-bottom:10px;font-size:14px;line-height:1.55;color:#e6d8f7}
+.mas-schemas{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:10px 0 16px}
+.mas-schema{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:4px 6px 6px;background:rgba(255,255,255,.05);border-radius:6px}
+.mas-schema span{grid-column:1/-1;margin-bottom:2px;font:700 10px/1 var(--f-machine);color:#a99bb8}
+.mas-schema i{aspect-ratio:1;background:rgba(255,255,255,.1);border-radius:2px}
+.mas-schema i.on{background:var(--jaune)}
+.mas-historique{width:100%;border-collapse:collapse;font:14px var(--f-machine)}
+.mas-historique th{text-align:left;padding:6px;font:700 11px var(--f-signal);text-transform:uppercase;letter-spacing:.12em;color:#a99bb8;border-bottom:1px solid rgba(255,255,255,.15)}
+.mas-historique td{padding:6px;border-bottom:1px solid rgba(255,255,255,.07)}
+
+/* fenêtres de bonus */
+.mas-fenetre{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border-color:var(--jaune);background:#1c0833}
+.mas-fenetre-sur{font:700 14px var(--f-signal);text-transform:uppercase;letter-spacing:.2em;color:#c9a9ee}
+.mas-fenetre b{font:700 56px/.95 var(--f-signal);font-stretch:75%;text-transform:uppercase;color:var(--jaune);-webkit-text-stroke:3px #111;paint-order:stroke fill;text-shadow:5px 5px 0 var(--rose)}
+.mas-fenetre strong{font:700 30px/1 var(--f-signal);text-transform:uppercase;color:#fff}
+.mas-fenetre p{max-width:420px;font-size:15px;line-height:1.5;color:#e6d8f7}
+.mas-continuer{margin-top:12px;padding:12px 26px;border-radius:30px;background:#fff;color:#111;border:0;font:700 16px var(--f-signal);text-transform:uppercase;letter-spacing:.12em;
+  animation:respire 1.4s ease-in-out infinite}
+@keyframes respire{50%{transform:scale(1.05)}}
+
+/* ---------------- écran d'accueil de la machine ---------------- */
+.mas-intro{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;
+  background:radial-gradient(circle at 50% 38%,rgba(255,61,139,.3),transparent 55%),radial-gradient(rgba(255,255,255,.07) 1.4px,transparent 1.6px) 0 0/14px 14px,#1c0833;outline:0}
+.mas-studio{font:700 20px/1 var(--f-signal);text-transform:uppercase;letter-spacing:.3em;color:#c9a9ee;text-align:center;animation:apparaitre .8s ease-out both}
+.mas-studio b{color:#fff}
+.mas-studio small{display:block;margin-top:6px;font:15px var(--f-feutre);letter-spacing:0;text-transform:none;color:var(--rose)}
+.mas-intro-logo .mas-logo-l1{font-size:40px}.mas-intro-logo .mas-logo-l2{font-size:110px;-webkit-text-stroke:5px #111;text-shadow:7px 7px 0 var(--rose)}
+.mas-intro-logo{animation:palier .7s .2s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes apparaitre{from{opacity:0;transform:translateY(-10px)}}
+.mas-fiches{display:grid;grid-template-columns:repeat(3,minmax(0,250px));gap:18px}
+.mas-fiches article{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.2);
+  border-radius:14px;text-align:center;animation:apparaitre .6s both}
+.mas-fiches article:nth-child(2){animation-delay:.15s}.mas-fiches article:nth-child(3){animation-delay:.3s}
+.mas-fiches svg{width:92px;height:92px;margin-bottom:6px}
+.mas-fiches b{font:700 20px/1 var(--f-signal);font-stretch:85%;text-transform:uppercase;color:var(--jaune)}
+.mas-fiches p{font-size:13.5px;line-height:1.45;color:#e6d8f7}
+.mas-intro-pied{font:700 13px var(--f-signal);text-transform:uppercase;letter-spacing:.14em;color:#c9a9ee}
+
+/* ---------------- tours rapides : animations raccourcies ---------------- */
+#screen-arcade.turbo .mas-case.gagne{animation-duration:.35s}
+@media (max-height:760px){
+  .mas{--case:min(13.4vh,8.4vw)}.mas-logo-l2{font-size:46px}.mas-logo-l1{font-size:22px}.mas-barre{height:86px}
+  .mas-tourner{width:80px;height:80px}.mas-achat{width:122px;height:122px}.mas-achat b{font-size:28px}
+  .mas-intro-logo .mas-logo-l2{font-size:76px}.mas-fiches svg{width:66px;height:66px}
+}
+@media (max-width:1100px){.mas-droite{display:none}.mas-centre{grid-template-columns:auto auto;justify-content:center}.mas-valeur b,.mas-mise-bouton b{font-size:18px}}

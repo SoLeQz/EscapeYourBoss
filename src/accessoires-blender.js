@@ -14,6 +14,14 @@ import { partager, libererArbre } from './resources.js';
 export const FICHIER_ACCESSOIRES = 'accessoires-v01.glb';
 // Mobilier v02 (tools/blender/creer_mobilier.py) : même contrat, cache séparé.
 export const FICHIER_MOBILIER = 'mobilier-v02.glb';
+export const FICHIER_DEPARTEMENTS = 'departements-v01.glb';
+const departements = new Map(); let chargementDepartements;
+export function etatDepartements() { return Object.fromEntries([...departements].map(([id,lots])=>[id,{triangles:lots.reduce((s,l)=>s+l.geometry.attributes.position.count/3,0)}])); }
+export async function prechargerDepartements(lire = nom => window.jeuAssets.lire(nom)) {
+  if(chargementDepartements)return chargementDepartements;
+  chargementDepartements=chargerKit(FICHIER_DEPARTEMENTS,lire,departements,'Départements absents : ').then(etatDepartements);
+  try{return await chargementDepartements;}catch(e){chargementDepartements=null;throw e;}
+}
 const COULEURS = new Set(['peint', 'verni', 'lumiere']);
 const DU_NIVEAU = new Set(['verre', 'carton', 'boisFonce', 'bois', 'alu', 'aluSombre', 'plastiqueNoir', 'plastiqueBlanc', 'papier', 'tissuCanape', 'laiton',
   'terreCuite', 'cableNoir', 'eau', 'beton', 'murAccent', 'tissuChaise', 'cloison']);
@@ -129,7 +137,7 @@ async function chargerKit(FICHIER, lire, cible, absent) {
 }
 
 // Lots bruts d'un accessoire (canards instanciés) ou d'un meuble du kit v02.
-export function lotsAccessoire(id) { return cache.get(id) || mobilier.get(id) || []; }
+export function lotsAccessoire(id) { return cache.get(id) || mobilier.get(id) || departements.get(id) || []; }
 
 // Pose un accessoire. `mobile` : il bouge (aspirateur, nacelle, carton) et
 // échappe à la fusion du décor. Les parties à rôle (manette, trappe, porte…)

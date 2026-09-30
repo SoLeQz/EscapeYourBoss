@@ -157,6 +157,22 @@ export class GameAudio {
       this.burst({ freq, dur: 0.1, type: 'square', vol: 0.04, pos, delay: i * 0.1 }));
   }
   ronflement(pos) { for (const d of [0, 1.2]) this.noiseHit({ dur: 0.9, vol: 0.06, freq: 160, q: 0.9, type: 'lowpass', pos, delay: d }); }
+  // --- machine à sous « Juste 5 minutes » (salle de sieste) ---
+  masClic() { this.burst({ freq: 1400, dur: 0.04, type: 'square', vol: 0.03 }); }
+  masDepart() { this.noiseHit({ dur: 0.35, vol: 0.05, freq: 900, q: 0.8 }); this.burst({ freq: 180, dur: 0.3, type: 'sawtooth', vol: 0.03, sweep: 260 }); }
+  masArret(i = 0) { this.noiseHit({ dur: 0.07, vol: 0.09, freq: 220 + i * 30, q: 1.4, type: 'lowpass' }); this.burst({ freq: 150 + i * 12, dur: 0.08, type: 'triangle', vol: 0.05 }); }
+  masSortie(i = 0) { [784, 988, 1175].forEach((freq, k) => this.burst({ freq: freq * (1 + i * 0.06), dur: 0.14, type: 'triangle', vol: 0.06, delay: k * 0.06 })); }
+  masPiece() { this.burst({ freq: 1900 + Math.random() * 500, dur: 0.05, type: 'square', vol: 0.018 }); }
+  masGain(niveau = 'petit') {
+    const notes = niveau === 'mini' ? [659] : niveau === 'petit' ? [523, 784] : [523, 659, 784, 1046];
+    notes.forEach((freq, k) => this.burst({ freq, dur: 0.16, type: 'square', vol: 0.045, delay: k * 0.08 }));
+  }
+  masBonus() { [392, 523, 659, 784, 1046, 1318].forEach((freq, k) => this.burst({ freq, dur: 0.18, type: 'square', vol: 0.05, delay: k * 0.07 })); }
+  masCelebration(niveau = 'gros') {
+    const base = { gros: 523, mega: 587, epique: 659, max: 784 }[niveau] || 523;
+    [1, 1.25, 1.5, 2, 1.5, 2, 2.5].forEach((r, k) => this.burst({ freq: base * r, dur: 0.22, type: 'square', vol: 0.05, delay: k * 0.11 }));
+    this.noiseHit({ dur: 0.8, vol: 0.05, freq: 3000, q: 0.5, delay: 0.1 });
+  }
   success() {
     [523, 659, 784, 1046].forEach((freq, i) =>
       this.burst({ freq, dur: 0.35, type: 'triangle', vol: 0.1, delay: i * 0.12 }));

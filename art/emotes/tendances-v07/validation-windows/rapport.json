@@ -1,0 +1,809 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":977,\"premierNiveau\":977,\"rendu\":29,\"total\":5107},\"pnj\":4,\"obstacles\":57}"
+    },
+    {
+      "name": "roue-neuf",
+      "result": {
+        "indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "clavier": [
+          "tchao",
+          "arrogance",
+          "moulin",
+          "takeL",
+          "67",
+          "ela-ke-leitada",
+          "aura-farming",
+          "griddy",
+          "floss"
+        ],
+        "note": "Souris ou 1–9 · Relâche pour jouer · Centre ou Échap pour annuler"
+      }
+    },
+    {
+      "name": "musique-leitada",
+      "result": {
+        "dureeSon": 11.294145833333333,
+        "canaux": 2,
+        "frequence": 48000,
+        "ecart": 0.029333333333333322,
+        "etatAudio": "running"
+      }
+    },
+    {
+      "name": "sons-tendances",
+      "result": {
+        "aura-farming": {
+          "son": null
+        },
+        "griddy": {
+          "son": null
+        },
+        "floss": {
+          "son": null
+        }
+      }
+    },
+    {
+      "name": "lisibilite-roue",
+      "result": {
+        "cases": 9,
+        "selectionsVerifiees": 9
+      }
+    },
+    {
+      "name": "atelier",
+      "result": {
+        "source": {
+          "tete": "tete-employe-v02.glb",
+          "mains": "mains-v03.glb"
+        },
+        "variantes": [
+          {
+            "tete": "tete-direction-v02.glb",
+            "mains": "mains-v03.glb"
+          },
+          {
+            "tete": "tete-chignon-v02.glb",
+            "mains": "mains-v03.glb"
+          },
+          {
+            "tete": "tete-securite-v02.glb",
+            "mains": "mains-v03.glb"
+          }
+        ]
+      }
+    },
+    {
+      "name": "clip-67",
+      "result": {
+        "emote": "67",
+        "source": "67-v05.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0.95,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.95,
+            0,
+            0
+          ]
+        ],
+        "duree": 4.8
+      }
+    },
+    {
+      "name": "clip-ela-ke-leitada",
+      "result": {
+        "emote": "ela-ke-leitada",
+        "source": "ela-ke-leitada-v05.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 11.8
+      }
+    },
+    {
+      "name": "sources-v07",
+      "result": [
+        {
+          "index": 6,
+          "id": "aura-farming",
+          "source": "aura-farming-v07.blend",
+          "duree": 8.4,
+          "apercu": 2.19,
+          "son": null
+        },
+        {
+          "index": 7,
+          "id": "griddy",
+          "source": "griddy-v07.blend",
+          "duree": 7.2,
+          "apercu": 2.6,
+          "son": null
+        },
+        {
+          "index": 8,
+          "id": "floss",
+          "source": "floss-v07.blend",
+          "duree": 8.3,
+          "apercu": 1.76,
+          "son": null
+        }
+      ]
+    },
+    {
+      "name": "pose-aura-farming-2.19",
+      "result": {
+        "emote": "aura-farming",
+        "source": "aura-farming-v07.blend",
+        "mains": [
+          [
+            0.5947522199999998,
+            0,
+            0.007434300000000282,
+            0,
+            0
+          ],
+          [
+            0.5965015799999999,
+            0,
+            0.0026239200000000994,
+            0,
+            0
+          ],
+          [
+            0.5947522199999998,
+            0,
+            0.007434300000000282,
+            0,
+            0
+          ],
+          [
+            0.5965015799999999,
+            0,
+            0.0026239200000000994,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.4,
+        "temps": 2.19,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-aura-farming-1.68",
+      "result": {
+        "emote": "aura-farming",
+        "source": "aura-farming-v07.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0.85,
+            0,
+            0
+          ],
+          [
+            0.2,
+            0,
+            0.3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.85,
+            0,
+            0
+          ],
+          [
+            0.2,
+            0,
+            0.3,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.4,
+        "temps": 1.68,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-aura-farming-3.36",
+      "result": {
+        "emote": "aura-farming",
+        "source": "aura-farming-v07.blend",
+        "mains": [
+          [
+            0.6,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.6,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.6,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.6,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.4,
+        "temps": 3.36,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-aura-farming-5.04",
+      "result": {
+        "emote": "aura-farming",
+        "source": "aura-farming-v07.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0.6735568599999997,
+            0,
+            0
+          ],
+          [
+            0,
+            0.5733234200000016,
+            0.26778437999999893,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.6735568599999997,
+            0,
+            0
+          ],
+          [
+            0,
+            0.5733234200000016,
+            0.26778437999999893,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.4,
+        "temps": 5.04,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-aura-farming-6.72",
+      "result": {
+        "emote": "aura-farming",
+        "source": "aura-farming-v07.blend",
+        "mains": [
+          [
+            0.2,
+            0,
+            0.3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.85,
+            0,
+            0
+          ],
+          [
+            0.2,
+            0,
+            0.3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0.85,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.4,
+        "temps": 6.72,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-griddy-2.6",
+      "result": {
+        "emote": "griddy",
+        "source": "griddy-v07.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "duree": 7.2,
+        "temps": 2.6,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-griddy-1.44",
+      "result": {
+        "emote": "griddy",
+        "source": "griddy-v07.blend",
+        "mains": [
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 7.2,
+        "temps": 1.44,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-griddy-2.88",
+      "result": {
+        "emote": "griddy",
+        "source": "griddy-v07.blend",
+        "mains": [
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "duree": 7.2,
+        "temps": 2.88,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-griddy-4.32",
+      "result": {
+        "emote": "griddy",
+        "source": "griddy-v07.blend",
+        "mains": [
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 7.2,
+        "temps": 4.32,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-griddy-5.76",
+      "result": {
+        "emote": "griddy",
+        "source": "griddy-v07.blend",
+        "mains": [
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.35,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 7.2,
+        "temps": 5.76,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-floss-1.76",
+      "result": {
+        "emote": "floss",
+        "source": "floss-v07.blend",
+        "mains": [
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.3,
+        "temps": 1.76,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-floss-1.66",
+      "result": {
+        "emote": "floss",
+        "source": "floss-v07.blend",
+        "mains": [
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.3,
+        "temps": 1.66,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-floss-3.32",
+      "result": {
+        "emote": "floss",
+        "source": "floss-v07.blend",
+        "mains": [
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.3,
+        "temps": 3.32,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-floss-4.98",
+      "result": {
+        "emote": "floss",
+        "source": "floss-v07.blend",
+        "mains": [
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.3,
+        "temps": 4.98,
+        "poids": 1
+      }
+    },
+    {
+      "name": "pose-floss-6.64",
+      "result": {
+        "emote": "floss",
+        "source": "floss-v07.blend",
+        "mains": [
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0.92,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "duree": 8.3,
+        "temps": 6.64,
+        "poids": 1
+      }
+    },
+    {
+      "name": "interruption",
+      "result": {
+        "tempsFige": 2,
+        "interruption": true
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(160,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(173,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

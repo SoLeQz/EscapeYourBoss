@@ -1,9 +1,11 @@
-"""Deux scènes animées dans Blender : 67 et Passinho do Jamal.
+"""Scènes animées dans Blender : 67, Passinho et tendances.
 Source : joueur courant + courbes Bézier éditables. Aucun mouvement créé dans le runtime.
 v02 : Passinho calé sur le drop « Ela Ké Leitada » (170 BPM), son embarqué dans le .blend.
 --seulement passinho-jamal --version v02 --son CHEMIN.mp3
 v06 : Aura Farming, Griddy, Floss, Apple (tendances_v06.py), musiques originales :
 --version v06 --seulement aura-farming,griddy,floss,apple --son DOSSIER_DES_MP3
+v07 : Aura Farming, Griddy et Floss retravaillés (sans Apple).
+--version v07 --seulement aura-farming,griddy,floss [--son DOSSIER_DES_MP3_V02]
 """
 import bpy,json,sys,argparse,math,importlib.util
 from pathlib import Path
@@ -17,6 +19,7 @@ C=exporter.C;CI=C.transposed();C4=C.to_4x4();CI4=CI.to_4x4();BONES=exporter.BONE
 REST={b:[0,0,0] for b in BONES};REST.update(armL=[0,0,-.03],armR=[0,0,.03],elbowL=[-.22,0,0],elbowR=[-.22,0,0])
 if a.version>='v04':REST.update(mainL=[0,1.0,0],mainR=[0,-1.0,0])  # mains v02 : repos naturel = POIGNET_REPOS du jeu
 EXPR=exporter.EXPRESSION+(['mainL_Pouce','mainR_Pouce'] if a.version>='v04' else [])
+if a.version>='v07':EXPR+=['mainL_Cercle','mainR_Cercle']
 def matrix(values):return Matrix([[values[c*4+r] for c in range(4)] for r in range(4)])
 def quaternion(angles):
  m=Matrix.Rotation(angles[0],3,'X')@Matrix.Rotation(angles[1],3,'Y')@Matrix.Rotation(angles[2],3,'Z');return (C@m@CI).to_quaternion()
@@ -191,16 +194,36 @@ def tendance_v06(ident):
   if rig.ecarts:print('IK',ident,'max %.1f mm'%(1000*max(e for e,_ in rig.ecarts)),'moyen %.1f mm'%(1000*sum(e for e,_ in rig.ecarts)/len(rig.ecarts)))
  return fn
 
+def tendance_v07(ident):
+ # Nouvelle chorégraphie Blender ; les clés sont triées avant les quaternions.
+ def fn():
+  ik=module('leitada_blender');v07=module('tendances_v07');ik.Rig.ecarts=[]
+  rig=ik.Rig(controls,atelier.nodes,data,quaternion,C,REST)
+  ch=v07.Choregraphe(ident,rig,cle,C);v07.CHOREGRAPHIES[ident](ch);ch.finir()
+  scene=bpy.context.scene
+  bpm,t0,n,duree=v07.GRILLES[ident]
+  scene['emote_cadence_bpm']=bpm;scene['emote_premier_temps']=t0
+  scene['emote_cadence_statut']='Cadence de la chorégraphie ; synchronisation à mesurer sur tout extrait musical fourni.'
+  for t,label in ch.marqueurs:scene.timeline_markers.new(label,frame=1+round(t*60))
+  for k in range(n+1):scene.timeline_markers.new('Temps %02d'%k,frame=1+round(ch.t(k)*60))
+  if rig.ecarts:print('IK',ident,'max %.1f mm'%(1000*max(e for e,_ in rig.ecarts)),'moyen %.1f mm'%(1000*sum(e for e,_ in rig.ecarts)/len(rig.ecarts)),flush=True)
+ return fn
+
 VERSION=a.version;CHOIX=a.seulement.split(',')
 scenes={'v01':[('67',4.8,sixseven,1.61),('passinho-jamal',6.4,jamal,1.34)],'v02':[('passinho-jamal',11.8,jamal_son,temps(28)+.1)],'v03':[('ela-ke-leitada',11.8,leitada,temps(1))],'v04':[('67',4.8,sixseven,1.61),('ela-ke-leitada',11.8,leitada,temps(1))],'v05':[('67',4.8,sixseven,1.61),('ela-ke-leitada',11.8,leitada,temps(1))],
- 'v06':[(i,module('tendances_v06').GRILLES[i][3],tendance_v06(i),module('tendances_v06').APERCUS[i]) for i in ['aura-farming','griddy','floss','apple']]}[VERSION]
+ 'v06':[(i,module('tendances_v06').GRILLES[i][3],tendance_v06(i),module('tendances_v06').APERCUS[i]) for i in ['aura-farming','griddy','floss','apple']],
+ 'v07':[(i,module('tendances_v07').GRILLES[i][3],tendance_v07(i),module('tendances_v07').APERCUS[i]) for i in ['aura-farming','griddy','floss']]}[VERSION]
 manifest=[]
 for ident,duree,fn,apercu in [x for x in scenes if x[0] in CHOIX]:
+ print('CREATION',VERSION,ident,flush=True)
  controls=atelier();s=bpy.context.scene;s['emote_id']=ident;s['emote_duree']=duree;s['emote_version']=VERSION;s['provenance']='Animation originale par clés Blender, référence gestuelle documentée dans REFERENCES.md';s.frame_start=1;s.frame_end=1+round(duree*60);fn()
  if a.son and ident in ['passinho-jamal','ela-ke-leitada']:son(a.son,'emote-'+ident+'-son-v01.mp3')
  if a.son and VERSION=='v06':
   T,_,n,_=module('tendances_v06').grille(ident);fichier='emote-'+ident+'-son-v01.mp3'
   son(Path(a.son)/fichier,fichier,ident+' (musique originale)',[T(k) for k in range(0,n+1,4)])
+ if a.son and VERSION=='v07':
+  T,_,n,_=module('tendances_v07').grille(ident);fichier='emote-'+ident+'-son-v02.mp3'
+  son(Path(a.son)/fichier,fichier,ident+' (extrait fourni)',[T(k) for k in range(0,n+1,4)])
  # Blender crée de vraies Actions et courbes Bézier AUTO_CLAMPED, éditables dans le Graph Editor.
  for action in bpy.data.actions:
   for layer in action.layers:

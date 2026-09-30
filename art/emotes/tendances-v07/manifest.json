@@ -1,0 +1,20 @@
+[
+  {
+    "source": "aura-farming-v07.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 8.4
+  },
+  {
+    "source": "griddy-v07.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 7.2
+  },
+  {
+    "source": "floss-v07.blend",
+    "blender": "5.2.2 LTS",
+    "fps": 60,
+    "duree": 8.3
+  }
+]

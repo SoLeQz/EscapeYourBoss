@@ -1,3 +1,7 @@
+import { departementDuNiveau } from './departements.js';
+import { messageAbsence, convocation, noteDepart, heurePointage } from './intranet.js';
+import { MachineASous } from './machine-a-sous.js';
+import { SIESTE, refusSieste, commencerSieste, avancerSieste, reveiller, dureeSieste } from './sieste.js';
 import { prechargerAnatomieBlender } from './anatomie-blender.js';
 import { prechargerGardeRobe } from './garde-robe-blender.js';
 import { nettoyerApparence, restreindre, nouveautes } from './garde-robe.js';
@@ -17,7 +21,7 @@ import { Minimap } from './minimap.js';
 import { NIVEAUX, PLANS, LIGNES_BOSS, pnjDuNiveau } from './levels.js';
 import { repereDuNiveau } from './repere.js';
 import { Interactifs } from './interactifs.js';
-import { prechargerAccessoires, prechargerMobilier } from './accessoires-blender.js';
+import { prechargerAccessoires, prechargerMobilier, prechargerDepartements } from './accessoires-blender.js';
 import { SECRETS, KONAMI, ECHELLE_GROSSE_TETE, noterCanard, noterSecret, aTrouveCanard, canardsTrouves, nettoyerSecrets } from './secrets.js';
 
 // Sorties : durée de la séquence (rester à portée), annonce et nom au bilan.
@@ -129,11 +133,12 @@ class Game {
     // Tenue du vestiaire, limitée aux pièces débloquées par cette sauvegarde.
     this.player.changerApparence(restreindre(this.etat.apparence, this.etat));
     this.overlays = null; this.appliquerGrosseTete();
+    this.menu.majAccueil();   // badge, indicateurs et fil tirés de la vraie sauvegarde
   }
 
   async sauver() {
     const ok = await Store.sauver(this.etat);
-    if (!ok && !this.sauvegardeEnErreur) this.ui.toast('Sauvegarde impossible', 'Tes découvertes restent dans cette session. Vérifie l’espace disque.');
+    if (!ok && !this.sauvegardeEnErreur) this.ui.toast('Sauvegarde impossible', 'Tes découvertes restent dans cette session. Vérifie l’espace disque.', 4, 'alerte');
     this.sauvegardeEnErreur = !ok; return ok;
   }
 
@@ -148,7 +153,7 @@ class Game {
     if (!noterCanard(this.etat, this.niveau.id, c.index)) return;
     this.sauver();
     const total = canardsTrouves(this.etat);
-    this.ui.toast('Canard de débogage trouvé !', `${canardsTrouves(this.etat, this.niveau.id)}/3 dans cet étage · ${total}/${NIVEAUX.length * 3} dans la collection`);
+    this.ui.toast('Canard de débogage trouvé !', `${canardsTrouves(this.etat, this.niveau.id)}/3 dans cet étage · ${total}/${NIVEAUX.length * 3} dans la collection`, 3, 'trouvaille');
     if (!distant && this.mode === 'multi') this.multi.envoyer({ t: 'canard', index: c.index, idx: this.niveauIndex });
   }
   appliquerGrosseTete() {
@@ -436,6 +441,7 @@ class Game {
     for (const l of this.lampes) { const [x, z] = l.userData.origine; l.position.x = repere.x(x); l.position.z = repere.z(z); }
     // un néon sur deux s'éteint quand l'étage passe en veille
     this.lampes.forEach((l, i) => {
+      l.color.setHex(i < 13 ? departementDuNiveau(this.niveau).lumiere : 0xffbf84);
       const eteint = facteur < 0.75 && i % 2 === 1;
       l.intensity = eteint ? 0 : l.userData.base * Math.max(facteur, 0.35);
     });
@@ -467,6 +473,7 @@ class Game {
 
   async demarrerNiveau(index) {
     if (this.state === 'loading') return;
+    this.fermerMachine(false);
     clearTimeout(this.transitionAuto);
     this.audio.start();
     for (const e of EMOTES) if (e.son) this.audio.chargerSon(e.son.fichier);
@@ -571,8 +578,10 @@ class Game {
     this.clock?.getDelta();
     this.fpsFenetre = [];
     this.ui.loading(null);
-    document.querySelector('#mission .cn').textContent = niv.titre;
+    const dept = departementDuNiveau(niv);
+    document.querySelector('#mission .cn').textContent = `Étage ${dept.etage} · ${dept.court}`;
     document.querySelector('#mission .fr').textContent = 'Quitter l’étage sans se faire repérer';
+    document.getElementById('top').style.setProperty('--c-dept', '#' + dept.accent.toString(16).padStart(6, '0'));
     this.repliFait = false;
     this.ui.show(null);
     this.ui.setDetection(0);
@@ -581,7 +590,7 @@ class Game {
     this.ui.setClock(formatClock(0, niv.heure));
     this.ui.setState('Repérage des lieux', 'ok');
     this.ui.setPrompt(''); this.ui.setExit(null);
-    this.ui.toastT = 0; this.ui.el.toast.style.opacity = 0;
+    this.ui.toastT = 0; this.ui.el.toast.style.opacity = 0; this.ui.el.toast.classList.remove('on');
     this.ui.el.flash.style.opacity = 0;
     this.majObjectifs();
     document.getElementById('chrono-sr').classList.toggle('on', this.mode === 'speedrun');
@@ -619,9 +628,95 @@ class Game {
     const reste = this.objetsRestants().length;
     this.ui.toast((distant ? (this.multi.nomDistant || 'Ton coéquipier') + ' a récupéré ' : 'Récupéré : ') + o.nom,
       o.ouvre ? (o.message || 'La porte coupe-feu de l’escalier est déverrouillée.')
-        : reste ? 'Il en reste ' + reste : 'Vous pouvez sortir.');
+        : reste ? 'Il en reste ' + reste : 'Vous pouvez sortir.', 2.8, 'succes');
     this.majObjectifs();
     if (!distant) this.multi.envoyer({ t: 'objet', id: i });
+  }
+
+  // ---------------------------------------------------------- borne d'arcade
+  //
+  // La borne de la salle de sieste fait tourner « Juste 5 minutes ». En solo,
+  // l'étage attend ; à plusieurs, la partie continue pour les autres (comme le
+  // menu local) et Lao D reste planté devant la borne.
+  ouvrirMachine() {
+    if (this.state !== 'play' || this.machine?.ouverte || this.exitSeq) return;
+    this.input.clear(); this.fermerRoue(false);
+    this.player.working = null;
+    if (this.mode === 'multi' && this.multi.actif) this.menuMulti = true;
+    else this.state = 'arcade';
+    document.exitPointerLock?.();
+    this.machine ??= new MachineASous(this, document.getElementById('screen-arcade'));
+    // l'écran d'abord : la machine place ensuite le focus sur son bouton de lancement
+    this.ui.show('arcade');
+    this.machine.ouvrir();
+    this.decouvrir('arcade');
+  }
+  // reprendre = faux : l'étage se termine ou change, la borne se ferme sans rendre la main.
+  fermerMachine(reprendre = true) {
+    if (!this.machine?.ouverte) return;
+    this.machine.fermer();
+    if (!reprendre) return;
+    this.ui.show(null);
+    if (this.state === 'arcade') this.state = 'play';
+    this.menuMulti = false;
+    this.input.clear(); this.clock.getDelta();
+    this.majObjectifs();
+    lockPointer(this.renderer.domElement);
+  }
+
+  // ---------------------------------------------------------- micro-sieste
+  //
+  // Le hamac de la salle clandestine (sieste.js) : E pour s'allonger, E ou une
+  // direction pour se lever. Posture locale, partagée en coopération comme une emote.
+  basculerSieste(it) {
+    const p = this.player;
+    if (p.sieste) { this.finirSieste(); return; }
+    const refus = refusSieste(p, this);
+    if (refus) { this.ui.toast(...refus); return; }
+    this.fermerRoue(false);
+    commencerSieste(p, it);
+    document.getElementById('sieste-kbd').textContent = this.touche('interagir');
+    this.audio.froissement?.(it);
+    this.ui.toast('Statut : Ne pas déranger', this.mode === 'multi' ? 'Micro-sieste. La partie continue sans toi.'
+      : `Micro-sieste. Pendant que tu dors, la réunion file ${SIESTE.acceleration}× plus vite.`, 3);
+  }
+  finirSieste(sursaut = false) {
+    const p = this.player;
+    if (!p.sieste) return;
+    const duree = reveiller(p), solo = this.mode !== 'multi';
+    this.elSieste && (this.elSieste.hidden = true);
+    if (sursaut) { this.ui.flash(); this.ui.toast('Réveil en sursaut', 'La réunion est finie. Le directeur te cherche.', 3, 'alerte'); return; }
+    if (duree < 1) return;
+    this.ui.toast(`Sieste de ${dureeSieste(duree)}`, `Stress à zéro, endurance au maximum.${solo ? ` La réunion a avancé de ${dureeSieste(duree * SIESTE.acceleration)}.` : ''}`, 3.5, 'succes');
+  }
+  majSieste(dt, multi) {
+    const p = this.player, s = p.sieste, el = this.elSieste ??= document.getElementById('sieste');
+    if (s?.reveil) this.finirSieste();
+    else if (s) {
+      const evt = avancerSieste(p, dt);
+      if (evt === 'ronfle') this.audio.ronflement(s.it);
+      if (evt === 'secret') this.decouvrir('sieste');
+      el.hidden = false;
+      el.style.setProperty('--sommeil', Math.min(1, s.t / 2.5).toFixed(3));
+      document.getElementById('sieste-duree').textContent = dureeSieste(s.t);
+      document.getElementById('sieste-note').textContent = multi ? 'La partie continue sans toi'
+        : `Réunion : ${dureeSieste(Math.max(0, this.timeLeft))} · le temps file ${SIESTE.acceleration}×`;
+    }
+    // niveau relancé ou perdu pendant la sieste : player.reset() l'a déjà levé
+    if (!p.sieste && !el.hidden) el.hidden = true;
+    this.animerZzz(dt);
+  }
+  // Trois « z » qui montent au-dessus de l'oreiller.
+  animerZzz(dt) {
+    const p = this.player;
+    if (!this.zzz) { if (!p.sieste) return; this.zzz = spriteZzz(); this.scene.add(this.zzz); }
+    const z = this.zzz, cible = p.sieste && p.sieste.t > 1 ? 1 : 0;
+    z.material.opacity += (cible - z.material.opacity) * (1 - Math.exp(-4 * dt));
+    z.visible = z.material.opacity > 0.02 && !!p._lit;
+    if (!z.visible) return;
+    z.userData.t = (z.userData.t || 0) + dt;
+    const tete = p.parts.head.getWorldPosition(z.position);
+    tete.y += 0.45 + Math.sin(z.userData.t * 1.3) * 0.05;
   }
 
   // ---------------------------------------------------------- vestiaire
@@ -704,7 +799,7 @@ class Game {
 
   ouvrirRoue() {
     if (this.roueOuverte || this.state !== 'play') return;
-    if (this.preparation || this.exitSeq) return;
+    if (this.preparation || this.exitSeq || this.player.sieste) return;
     this.roueOuverte = true;
     this.roueSel = -1;
     this.roueVec = { x: 0, y: 0 };
@@ -766,6 +861,7 @@ class Game {
       if (e.code === 'Escape' && !e.repeat) {
         e.preventDefault();
         if (this.roueOuverte) { this.fermerRoue(false); return; }
+        if (this.machine?.ouverte) { this.machine.echap(); return; }
         if (this.menu?.depuisPause) {
           this.menu.depuisPause = false;
           this.ui.show('pause');
@@ -880,10 +976,11 @@ class Game {
     this.input.clear();
     this.fermerRoue(false);
     const aDeux = this.mode === 'multi' && this.multi.actif;
-    document.getElementById('pause-titre').textContent = aDeux ? 'Menu' : 'Pause';
+    document.getElementById('pause-titre').textContent = aDeux ? 'Absent · la partie continue' : 'En pause';
     document.getElementById('pause-sous').textContent = aDeux
-      ? 'La partie continue pour les autres joueurs. Ton personnage reste où il est.'
+      ? 'Les autres continuent. Ton personnage reste où il est, bien visible.'
       : 'Souffle un peu. Le bureau peut attendre.';
+    document.getElementById('pause-message').textContent = messageAbsence();
     if (aDeux) this.menuMulti = true;
     else this.state = 'pause';
     document.getElementById('btn-guide').hidden = this.apprentissage == null;
@@ -972,7 +1069,7 @@ class Game {
   }
   coequipierParti(raison) {
     if (this.mode !== 'multi') { this.menu?.majMulti?.(); return; }
-    this.ui.toast('Coéquipier déconnecté', raison || 'Retour au salon pour reformer le groupe.', 5);
+    this.ui.toast('Coéquipier déconnecté', raison || 'Retour au salon pour reformer le groupe.', 5, 'alerte');
     this.retourMenuMulti(!this.multi.hote);
   }
   retourMenuMulti(distant = false) {
@@ -989,6 +1086,7 @@ class Game {
 
   nearestInteractable() {
     if (this.player.working) return this.player.working;
+    if (this.player.sieste) return this.player.sieste.it;
     return [...this.actionsBureau, ...this.level.interactables].filter(it => actionAccessible(it, this.player, this.level.obstacles))
       .concat(this.interactifs.accessibles(this.player))
       .sort((a, b) => Math.hypot(a.x-this.player.pos.x, a.z-this.player.pos.z)
@@ -1001,7 +1099,9 @@ class Game {
     if (!it) return;
     // Décor interactif et secrets (interactifs.js). À deux, l'hôte décide.
     if (this.interactifs.liste.includes(it)) {
+      if (it.type === 'sieste') { this.basculerSieste(it); return; }
       if (this.mode === 'multi' && this.multi.invite) {
+        if(it.type==='observation')this.ui.toast(it.titre,it.texte,7);
         this.multi.envoyer({ t: 'action', id: 'acc:' + this.interactifs.liste.indexOf(it), idx: this.niveauIndex });
       } else this.interactifs.interagir(it);
       return;
@@ -1106,6 +1206,8 @@ class Game {
       const u = this.post.bokeh.materialBokeh.uniforms;
       u.focus.value += (d - u.focus.value) * (1 - Math.exp(-4 * dt));
     }
+    // la borne couvre tout l'écran d'un fond opaque : inutile de dessiner l'étage derrière
+    if (this.machine?.ouverte) return;
     if (this.post.composer) this.post.composer.render(dt);
     else this.renderer.render(this.scene, this.camera);
   }
@@ -1142,9 +1244,10 @@ class Game {
 
     // compte à rebours de la réunion (chez l'invité, c'est l'hôte qui décide)
     if (!this.hunting && !multi?.invite) {
-      this.timeLeft -= dt;
+      this.timeLeft -= dt * (this.player.sieste && !multi ? SIESTE.acceleration : 1);
       if (this.timeLeft <= 0) {
         this.hunting = true;
+        this.finirSieste(true);
         this.ui.flash();
         this.ui.say('La réunion est finie', 'Le directeur Wang te cherche.', 4);
         this.boss.say('Où est passé Lao D ?', 3);
@@ -1166,13 +1269,14 @@ class Game {
     }
 
     if (!multi?.sortiLocal) this.player.update(dt, this.input, this.camYaw);
+    this.majSieste(dt, multi);
     this.interactifs.mettreAJour(dt, !!multi?.invite);
     if (multi?.hote) for (const c of this.coequipiers.values()) avancerTravail(c, dt);
     const travail = multi?.invite ? null : avancerTravail(this.player, dt);
     if (multi?.invite && this.player.working?.restant <= 0) this.player.working = null;
     const protege = travailProtege(this.player);
-    if (travail === 'avertir') this.ui.toast('Encore 3 secondes de protection', 'Prépare ton prochain abri.');
-    else if (travail === 'expire') this.ui.toast('Ce poste ne fait plus illusion', 'Protection terminée. Rejoins un autre abri.');
+    if (travail === 'avertir') this.ui.toast('Encore 3 secondes de protection', 'Prépare ton prochain abri.', 2.4, 'alerte');
+    else if (travail === 'expire') this.ui.toast('Ce poste ne fait plus illusion', 'Protection terminée. Rejoins un autre abri.', 2.4, 'alerte');
 
     // stress au max : on souffle bruyamment, tout le monde entend
     if (!protege && this.player.stress >= 0.999 && !this._panic) {
@@ -1182,7 +1286,7 @@ class Game {
         const d = Math.hypot(n.pos.x - this.player.pos.x, n.pos.z - this.player.pos.z);
         if (d < 7) n.suspicion = Math.min(0.95, n.suspicion + 0.3);
       }
-      this.ui.toast('Tu souffles trop fort', 'On t’a entendu.');
+      this.ui.toast('Tu souffles trop fort', 'On t’a entendu.', 2.4, 'alerte');
     }
     if (this.player.stress < 0.6) this._panic = false;
 
@@ -1238,7 +1342,7 @@ class Game {
     this.ui.setBars(this.player.stress, this.player.stamina, this.player.epuise);
 
     const v = this.visibilite;
-    const posture = this.player.crouch > 0.5 ? 'Accroupi' : this.player.running ? 'Course' : this.player.moving ? 'Marche' : 'Immobile';
+    const posture = this.player.sieste ? 'Sieste' : this.player.crouch > 0.5 ? 'Accroupi' : this.player.running ? 'Course' : this.player.moving ? 'Marche' : 'Immobile';
     if (protege) this.ui.setState(`Au travail · Protégé · ${Math.ceil(this.player.working.restant)} s`,
       this.player.working.restant <= ALERTE_TRAVAIL ? 'warning' : 'good');
     else this.ui.setState(`${this.player.deguisement ? 'Carton · discrétion accrue' : posture} · ${v.visible ? 'Visible' : v.entendu ? 'Entendu' : 'Hors des regards'}${this.interactifs.obscurite > 0 ? ' · Coupure ' + Math.ceil(this.interactifs.obscurite) + ' s' : ''}`,
@@ -1370,10 +1474,13 @@ class Game {
     // le tiers gauche du cadre
     const decal = 0.52;
     const rx = -Math.cos(this.camYaw), rz = Math.sin(this.camYaw);
+    // allongé dans le hamac : la caméra vise le creux de la toile, plus bas
+    const s = p.siesteBlend > 0.01 && p._lit ? p.siesteBlend : 0;
+    const ax = s ? p.pos.x + (p._lit.x - p.pos.x) * s : p.pos.x, az = s ? p.pos.z + (p._lit.z - p.pos.z) * s : p.pos.z;
     const vise = new THREE.Vector3(
-      p.pos.x + rx * decal,
-      THREE.MathUtils.lerp(1.5, 1.0, p.crouch),
-      p.pos.z + rz * decal);
+      ax + rx * decal,
+      THREE.MathUtils.lerp(THREE.MathUtils.lerp(1.5, 1.0, p.crouch), 1.05, s),
+      az + rz * decal);
 
     // Le point visé est lissé à part : la caméra ne doit pas copier le
     // ballant vertical du personnage, sinon l'image tangue en marchant.
@@ -1427,6 +1534,7 @@ class Game {
   // ---------------------------------------------------------- fins
   lose(npc) {
     if (this.state !== 'play') return;
+    this.fermerMachine(false);
     if (this.mode === 'multi' && this.multi.hote) this.multi.envoyer({ t: 'perdu', i: this.npcs.indexOf(npc) });
     this.fermerRoue(false);
     this.state = 'over'; this.menuMulti = false;
@@ -1438,18 +1546,24 @@ class Game {
     const line = npc.isBoss
       ? LIGNES_BOSS[(Math.random() * LIGNES_BOSS.length) | 0]
       : 'Lao D, le directeur te demande — « juste 5 minutes ».';
-    document.getElementById('fail-who').textContent = `${npc.name} — ${npc.role}`;
-    this.ui.el.failLine.innerHTML = `<b>« ${line} »</b>`;
+    const invitation = convocation(npc);
+    document.getElementById('fail-who').textContent = invitation.organisateur;
+    document.getElementById('fail-duree').textContent = invitation.duree;
+    this.ui.el.failLine.innerHTML = `<b>« ${line} »</b><span>Message joint à l’invitation</span>`;
     this.ui.el.failCount.textContent = this.failCount;
     this.ui.show('fail');
   }
 
   terminerNiveau(route) {
     if (this.state !== 'play') return;
+    this.fermerMachine(false);
     if (route === 'nacelle' || route === 'toboggan') this.decouvrir(route);
     this.state = 'over'; this.menuMulti = false;
     document.exitPointerLock?.();
     this.audio.success();
+    // Le ticket porte l'heure de sortie réelle de l'étage.
+    document.getElementById('suite-heure').textContent = `Sortie pointée à ${heurePointage(this.niveau.heure, this.elapsed)}`;
+    document.querySelector('#screen-suite .tampon')?.remove();
     if (this.mode === 'multi') {
       // Coopération : pas de records solo. L'hôte choisit la suite.
       const suivant = this.niveauIndex + 1, dernier = suivant >= NIVEAUX.length;
@@ -1476,7 +1590,7 @@ class Game {
     const cadeaux = () => {
       const liste = nouveautes(avant, this.etat);
       if (!liste.length) return '';
-      this.ui.toast('Nouveau au vestiaire', liste.map(p => p.icone + ' ' + p.nom).join(' · '), 5);
+      this.ui.toast('Nouveau au vestiaire', liste.map(p => p.icone + ' ' + p.nom).join(' · '), 5, 'succes');
       return `<div class="cadeau"><span>🎁 Nouveau au vestiaire</span><b>${liste.map(p => p.icone + ' ' + p.nom).join(', ')}</b></div>`;
     };
     const rec = this.etat.records[cle];
@@ -1512,7 +1626,7 @@ class Game {
       document.getElementById('suite-stats').innerHTML =
         `<div class="splits">` +
         this.srSplits.map(sp => `<div><span>${sp.titre}</span><b>${formaterTemps(sp.t)}</b></div>`).join('') +
-        `<div><span><b>Total</b></span><b>${formaterTemps(total)}</b></div>` +
+        `<div class="total"><span>Total</span><b>${formaterTemps(total)}</b></div>` +
         (recSr != null ? `<div><span>Ancien record</span><b>${formaterTemps(recSr)}</b></div>` : '') +
         cadeaux() + `</div>`;
       document.getElementById('btn-suivant').textContent = 'Retour au menu';
@@ -1524,7 +1638,7 @@ class Game {
     const suivant = this.niveauIndex + 1;
     const dernier = suivant >= NIVEAUX.length;
     const routeTxt = SORTIES[route]?.nom || 'Escaliers';
-    const note = t < 45 ? 'S — Éclair' : t < 75 ? 'A — Propre' : t < 110 ? 'B — Ça passe' : 'C — De justesse';
+    const note = noteDepart(t);
     document.getElementById('suite-titre').textContent =
       dernier ? 'Tu as fait tous les étages' : 'Étage franchi';
     document.getElementById('suite-sous').textContent = dernier
@@ -1532,17 +1646,35 @@ class Game {
       : NIVEAUX[suivant].titre + ' est débloqué';
     document.getElementById('suite-stats').innerHTML = `
       <div class="splits">
-        <div><span>Temps</span><b>${formaterTemps(t)}</b></div>
-        <div><span>Sortie</span><b>${routeTxt}</b></div>
+        <div><span>Temps de fuite</span><b>${formaterTemps(t)}</b></div>
+        <div><span>Sortie empruntée</span><b>${routeTxt}</b></div>
         <div><span>Frôlements</span><b>${this.nearMisses}</b></div>
-        <div><span>Note</span><b>${note}</b></div>
-        <div><span>Record de l’étage</span><b>${formaterTemps(this.etat.records[cle])}${nouveauRecord ? ' ★' : ''}</b></div>
+        <div><span>Record de l’étage</span><b>${formaterTemps(this.etat.records[cle])}${nouveauRecord ? ' ★ nouveau' : ''}</b></div>
+        <div class="total"><span>Appréciation</span><b>${note.lettre} · ${note.mot}</b></div>
         ${cadeaux()}
       </div>`;
+    const tampon = document.createElement('div');
+    tampon.className = 'tampon tampon-vert'; tampon.textContent = `Parti · ${note.lettre}`;
+    document.querySelector('#screen-suite .ticket').appendChild(tampon);
     document.getElementById('btn-suivant').textContent =
       dernier ? 'Retour au menu' : 'Étage suivant';
     this.ui.show('suite');
   }
+}
+
+// « z Z z » dessinés une fois au feutre sur un canvas.
+function spriteZzz() {
+  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 96;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#f5f1e6'; g.strokeStyle = 'rgba(20,30,40,.85)'; g.lineWidth = 5; g.lineJoin = 'round';
+  for (const [t, x, y, taille] of [['z', 18, 82, 30], ['Z', 52, 58, 42], ['z', 94, 30, 34]]) {
+    g.font = `700 ${taille}px "Ink Free", "Segoe Print", cursive`;
+    g.strokeText(t, x, y); g.fillText(t, x, y);
+  }
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false }));
+  sprite.scale.set(0.55, 0.41, 1); sprite.renderOrder = 5;
+  return sprite;
 }
 
 // Le verrouillage échoue si la page n'a pas le focus : on l'ignore sans bruit.
@@ -1593,6 +1725,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     await prechargerAccessoires();
     etape.textContent = 'Chargement du mobilier…';
     await prechargerMobilier();
+    await prechargerDepartements();
     etape.textContent = 'Chargement des matières…';
     await prechargerTexturesBlender();
     etape.textContent = 'Chargement des personnages…';

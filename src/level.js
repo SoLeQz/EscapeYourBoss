@@ -1,3 +1,5 @@
+import { departementDuNiveau, materiauxDepartement } from './departements.js';
+import { habillerDepartement } from './habillage-departements.js';
 import { uvBoiteMetrique } from './uv.js';
 import { poserDecorBlender } from './decor-blender.js';
 import { partager, libererArbre } from './resources.js';
@@ -305,11 +307,12 @@ export function buildLevel(scene, MAT, plan, niveau) {
   // Tout est construit dans le repère d'origine, puis retourné d'un bloc.
   const repere = repereDuNiveau(niveau);
   miroirEcrans = repere.miroir; definirMiroirTexte(repere.miroir);
-  try { return construire(scene, MAT, plan, niveau, repere); }
+  try { return construire(scene, materiauxDepartement(MAT,niveau), plan, niveau, repere); }
   finally { miroirEcrans = false; definirMiroirTexte(false); }
 }
 
 function construire(scene, MAT, plan, niveau, repere) {
+  const departement=departementDuNiveau(niveau);
   const elevatorPanels = [];
   let elevatorLed = null;
   for (const mat of Object.values(MAT)) if (mat?.isMaterial) partager(mat);
@@ -496,6 +499,7 @@ function construire(scene, MAT, plan, niveau, repere) {
 
   // ---------- direction artistique commune et quartier extérieur ----------
   habillerBureau(root, MAT, plan, niveau);
+  accessoires.push(habillerDepartement(root,MAT,plan,niveau));
   construireVille(root);
   ossatureBureau(root, MAT, plan);
   cabineAscenseur(root, MAT);
@@ -561,16 +565,20 @@ function construire(scene, MAT, plan, niveau, repere) {
     const obstaclePorte = { x1: x2 - 0.2, z1: zp1, x2: x2 + 0.2, z2: zp2, h: 2.3, kind: 'secret' };
     obstacles.push(obstaclePorte);
     const etagere = poserAccessoire('etagere-secrete', root, MAT, { x: x2, z: porte.z, yaw: Math.PI / 2 });
+    // On manœuvre l'étagère des deux côtés : livre rouge dehors, poussée dedans.
     const liste = [{ id: 'etagere-secrete', type: 'passage', x: x2 + 0.7, z: porte.z, r: 1.25,
-      label: 'Tirer le livre rouge', obstacle: obstaclePorte, ...etagere }];
+      label: 'Tirer le livre rouge', obstacle: obstaclePorte, ...etagere,
+      cotes: [{ x: x2 + 0.7, z: porte.z }, { x: x2 - 0.7, z: porte.z }], piece: { x1, z1, x2, z2 } }];
     const m = ps.meubles;
     const hamac = poserAccessoire('hamac', root, MAT, { x: m.hamac[0], z: m.hamac[1] });
     obstacles.push({ x1: m.hamac[0] - 1.42, z1: m.hamac[1] - 0.45, x2: m.hamac[0] + 1.42, z2: m.hamac[1] + 0.45, h: 0.95, kind: 'secret' });
-    liste.push({ id: 'hamac', type: 'sieste', x: m.hamac[0], z: m.hamac[1] - 0.85, r: 1.2, label: 'Faire une petite sieste', ...hamac });
+    // lit : creux de la toile (0,54 m au centre, creer_accessoires.py) et oreiller côté -x
+    liste.push({ id: 'hamac', type: 'sieste', x: m.hamac[0], z: m.hamac[1] - 0.85, r: 1.2, label: 'S’allonger dans le hamac', ...hamac,
+      lit: { x: m.hamac[0], z: m.hamac[1], y: 0.54, tete: { x: m.hamac[0] - 0.75, z: m.hamac[1] } } });
     const arcade = poserAccessoire('borne-arcade', root, MAT, { x: m.arcade[0], z: m.arcade[1], yaw: Math.PI / 2 });
     obstacles.push({ ...emprise(m.arcade[0], m.arcade[1], 0.66, 0.78, Math.PI / 2), h: 1.72, kind: 'secret' });
     liste.push({ id: 'borne-arcade', type: 'arcade', ...devant(m.arcade[0], m.arcade[1], Math.PI / 2, 0.85), r: 1.1,
-      label: 'Jouer à Escape Your Boss (1985)', ...arcade });
+      label: 'Jouer à « Juste 5 minutes » (machine à sous)', ...arcade });
     const bouton = poserAccessoire('bouton-rouge', root, MAT, { x: m.bouton[0], z: m.bouton[1] });
     obstacles.push({ x1: m.bouton[0] - 0.22, z1: m.bouton[1] - 0.22, x2: m.bouton[0] + 0.22, z2: m.bouton[1] + 0.22, h: 1.05, kind: 'secret' });
     liste.push({ id: 'bouton-rouge', type: 'bouton', x: m.bouton[0], z: m.bouton[1] + 0.6, r: 1.0, label: 'NE PAS APPUYER', ...bouton });
@@ -820,16 +828,15 @@ function construire(scene, MAT, plan, niveau, repere) {
     }
 
     const kitPoste = kit('poste');
-    if (kitPoste) { poserAccessoire('poste', g, MAT); poserAccessoire('poste-' + typeEcran, g, MAT); }
+    if (kitPoste) { poserAccessoire('poste', g, MAT); poserAccessoire(kit('poste-'+departement.id)?'poste-'+departement.id:'poste-'+typeEcran, g, MAT); }
 
     // écran : la dalle (code, tableur, graphique) reste dessinée par le jeu
     const ecran = new THREE.Group();
     ecran.position.set(-0.35, 0, -0.2);
     ecran.rotation.y = 0.17;
     g.add(ecran);
-    const dalle = new THREE.Mesh(new THREE.PlaneGeometry(0.585, 0.345),
-      materiauEcran(typeEcran));
-    dalle.position.set(0, 1.05, 0.019); ecran.add(dalle);
+    const dalle = panneauGraphique(ecran,'ecran-'+departement.id,.585,.345,0,1.05,.019);
+    if(departement.id==='it' && kit('poste-it'))panneauGraphique(g,'ecran-it',.58,.34,.66,1.11,-.28);
     emissifs.push(dalle);
     if (!kitPoste) {
       const coque = new THREE.Mesh(rbox(0.63, 0.39, 0.035, 0.008), MAT.plastiqueNoir);
@@ -879,7 +886,7 @@ function construire(scene, MAT, plan, niveau, repere) {
         { receive: false });
     }
 
-    personnaliserPoste(g, MAT, typeEcran, kitPoste);
+    if(!kit('poste-'+departement.id))personnaliserPoste(g, MAT, typeEcran, kitPoste);
 
     // la chaise vit dans le repère monde : on transforme sa position
     const cs = Math.cos(rot), sn = Math.sin(rot);
@@ -992,9 +999,7 @@ function construire(scene, MAT, plan, niveau, repere) {
     const g = new THREE.Group(); g.position.set(x, 1.65, z); g.rotation.y = yaw; root.add(g);
     if (kit('ecran-mural')) poserAccessoire('ecran-mural', g, MAT);
     else { const c = new THREE.Mesh(rbox(2.0, 1.16, 0.06, 0.012), MAT.plastiqueNoir); c.castShadow = true; g.add(c); }
-    const d = new THREE.Mesh(new THREE.PlaneGeometry(1.94, 1.1),
-      materiauEcran('graph'));
-    d.position.z = 0.032; g.add(d);
+    const d = panneauGraphique(g,'ecran-'+departement.id,1.94,1.1,0,0,.032);
     emissifs.push(d);
   }
 
@@ -1003,7 +1008,7 @@ function construire(scene, MAT, plan, niveau, repere) {
     const pas = (z2 - z1 - 0.08) / n;
     if (kit('casier')) {
       obstacles.push({ x1, z1, x2, z2, h: 1.85, seeThrough: false, noClip: false, kind: 'solid' });
-      const modele = Math.round(z1) % 2 ? 'casier-b' : 'casier';
+      const modele = kit('rangement-'+departement.id) ? 'rangement-'+departement.id : Math.round(z1) % 2 ? 'casier-b' : 'casier';
       for (let i = 0; i < n; i++) {
         const p = poserAccessoire(modele, root, MAT, { x: (x1 + x2) / 2, z: z1 + 0.04 + pas * (i + 0.5), yaw: -Math.PI / 2 });
         p.groupe.scale.x = pas / 0.62;
@@ -1177,7 +1182,7 @@ function construire(scene, MAT, plan, niveau, repere) {
   function cartons(x, z) {
     if (kit('cartons-pile')) {
       obstacles.push({ x1: x - 0.42, z1: z - 0.38, x2: x + 0.42, z2: z + 0.38, h: 1.28, kind: 'prop' });
-      poserAccessoire('cartons-pile', root, MAT, { x, z });
+      poserAccessoire(departement.id==='direction' && kit('vitrine-direction') ? 'vitrine-direction' : 'cartons-pile', root, MAT, { x, z });
       return;
     }
     const tailles = [[0.7, 0.5, 0.6, 0], [0.55, 0.42, 0.5, 0.5], [0.45, 0.35, 0.42, 0.92]];
@@ -1290,12 +1295,12 @@ function construire(scene, MAT, plan, niveau, repere) {
     const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; root.add(g);
     if (kit('tableau-blanc')) {
       poserAccessoire('tableau-blanc', g, MAT);
-      panneauGraphique(g, 'planning', 2.98, 1.48, 0, 0, 0.033);
+      panneauGraphique(g, 'tableau-'+departement.id, 2.98, 1.48, 0, 0, 0.033);
       return;
     }
     const cadre = new THREE.Mesh(rbox(3.1, 1.6, 0.06, 0.012), MAT.alu);
     cadre.castShadow = true; g.add(cadre);
-    panneauGraphique(g, 'planning', 2.98, 1.48, 0, 0, 0.033);
+    panneauGraphique(g, 'tableau-'+departement.id, 2.98, 1.48, 0, 0, 0.033);
     const tablette = new THREE.Mesh(rbox(3.1, 0.05, 0.1, 0.012), MAT.alu);
     tablette.position.set(0, -0.82, 0.06); tablette.castShadow = true; g.add(tablette);
     for (let i = 0; i < 3; i++) {
@@ -1369,6 +1374,9 @@ function construire(scene, MAT, plan, niveau, repere) {
     Object.assign(a, repere.p(a.x, a.z), a.yaw != null ? { yaw: repere.yaw(a.yaw) } : {});
     if (a.source) a.source = repere.p(a.source.x, a.source.z);
     if (a.route) a.route = repere.points(a.route);
+    if (a.cotes) a.cotes = a.cotes.map(c => repere.p(c.x, c.z));
+    if (a.piece) a.piece = repere.boite(a.piece);
+    if (a.lit) a.lit = { ...a.lit, ...repere.p(a.lit.x, a.lit.z), tete: repere.p(a.lit.tete.x, a.lit.tete.z) };
   }
   for (const c of canards) Object.assign(c, repere.p(c.x, c.z));
   const depart = { ...plan.depart, ...repere.p(plan.depart.x, plan.depart.z), yaw: repere.yaw(plan.depart.yaw) };

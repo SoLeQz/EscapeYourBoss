@@ -1,3 +1,5 @@
+import { NIVEAUX } from './levels.js';
+
 // ============================================================
 //  Vestiaire : ce que Lao D peut porter.
 //
@@ -77,6 +79,29 @@ export const PALETTES = {
   accent: [0xc62828, 0x1e88e5, 0x43a047, 0xfdd835, 0x8e24aa, 0xff6d00, 0x212121, 0xfafafa, 0xff4081, 0x00bcd4],
 };
 
+// Noms affichés dans les nuanciers. Les valeurs numériques restent celles des
+// sauvegardes et des matériaux ; aucune conversion de la tenue n'est nécessaire.
+const NOMS_PALETTES = {
+  peau: ['Beige doré', 'Beige clair', 'Miel', 'Caramel', 'Brun chaud', 'Brun profond'],
+  cheveux: ['Noir', 'Brun foncé', 'Châtain', 'Châtain doré', 'Blond', 'Auburn', 'Argent', 'Rose bonbon', 'Bleu électrique', 'Vert émeraude', 'Violet'],
+  chemise: ['Ivoire', 'Blanc', 'Bleu ciel', 'Rose pâle', 'Jaune pastel', 'Vert menthe', 'Corail', 'Prune', 'Anthracite'],
+  veste: ['Sans veste', 'Gris ardoise', 'Noir charbon', 'Bleu marine', 'Bordeaux', 'Vert forêt', 'Beige sable', 'Gris perle', 'Rose vif'],
+  pantalon: ['Gris acier', 'Noir charbon', 'Bleu marine', 'Beige sable', 'Rouge brique', 'Vert forêt', 'Gris perle'],
+  cravate: ['Lie-de-vin', 'Noir charbon', 'Bleu marine', 'Or', 'Vert émeraude', 'Rose vif', 'Corail', 'Violet'],
+  accent: ['Rouge', 'Bleu azur', 'Vert', 'Jaune soleil', 'Violet vif', 'Orange', 'Noir', 'Blanc cassé', 'Rose vif', 'Turquoise'],
+};
+export function nomCouleur(c, palette) {
+  if (c === null) return 'Sans veste';
+  const index = PALETTES[palette]?.indexOf(c) ?? -1;
+  if (index >= 0) return NOMS_PALETTES[palette][index];
+  // Une tenue toute faite peut utiliser une teinte d'un autre nuancier.
+  for (const [cle, couleurs] of Object.entries(PALETTES)) {
+    const i = couleurs.indexOf(c);
+    if (i >= 0) return NOMS_PALETTES[cle][i];
+  }
+  return 'Couleur personnalisée';
+}
+
 export const APPARENCE_DEFAUT = Object.freeze({
   visage: 'employe', peau: 0xf1c096, cheveux: 0x14100d,
   chemise: 0xf2ead8, veste: 0x4c5464, pantalon: 0x555a66, cravate: 0x82333d, badge: true,
@@ -121,13 +146,16 @@ export function optionsPersonnage(a) {
 export function estDebloquee(p, etat) {
   if (!p?.debloque) return true;
   if (p.debloque.etage) return (etat?.niveauxFinis || []).includes(p.debloque.etage);
-  if (p.debloque.speedrun) return etat?.records?.speedrun != null;
+  if (p.debloque.speedrun) return etat?.records?.speedrun != null || etat?.records?.speedrunSixEtages != null;
   return false;
 }
 export function conditionDeblocage(p) {
   if (!p?.debloque) return '';
-  if (p.debloque.etage) return `Termine l’étage ${p.debloque.etage}`;
-  if (p.debloque.speedrun) return 'Termine un speedrun complet';
+  if (p.debloque.etage) {
+    const niveau = NIVEAUX.find(n => n.id === p.debloque.etage);
+    return `Termine le niveau ${p.debloque.etage} en solo${niveau ? ' · ' + niveau.titre : ''}`;
+  }
+  if (p.debloque.speedrun) return `Termine un speedrun complet : les ${NIVEAUX.length} niveaux depuis le premier, en solo`;
   return '';
 }
 export function compterPieces(etat) {
@@ -177,6 +205,13 @@ export function tenue(id) {
 export function tenueDisponible(id, etat) {
   const a = tenue(id);
   return !!a && Object.keys(PIECES).every(e => estDebloquee(piece(e, a[e]), etat));
+}
+
+// Pour une tenue complète, expliquer seulement les pièces encore à obtenir.
+export function piecesManquantes(id, etat) {
+  const a = tenue(id);
+  if (!a) return [];
+  return Object.keys(PIECES).map(e => piece(e, a[e])).filter(p => !estDebloquee(p, etat));
 }
 
 // ------------------------------------------------------------ surprise

@@ -24,7 +24,7 @@ module.exports = async ({ js, shot, step, wait }) => {
   const attendre = async (fenetre, cond, ms = 15000) => {
     const t0 = Date.now();
     while (Date.now() - t0 < ms) { if (await fenetre(cond)) return true; await wait(150); }
-    const diag = "JSON.stringify({etat:__game.state,prep:__game.preparation,niveau:__game.niveauIndex,mode:__game.mode,connecte:__game.multi.connecte,pret:__game.multi.pretIndex,monde:__game.multi.monde?.idx})";
+    const diag = "JSON.stringify({phase:__game.chargementPhase,programmes:__game.renderer.info.programs?.length,etat:__game.state,prep:__game.preparation,niveau:__game.niveauIndex,mode:__game.mode,connecte:__game.multi.connecte,pret:__game.multi.pretIndex,monde:__game.multi.monde?.idx})";
     throw Error('Délai dépassé : ' + cond + ' · hôte ' + await js(diag) + ' · invité ' + await js2(diag));
   };
   const resultats = {};
@@ -68,7 +68,7 @@ module.exports = async ({ js, shot, step, wait }) => {
     // position réelle de l'invité (la collision a pu le repousser d'un meuble)
     const cible = await js2(`(()=>{const p=__game.player;return {x:p.pos.x,z:p.pos.z}})()`);
     const vu = await js(`(()=>{const c=__game.coequipier,d=__game.multi.etatDistant;return {x:c.pos.x,z:c.pos.z,visible:c.mesh.visible,recu:d&&{x:d.x,z:d.z}}})()`);
-    const encore = await js2(`(()=>{const p=__game.player;return {x:p.pos.x,z:p.pos.z,v:p.speed,etat:__game.state,prep:__game.preparation}})()`);
+    const encore = await js2(`(()=>{const p=__game.player;return {x:p.pos.x,z:p.pos.z,v:p.speed,phase:__game.chargementPhase,programmes:__game.renderer.info.programs?.length,etat:__game.state,prep:__game.preparation}})()`);
     const ecart = Math.hypot(vu.x - cible.x, vu.z - cible.z);
     if (!vu.visible || ecart > .25) throw Error(`Coéquipier mal placé chez l'hôte (${ecart.toFixed(2)} m) ` + JSON.stringify({cible,vu,encore,imagesHote}));
     return { ecart: +ecart.toFixed(3), imagesHote };
@@ -164,8 +164,58 @@ module.exports = async ({ js, shot, step, wait }) => {
     return { routes: [routeInvite, routeHote], hote: await js("document.getElementById('suite-titre').textContent"), invite: await js2("document.getElementById('btn-suivant').textContent") };
   });
   await shot('multi-victoire-hote.jpg'); await shot2('multi-victoire-invite.jpg');
+  if (process.argv.includes('--speedrun')) {
+    await etape('quitter-coop-apres-sortie',async()=>{
+      const caches={hote:!await js('__game.player.mesh.visible'),invite:!await js2('__game.player.mesh.visible')};
+      if(!caches.invite)throw Error('La sortie ne masque pas le joueur invité');
+      await js('__game.retourMenuMulti()');await attendre(js2,"__game.state==='menu'");
+      await js2('__game.multi.quitter()');await js('__game.multi.quitter()');return caches;
+    });
+    await etape('hote-speedrun-apres-coop',async()=>{
+      return js(`(async()=>{const g=__game;g.lancerSpeedrun(g.niveauIndex);while(g.state==='loading')await new Promise(r=>setTimeout(r,50));if(!g.player.mesh.visible||[...g.coequipiers.values()].some(c=>c.mesh.visible))throw Error('Visibilité hôte incorrecte');g.pause();return {visible:g.player.mesh.visible}})()`);
+    });
+    const stepInvite=async(nom,expr)=>{
+      const r=await js2(`(async()=>{try{return {valeur:await (${expr})}}catch(e){return {erreur:e.message,etat:__game.state,niveau:__game.niveauIndex}}})()`);
+      if(r.erreur)await step(nom,`(()=>{throw Error(${JSON.stringify(JSON.stringify(r))})})()`);
+      else await step(nom,`(${JSON.stringify(r.valeur??null)})`);
+    };
+    await require('./speedrun-test.cjs')({js:js2,shot:shot2,step:stepInvite,wait});
+    invite.destroy();return;
+  }
+  await etape('secrets-cooperatifs', async () => {
+    await js('__game.lancerMulti(6)');
+    await attendre(js, "__game.state==='play'&&!__game.preparation",30000);
+    await attendre(js2, "__game.state==='play'&&!__game.preparation",30000);
+    await js('__game.npcs.forEach(n=>{n.gainRate=0;n.suspicion=0});__game.timeLeft=500');
+    for(const type of ['disjoncteur','passage']) {
+      await js2(`(()=>{const g=__game,it=g.interactifs.liste.find(a=>a.type==='${type}');g.player.pos.set(it.x,0,it.z);g.player.vel.set(0,0,0)})()`);
+      await wait(400); await js2('__game.tryInteract()');
+      await attendre(js, type==='disjoncteur' ? '__game.interactifs.obscurite>0' : "__game.interactifs.liste.find(a=>a.type==='passage').ouvert",5000);
+      await attendre(js2, type==='disjoncteur' ? '__game.interactifs.obscurite>0' : "__game.interactifs.liste.find(a=>a.type==='passage').ouvert",5000);
+    }
+    await js2('__game.ramasserCanard(__game.level.canards[0])');
+    await attendre(js,"__game.etat.canards[7]?.includes(0)",5000);
+    return {coupure:'commune',bibliotheque:'ouverte des deux côtés',canard:'partagé'};
+  });
+  await etape('carton-et-poste-cooperatifs', async () => {
+    await js('__game.lancerMulti(7)');
+    await attendre(js,"__game.state==='play'&&!__game.preparation",30000);
+    await attendre(js2,"__game.state==='play'&&!__game.preparation",30000);
+    await js('__game.npcs.forEach(n=>{n.gainRate=0;n.suspicion=0});__game.timeLeft=500');
+    await js2(`(()=>{const g=__game,it=g.interactifs.liste.find(a=>a.type==='carton');g.player.pos.set(it.x+.85,0,it.z);g.player.vel.set(0,0,0)})()`);
+    await wait(400);await js2('__game.tryInteract()');
+    await attendre(js2,"__game.player.deguisement==='carton'",5000);
+    await attendre(js,"__game.coequipier.deguisement==='carton'",5000);
+    if(await js('__game.coequipier.mesh.visible'))throw Error('Corps visible à travers le carton');
+    await js2('__game.tryInteract()');await attendre(js2,'!__game.player.deguisement',5000);
+    await js2(`(()=>{const g=__game,it=g.actionsBureau.find(a=>a.type==='travail');g.player.pos.set(it.x,0,it.z);g.player.vel.set(0,0,0);g.tryInteract()})()`);
+    await attendre(js,'!!__game.coequipier.working',5000);await wait(13000);
+    if(await js2('!!__game.player.working'))throw Error('Protection de travail encore active après 13 s');
+    return {carton:'entrée et sortie synchronisées',poste:'crédit épuisé'};
+  });
+  await etape('erreurs-deux-fenetres',async()=>{const e=[...await js('__erreurs'),...await js2('__erreurs')];if(e.length)throw Error(e.join(' / '));return e});
   await etape('deconnexion', async () => {
-    await js(`document.getElementById('btn-suivant').click()`);  // l'hôte lance l'étage suivant
+    await js('__game.lancerMulti(8)');
     await attendre(js2, "__game.state==='play'", 30000);
     await js2('__game.multi.quitter()');
     await attendre(js, "__game.state==='menu'&&!document.getElementById('menu-multi').hidden", 5000);

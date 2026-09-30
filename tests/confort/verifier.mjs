@@ -7,6 +7,15 @@ import { geometriesCorps } from '../../src/body.js';
 
 const niveau = { playerStart: { x: 0, z: 0, yaw: 0 }, obstacles: [] };
 const joueur = new Player(new THREE.Scene(), niveau);
+// Après une sortie coopérative, le modèle est caché. Un départ solo doit
+// restaurer le joueur sans attendre un accessoire ou un paquet réseau.
+joueur.mesh.visible = false; joueur.outline.visible = true;
+joueur.exitPose = { id: 'stairs', progress: 1 };
+joueur.reset(); joueur.animate(0);
+assert(joueur.mesh.visible, 'Joueur invisible après réinitialisation');
+assert(!joueur.outline.visible, 'Ancien contour de détection conservé');
+assert.equal(joueur.exitPose, null);
+assert(Math.hypot(joueur.mesh.position.x, joueur.mesh.position.z) < .001);
 const input = new Entrees();
 input.add('KeyW'); input.add('ShiftLeft');
 let transitions = 0, avant = false, dureeBlocage = 0, blocageMax = 0;

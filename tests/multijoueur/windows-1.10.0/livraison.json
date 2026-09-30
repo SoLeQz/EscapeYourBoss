@@ -1,0 +1,13 @@
+{
+  "version": "1.10.0",
+  "installation": "/mnt/c/Users/nicol/EscapeYourBoss",
+  "backup": "/mnt/c/Users/nicol/EscapeYourBoss-sauvegarde-1.9.0-20260928-010829",
+  "zip": "/mnt/c/Users/nicol/Downloads/EscapeYourBoss-1.10.0-win64.zip",
+  "sha256": "56f6434386d6ad5acf43d6065e9b8c80753960bff1472748c272af296eea8e7c",
+  "sauvegardes_inchangees": true,
+  "windows": {
+    "trois_et_quatre": 16,
+    "deux": 17,
+    "erreurs": 0
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":847,\"premierNiveau\":898,\"rendu\":14,\"total\":3978},\"pnj\":4,\"obstacles\":57}"
+    },
+    {
+      "name": "carnet",
+      "result": "0/30 canards · 0/12 découvertes"
+    },
+    {
+      "name": "menus-petite-fenetre",
+      "result": {
+        "largeur": 947,
+        "hauteur": 563
+      }
+    },
+    {
+      "name": "charger-1",
+      "result": {
+        "niveau": 1,
+        "orientation": "origine",
+        "sorties": [
+          "elevator",
+          "stairs"
+        ]
+      }
+    },
+    {
+      "name": "charger-2",
+      "result": {
+        "niveau": 2,
+        "orientation": "nord",
+        "sorties": [
+          "elevator",
+          "stairs"
+        ]
+      }
+    },
+    {
+      "name": "charger-3",
+      "result": {
+        "niveau": 3,
+        "orientation": "ouest",
+        "sorties": [
+          "elevator"
+        ]
+      }
+    },
+    {
+      "name": "charger-4",
+      "result": {
+        "niveau": 4,
+        "orientation": "retournee",
+        "sorties": [
+          "elevator",
+          "stairs"
+        ]
+      }
+    },
+    {
+      "name": "charger-5",
+      "result": {
+        "niveau": 5,
+        "orientation": "nord",
+        "sorties": [
+          "elevator",
+          "stairs"
+        ]
+      }
+    },
+    {
+      "name": "charger-6",
+      "result": {
+        "niveau": 6,
+        "orientation": "ouest",
+        "sorties": [
+          "elevator",
+          "stairs"
+        ]
+      }
+    },
+    {
+      "name": "charger-7",
+      "result": {
+        "niveau": 7,
+        "orientation": "retournee",
+        "sorties": [
+          "elevator",
+          "stairs",
+          "toboggan"
+        ]
+      }
+    },
+    {
+      "name": "charger-8",
+      "result": {
+        "niveau": 8,
+        "orientation": "nord",
+        "sorties": [
+          "nacelle"
+        ]
+      }
+    },
+    {
+      "name": "charger-9",
+      "result": {
+        "niveau": 9,
+        "orientation": "ouest",
+        "sorties": [
+          "elevator",
+          "stairs",
+          "toboggan"
+        ]
+      }
+    },
+    {
+      "name": "charger-10",
+      "result": {
+        "niveau": 10,
+        "orientation": "origine",
+        "sorties": [
+          "elevator",
+          "nacelle"
+        ]
+      }
+    },
+    {
+      "name": "piece-et-coupure",
+      "result": {
+        "secrets": [
+          "salle-secrete",
+          "disjoncteur",
+          "bouton",
+          "arcade",
+          "sieste"
+        ],
+        "canards": {
+          "7": [
+            0
+          ]
+        },
+        "lumieres": [
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.9520000000000001,
+          0.3264,
+          0.3264,
+          0.3264,
+          0.3264
+        ]
+      }
+    },
+    {
+      "name": "persistance",
+      "result": true
+    },
+    {
+      "name": "carton",
+      "result": true
+    },
+    {
+      "name": "sortie-toboggan",
+      "result": {
+        "etat": "over",
+        "decouverte": true
+      }
+    },
+    {
+      "name": "sortie-nacelle",
+      "result": {
+        "etat": "over",
+        "decouverte": true
+      }
+    },
+    {
+      "name": "erreurs",
+      "result": {
+        "erreurs": [],
+        "fps": 65.23673025614887
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

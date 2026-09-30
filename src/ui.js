@@ -124,7 +124,7 @@ export class UI {
       el.classList.toggle('hors-champ',p.horsChamp);
       el.querySelector('.repere-direction').style.transform=`rotate(${p.angle}rad)`;
       const distance=Math.ceil(Math.hypot(o.x-player.pos.x,o.z-player.pos.z));
-      el.querySelector('small').textContent=`${distance} m · ${o.ouvre?'facultatif, ouvre l’escalier':'à récupérer'}`;
+      el.querySelector('small').textContent=`${distance} m · ${o.ouvre?(o.effet || 'ouvre l’escalier'):'à récupérer'}`;
     }
     for(const [o,el] of this.objectiveNodes)if(!actifs.has(o)){el.remove();this.objectiveNodes.delete(o);}
     $('legende-objets').hidden=!actifs.size;

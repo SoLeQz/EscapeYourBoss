@@ -1,0 +1,352 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":870,\"premierNiveau\":928,\"rendu\":16,\"total\":4362},\"pnj\":4,\"obstacles\":57}"
+    },
+    {
+      "name": "heberger",
+      "result": {
+        "role": "hote",
+        "statut": "Partie ouverte. Sur le même réseau, ton ami la trouve avec « Rechercher », ou tape ton adresse : 192.168.1.49 ou 172.17.80.1. En ligne, donne-lui l’adresse de ton tunnel playit.gg (nom:port). Si Windows demande l’accès réseau, accepte pour les réseaux privés."
+      }
+    },
+    {
+      "name": "decouverte",
+      "result": {
+        "trouve": true,
+        "texte": "Rejoindre Lao D 127.0.0.1",
+        "statut": "1 partie trouvée."
+      }
+    },
+    {
+      "name": "connexion",
+      "result": {
+        "hote": [
+          "hote",
+          "Ami"
+        ],
+        "invite": [
+          "invite",
+          "Lao D"
+        ]
+      }
+    },
+    {
+      "name": "lancement",
+      "result": {
+        "hote": [
+          "multi",
+          1
+        ],
+        "invite": [
+          "multi",
+          1
+        ]
+      }
+    },
+    {
+      "name": "coequipier-suivi",
+      "result": {
+        "ecart": 0,
+        "imagesHote": 28
+      }
+    },
+    {
+      "name": "collegues-synchronises",
+      "result": {
+        "collegues": 5,
+        "ecartMax": 0.174
+      }
+    },
+    {
+      "name": "objet-partage",
+      "result": {
+        "objets": 2,
+        "prisChezHote": true
+      }
+    },
+    {
+      "name": "perception-invite",
+      "result": {
+        "suspicion": 0.586380414976838,
+        "vu": 0.00005271523939071763
+      }
+    },
+    {
+      "name": "defaite-partagee",
+      "result": {
+        "hote": "fail",
+        "invite": "fail"
+      }
+    },
+    {
+      "name": "touche-r",
+      "result": {
+        "invite": "R ignoré",
+        "hote": "R relance après défaite, ignoré en jeu",
+        "coequipiers": "visibles"
+      }
+    },
+    {
+      "name": "menu-echap-local",
+      "result": {
+        "invite": {
+          "menu": true,
+          "etat": "play",
+          "ecran": true
+        },
+        "hote": {
+          "etat": "play",
+          "t": 1.863699999999257,
+          "ecran": false
+        }
+      }
+    },
+    {
+      "name": "relance-et-victoire",
+      "result": {
+        "routes": [
+          "elevator",
+          "stairs"
+        ],
+        "hote": "Sortis tous les deux !",
+        "invite": "L’hôte choisit la suite…"
+      }
+    },
+    {
+      "name": "quitter-coop-apres-sortie",
+      "result": {
+        "hote": true,
+        "invite": true
+      }
+    },
+    {
+      "name": "hote-speedrun-apres-coop",
+      "result": {
+        "visible": true
+      }
+    },
+    {
+      "name": "speedrun-meme-etage",
+      "result": {
+        "etage": 2,
+        "visible": true
+      }
+    },
+    {
+      "name": "speedrun-visible-1",
+      "result": {
+        "etage": 1,
+        "dessins": 2028,
+        "visible": true,
+        "position": [
+          -15.2,
+          -0.01142921090229956,
+          5.016685437981742
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-1",
+      "result": {
+        "sortie": "stairs",
+        "splits": 1
+      }
+    },
+    {
+      "name": "speedrun-visible-2",
+      "result": {
+        "etage": 2,
+        "dessins": 1794,
+        "visible": true,
+        "position": [
+          -15.2,
+          -0.010838996732002391,
+          -5.029134976326855
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-2",
+      "result": {
+        "sortie": "stairs",
+        "splits": 2
+      }
+    },
+    {
+      "name": "speedrun-visible-3",
+      "result": {
+        "etage": 3,
+        "dessins": 2106,
+        "visible": true,
+        "position": [
+          17.5,
+          -0.010689181614440109,
+          12.868002017908639
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-3",
+      "result": {
+        "sortie": "elevator",
+        "splits": 3
+      }
+    },
+    {
+      "name": "speedrun-visible-4",
+      "result": {
+        "etage": 4,
+        "dessins": 1872,
+        "visible": true,
+        "position": [
+          17.5,
+          -0.008848203582491353,
+          -12.82992352811971
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-4",
+      "result": {
+        "sortie": "stairs",
+        "splits": 4
+      }
+    },
+    {
+      "name": "speedrun-visible-5",
+      "result": {
+        "etage": 5,
+        "dessins": 2028,
+        "visible": true,
+        "position": [
+          -3,
+          -0.010887360160617553,
+          -2.1280056455000547
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-5",
+      "result": {
+        "sortie": "stairs",
+        "splits": 5
+      }
+    },
+    {
+      "name": "speedrun-visible-6",
+      "result": {
+        "etage": 6,
+        "dessins": 2028,
+        "visible": true,
+        "position": [
+          3,
+          -0.010528611036015599,
+          2.1353429874132104
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-6",
+      "result": {
+        "sortie": "stairs",
+        "splits": 6
+      }
+    },
+    {
+      "name": "speedrun-visible-7",
+      "result": {
+        "etage": 7,
+        "dessins": 780,
+        "visible": true,
+        "position": [
+          16.602473381740115,
+          -0.012116043830046727,
+          12.7
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-7",
+      "result": {
+        "sortie": "stairs",
+        "splits": 7
+      }
+    },
+    {
+      "name": "speedrun-visible-8",
+      "result": {
+        "etage": 8,
+        "dessins": 1782,
+        "visible": true,
+        "position": [
+          1.4263521789968334,
+          -0.010978071466067184,
+          -13.6
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-8",
+      "result": {
+        "sortie": "nacelle",
+        "splits": 8
+      }
+    },
+    {
+      "name": "speedrun-visible-9",
+      "result": {
+        "etage": 9,
+        "dessins": 2028,
+        "visible": true,
+        "position": [
+          16.635624334350954,
+          -0.010525127793765935,
+          -12.7
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-9",
+      "result": {
+        "sortie": "stairs",
+        "splits": 9
+      }
+    },
+    {
+      "name": "speedrun-visible-10",
+      "result": {
+        "etage": 10,
+        "dessins": 1056,
+        "visible": true,
+        "position": [
+          1.4364062141406209,
+          -0.01047152952644896,
+          13.6
+        ]
+      }
+    },
+    {
+      "name": "speedrun-sortie-10",
+      "result": {
+        "sortie": "elevator",
+        "splits": 10
+      }
+    },
+    {
+      "name": "speedrun-bilan",
+      "result": {
+        "splits": 10,
+        "erreurs": []
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(123,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

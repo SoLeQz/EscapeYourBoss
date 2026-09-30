@@ -9,7 +9,8 @@ import { poserDecorBlender } from './decor-blender.js';
 // Aucun texte généré aléatoirement, aucun chargement réseau.
 const INK = '#234b49', PAPER = '#eee9db', GOLD = '#d7a24d', RUST = '#ad563c';
 const CELLS = ['marque', 'cinq', 'pause', 'planning', 'direction', 'reunion',
-  'hall', 'impression', 'cafe', 'annonces', 'projet', 'carnet', '23', '19', '12', 'service', 'escaliers', 'evacuation', ...HUMOUR.map(h=>h.id)];
+  'hall', 'impression', 'cafe', 'annonces', 'projet', 'carnet', '23', '19', '12', 'service', 'escaliers', 'evacuation', ...HUMOUR.map(h=>h.id),
+  'sieste', 'canards', 'travaux', 'afterwork', 'informatique', '9', '7', '4', '2'];
 const ATLAS_H = Math.ceil(CELLS.length / 4) * 256;
 let assets;
 
@@ -119,6 +120,34 @@ function creerAtlas() {
       for(const [x,y,w,h] of [[35,70,300,8],[35,70,8,123],[35,185,300,8],[327,70,8,123],[142,70,8,88]])rect(x,y,w,h,INK);
       rect(183,135,150,7,GOLD);rect(183,99,7,43,GOLD);text('↓',348,154,58,INK,true);
       text('VOUS ÊTES ICI  →  SORTIE',26,234,17,INK,true);
+    } else if (id === 'sieste') {
+      rect(0, 0, 512, 256, '#3b1f3a');
+      text('SALLE DE SIESTE', 28, 70, 40, PAPER, true); text('CLANDESTINE', 28, 118, 40, GOLD, true);
+      text('Chut. Ici, personne ne te trouvera.', 30, 164, 20, PAPER);
+      line(28, 212, 456, GOLD); text('RÉSERVÉ AU FONDATEUR  /  DEPUIS 1998', 28, 238, 12, PAPER);
+    } else if (id === 'canards') {
+      rect(0, 0, 512, 256, '#f6d23c');
+      circle(420, 150, 58, '#ffbf1a'); circle(420, 78, 36, '#ffbf1a'); rect(448, 70, 44, 16, '#ff7a12'); circle(428, 68, 6, INK);
+      text('BLOQUÉ ?', 28, 62, 44, INK, true); text('Explique ton bug', 30, 112, 26, INK);
+      text('au canard.', 30, 146, 26, INK, true);
+      footer('SERVICE INFORMATIQUE  /  MÉTHODE N° 42');
+    } else if (id === 'travaux') {
+      for (let i = 0; i < 12; i++) { c.save(); c.translate(i * 48 - 20, 0); c.transform(1, 0, -0.6, 1, 0, 0); rect(0, 0, 24, 40, INK); c.restore(); }
+      rect(0, 0, 512, 40, 'rgba(245,190,40,.55)');
+      text('ÉTAGE EN TRAVAUX', 28, 94, 38, INK, true);
+      text('Déménagement : ascenseur réservé.', 30, 136, 19);
+      text('La nacelle du laveur de vitres est en service.', 30, 166, 17, RUST, true);
+      footer('MÉRIDIEN  /  SERVICES GÉNÉRAUX  /  MERCI DE VOTRE PATIENCE');
+    } else if (id === 'afterwork') {
+      rect(0, 0, 512, 256, RUST);
+      text('AFTERWORK', 26, 84, 60, PAPER, true); text('Marketing  ·  21 h  ·  open space', 29, 124, 18, PAPER);
+      text('Sono, chips et tableaux croisés dynamiques.', 29, 160, 18, GOLD);
+      text('MÉRIDIEN  /  ON S’AMUSE (OBLIGATOIRE)', 29, 237, 13, PAPER);
+    } else if (id === 'informatique') {
+      rect(0, 0, 512, 256, '#1f2d3a');
+      text('AVEZ-VOUS ESSAYÉ', 28, 70, 36, PAPER, true); text('DE L’ÉTEINDRE', 28, 114, 36, PAPER, true);
+      text('ET DE LE RALLUMER ?', 28, 158, 36, GOLD, true);
+      text('SERVICE INFORMATIQUE  /  TICKET N° 0000001', 28, 236, 12, PAPER);
     } else if (id === 'service') {
       text('MAINTENANCE', 26, 54, 30, INK, true); text('HORS SERVICE', 26, 137, 43, RUST, true);
       footer('MERCI D’EMPRUNTER L’AUTRE SORTIE');
@@ -144,6 +173,11 @@ function bibliothequeMateriaux() {
   return assets;
 }
 
+// Étage construit en miroir (repere.js) : les affiches sont peintes à l'envers
+// pour se lire à l'endroit une fois l'étage retourné.
+let miroirTexte = false;
+export function definirMiroirTexte(actif) { miroirTexte = !!actif; }
+
 export function panneauGraphique(parent, id, w, h, x, y, z, yaw = 0) {
   const index = CELLS.indexOf(id);
   if (index < 0) throw new Error(`Panneau inconnu : ${id}`);
@@ -151,7 +185,7 @@ export function panneauGraphique(parent, id, w, h, x, y, z, yaw = 0) {
   const col = index % 4, row = Math.floor(index / 4);
   // Deux pixels de garde : le filtrage ne prélève pas la cellule voisine.
   for (let i = 0; i < uv.count; i++) uv.setXY(i,
-    (col * 512 + 2 + uv.getX(i) * 508) / 2048,
+    (col * 512 + 2 + (miroirTexte ? 1 - uv.getX(i) : uv.getX(i)) * 508) / 2048,
     1 - (row * 256 + 2 + (1 - uv.getY(i)) * 252) / ATLAS_H);
   const m = new THREE.Mesh(geo, bibliothequeMateriaux().atlas);
   m.position.set(x, y, z); m.rotation.y = yaw; m.receiveShadow = true;
@@ -276,13 +310,20 @@ export function habillerBureau(root, MAT, plan, niveau) {
 }
 
 // Contenu de bureau choisi par rôle, toujours dans l'emprise du plateau.
-export function personnaliserPoste(parent, MAT, type) {
+// `kit` : les objets du bureau viennent du mobilier Blender v02 ; seules les
+// images de l'atlas (photo de marque, carnet) restent posées ici.
+export function personnaliserPoste(parent, MAT, type, kit = false) {
   const A = bibliothequeMateriaux();
   const add = (geo, mat, x, y, z) => {
     const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z);
     m.castShadow = true; m.receiveShadow = true; parent.add(m); return m;
   };
   const box = (w, h, d, mat, x, y, z) => add(new THREE.BoxGeometry(w, h, d), mat, x, y, z);
+  if (kit) {
+    if (type === 'code') panneauGraphique(parent, 'marque', 0.22, 0.11, 0.8, 0.86, -0.414, -0.14);
+    if (type === 'graph') panneauGraphique(parent, 'carnet', 0.35, 0.22, 0.67, 0.814, 0.20).rotation.set(-Math.PI / 2, 0, -0.18);
+    return;
+  }
   if (type === 'code') {
     box(0.25, 0.15, 0.018, MAT.boisFonce, 0.8, 0.86, -0.42).rotation.y = -0.14;
     panneauGraphique(parent, 'marque', 0.22, 0.11, 0.8, 0.86, -0.408, -0.14);

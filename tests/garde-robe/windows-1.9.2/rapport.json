@@ -1,0 +1,177 @@
+{
+  "steps": [
+    {
+      "name": "boot",
+      "result": "{\"booted\":true,\"erreur\":null,\"profil\":{\"nom\":\"ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Laptop GPU (0x0000249D) Direct3D11 vs_5_0 ps_5_0, D3D11)\",\"dedie\":true,\"aniso\":16,\"echelleTex\":1.5,\"ombreMax\":4096},\"chrono\":{\"matieres\":863,\"premierNiveau\":920,\"rendu\":14,\"total\":4515},\"pnj\":4,\"obstacles\":57}"
+    },
+    {
+      "name": "ouvrir",
+      "result": {
+        "compteur": "20/26 pièces",
+        "titre": "Développeur, version réunion",
+        "verrousOngletChapeau": 2
+      }
+    },
+    {
+      "name": "conditions-et-couleurs",
+      "result": {
+        "verrous": [
+          "Casquette à hélice",
+          "Couronne de l’employé du mois",
+          "Lunettes pixel",
+          "Gilet fluo",
+          "Cape de super-héros",
+          "Jetpack"
+        ],
+        "couleurs": [
+          "Rouge",
+          "Bleu azur",
+          "Vert",
+          "Jaune soleil",
+          "Violet vif",
+          "Orange",
+          "Noir",
+          "Blanc cassé",
+          "Rose vif",
+          "Turquoise"
+        ]
+      }
+    },
+    {
+      "name": "nuancier-lisible",
+      "result": true
+    },
+    {
+      "name": "conditions-tenues",
+      "result": "🔒Employé du moisCouronne de l’employé du mois : Termine le niveau 6 en solo · Étage 12 — 21:00\nLunettes pixel : Termine le niveau 4 en solo · Étage 19 — 19:30\nJetpack : Termine le niveau 5 en solo · Étage 12 — 20:15"
+    },
+    {
+      "name": "essayer",
+      "result": {
+        "brouillon": {
+          "visage": "employe",
+          "peau": 15843478,
+          "cheveux": 1314829,
+          "chemise": 15919832,
+          "veste": null,
+          "pantalon": 5593702,
+          "cravate": 8532797,
+          "badge": true,
+          "couleurs": {
+            "tete": 2001125,
+            "torse": 12986408,
+            "dos": 12986408
+          },
+          "tete": "bonnet",
+          "yeux": "aviateur",
+          "moustache": "moustache-guidon",
+          "cou": "noeud-papillon",
+          "torse": "aucun",
+          "dos": "sac-livreur"
+        },
+        "titre": "Livreur égaré au 23e"
+      }
+    },
+    {
+      "name": "gros-plan",
+      "result": "tete"
+    },
+    {
+      "name": "tout-debloquer",
+      "result": {
+        "pieces": [
+          "couronne",
+          "jetpack",
+          "noeud-papillon",
+          "pixel"
+        ],
+        "compteur": "26/26 pièces",
+        "titre": "Employé du mois (autoproclamé)"
+      }
+    },
+    {
+      "name": "tenue-Vendredi",
+      "result": [
+        "aviateur",
+        "casquette",
+        "collier-fleurs",
+        "sac-banane"
+      ]
+    },
+    {
+      "name": "tenue-stagiaire",
+      "result": [
+        "casque-audio",
+        "rondes",
+        "sac-livreur"
+      ]
+    },
+    {
+      "name": "tenue-Agent",
+      "result": [
+        "aviateur"
+      ]
+    },
+    {
+      "name": "tenue-Directeur",
+      "result": [
+        "chapeau-melon",
+        "moustache-guidon",
+        "noeud-papillon"
+      ]
+    },
+    {
+      "name": "tenue-Inspection",
+      "result": [
+        "casque-chantier",
+        "gilet-fluo"
+      ]
+    },
+    {
+      "name": "tenue-Pot",
+      "result": [
+        "chapeau-fete",
+        "collier-fleurs",
+        "lunettes-3d"
+      ]
+    },
+    {
+      "name": "tenue-Héros",
+      "result": [
+        "bandeau",
+        "cape",
+        "pixel"
+      ]
+    },
+    {
+      "name": "tourner",
+      "result": 6.064608000000722
+    },
+    {
+      "name": "surprise-annuler",
+      "result": [
+        "aviateur+casque-chantier+gilet-fluo+moustache-guidon",
+        "sac-livreur",
+        "gilet-fluo+moustache-brosse+rondes",
+        "bandeau+moustache-brosse+sac-livreur"
+      ]
+    },
+    {
+      "name": "enregistrer",
+      "result": {
+        "pieces": [
+          "bandeau",
+          "cape",
+          "pixel"
+        ],
+        "fps": 73.80622151784226
+      }
+    }
+  ],
+  "consoleErrors": [
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(236,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(249,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(126,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\nC:\\fakepath(139,3-49): warning X3557: loop only executes for 1 iteration(s), forcing loop to unroll\n\n\n\u0000",
+    "[warn] THREE.WebGLProgram: Program Info Log: C:\\fakepath(100,1-6): warning X4000: use of potentially uninitialized variable (dyn_index_vec4_float4_int)\n\n\n\u0000"
+  ],
+  "erreursPage": []
+}

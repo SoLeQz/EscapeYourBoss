@@ -4,7 +4,7 @@ import '../personnages/dom-bouchon.mjs';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { NPC } from '../../src/npc.js';
-import { NIVEAUX, PLANS } from '../../src/levels.js';
+import { NIVEAUX, PLANS, pnjDuNiveau } from '../../src/levels.js';
 import { buildLevel } from '../../src/level.js';
 import { buildMaterials } from '../../src/materials.js';
 import { creerNavigation, chemin, ligneLibre } from '../../src/navigation.js';
@@ -27,10 +27,10 @@ const scene=new THREE.Scene(),mat=buildMaterials();
 let essais=0,pire=0;
 for(const niv of NIVEAUX){
   const plan=PLANS[niv.plan],level=buildLevel(scene,mat,plan,niv);
-  const cfg=niv.pnj(plan).find(c=>c.boss);assert(cfg,`Pas de directeur à l'étage ${niv.id}`);
+  const cfg=pnjDuNiveau(niv).find(c=>c.boss);assert(cfg,`Pas de directeur à l'étage ${niv.id}`);
   const nav=creerNavigation(level.obstacles);
   // cibles : départ du joueur + cellules libres réparties dans l'étage (tirage fixe)
-  const cibles=[{x:plan.depart.x,z:plan.depart.z}];
+  const cibles=[{x:level.playerStart.x,z:level.playerStart.z}];
   let graine=7;const alea=()=>((graine=(graine*16807)%2147483647)/2147483647);
   while(cibles.length<7){
     const i=Math.floor(alea()*nav.nx),k=Math.floor(alea()*nav.nz);

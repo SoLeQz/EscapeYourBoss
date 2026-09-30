@@ -1,137 +1,59 @@
-# Jouer à deux (réseau local ou en ligne)
+# Coopération de 2 à 4 joueurs
 
-Escape your boss 1.8.0 se joue à deux, **en coopération**, sur le même réseau (même
-Wi-Fi ou même box) ou **en ligne** grâce à un tunnel playit.gg. Pas de serveur à
-installer : l'un des deux joueurs **héberge** la partie depuis le jeu, l'autre la
-**rejoint**.
+À partir de la **1.10.0**, un joueur héberge et jusqu’à trois invités rejoignent.
+Tous doivent utiliser la même version. Le ZIP Windows contient le jeu complet :
+chaque personne l’extrait et lance `EscapeYourBoss.exe`.
 
-## Ce qu'il faut envoyer à ton ami
+## Former le groupe
 
-**Un seul fichier : `dist/EscapeYourBoss-win64.zip`** (≈ 125 Mo).
+1. Hôte : **Multijoueur → Héberger une partie**.
+2. Invités : **Rechercher une partie**, puis choisir le salon, ou saisir l’IP de
+   l’hôte dans **Rejoindre**. Le salon indique les noms et le nombre de joueurs sur quatre.
+3. L’hôte choisit l’étage et lance une fois le groupe réuni. Le départ attend que
+   chaque joueur ait chargé. Les dix étages sont disponibles en coopération.
 
-- Pour le fabriquer : `npm run paquet:win` (build Windows + zip).
-- Pour l'envoyer : WeTransfer, Google Drive, clé USB… ou une *Release* GitHub
-  (voir plus bas). Le zip contient tout : le jeu, Electron, les modèles et les sons.
-- Ton ami **dézippe** le dossier où il veut et lance `EscapeYourBoss.exe`.
-  Rien à installer.
+La découverte utilise UDP 47801 sur le réseau local, et la partie TCP 47800.
+Si Windows demande une autorisation, permettre au jeu de communiquer sur le réseau privé.
+À distance, un tunnel TCP déjà configuré vers `127.0.0.1:47800` peut être utilisé :
+chaque invité saisit la même adresse publique, avec son port (`nom.ply.gg:12345`).
+La recherche automatique ne trouve que les parties du réseau local.
 
-> Vous devez avoir **exactement la même version** (affichée en bas du menu
-> principal). Sinon le jeu refuse la connexion et l'indique. Après chaque mise à
-> jour, renvoie le zip.
+## Règles communes
 
-## Lancer une partie
+- Chaque joueur garde son personnage et sa tenue ; les noms apparaissent au-dessus
+  des personnages et les coéquipiers figurent sur la mini-carte.
+- Les collègues peuvent repérer n’importe quel joueur. Une défaite vaut pour le groupe.
+- Un objectif récupéré est partagé. Secrets et canards sont enregistrés pour chacun.
+- Un carton a un seul porteur ; un café profite à celui qui l’utilise. Le crédit
+  d’un poste de travail reste limité, quel que soit le nombre de joueurs.
+- La victoire attend **la sortie de tous**. Les premiers sortis attendent le reste
+  du groupe. L’hôte choisit ensuite la suite.
+- Échap ouvre un menu local, sans arrêter les autres joueurs. R ne relance qu’après
+  une défaite ou une victoire, à la demande de l’hôte.
+- Les nouveaux joueurs rejoignent au salon, pas pendant un étage. Un cinquième est refusé.
+- Le départ d’un invité pendant un étage ramène le groupe au salon. L’hôte peut
+  relancer avec les joueurs restants, ou attendre un nouvel invité.
+- Le départ de l’hôte ferme la partie ; il n’y a pas de transfert automatique de l’hébergement.
 
-1. **L'hôte** : *Multijoueur* → entre ton nom → **Héberger une partie**.
-   Au premier lancement, Windows demande l'accès au réseau : coche **Réseaux
-   privés** et accepte. L'écran affiche aussi ton adresse IP (ex. `192.168.1.49`).
-2. **L'invité** : *Multijoueur* → entre ton nom → **Rechercher une partie**, puis
-   clique sur la partie trouvée. Si rien n'apparaît, tape l'IP de l'hôte et
-   clique **Rejoindre**.
-3. L'hôte choisit l'étage (tous sont ouverts à deux) et clique **Lancer la partie**.
-   Le jeu démarre quand les deux ont chargé l'étage.
+## Dépannage
 
-## Jouer en ligne (playit.gg)
+| Message | À vérifier |
+|---|---|
+| Partie complète | Quatre personnes sont déjà présentes. |
+| Partie en cours | Attendre le retour au salon. |
+| Versions différentes | Utiliser tous la même archive 1.10.0. |
+| Aucune partie trouvée | Même réseau, isolation Wi-Fi désactivée, ou connexion directe par IP. |
+| Aucune réponse | Adresse, port et autorisation réseau de l’hôte. |
+| Port déjà utilisé | Fermer l’autre partie hébergée sur ce PC. |
 
-Quand vous n'êtes pas sur le même réseau, l'hôte ouvre un **tunnel playit.gg** :
-ton ami se connecte à une adresse publique qui renvoie vers ton PC. Rien à régler
-sur la box, rien à installer chez l'ami, et ça marche même derrière une box 4G.
+## Validation technique
 
-**Une seule fois, chez l'hôte (sous Windows, là où tourne le jeu) :**
+L’hôte attribue les identifiants et relaie les postures et tenues. Il simule le monde,
+les collègues et les interactions partagées. Les messages d’une ancienne manche sont
+ignorés. Postures à 20 Hz et état du monde à 15 Hz.
 
-1. Crée un compte sur [playit.gg](https://playit.gg) et installe l'agent Windows
-   proposé sur le site. Au premier lancement, il ouvre une page pour le relier à
-   ton compte.
-2. Dans le tableau de bord playit.gg, ajoute un tunnel de type **TCP** avec
-   l'adresse locale **`127.0.0.1`** et le port local **`47800`**. Le TCP générique
-   fait partie de *playit Premium* (3 $/mois) ; avec Premium, choisis une région
-   proche de vous (Europe) pour réduire la latence.
-3. Note l'**adresse publique** du tunnel, de la forme `nom-du-tunnel.ply.gg:12345`
-   (le domaine exact peut varier). Elle reste la même d'une partie à l'autre.
-
-**À chaque partie :**
-
-1. L'hôte lance l'agent playit.gg, puis le jeu : *Multijoueur* → **Héberger une
-   partie**.
-2. L'ami tape l'adresse publique **avec son port** dans le champ du bas
-   (`nom-du-tunnel.ply.gg:12345`) et clique **Rejoindre**. *Rechercher* ne voit que
-   le réseau local : en ligne, il faut l'adresse.
-3. L'hôte choisit l'étage et lance, comme en local.
-
-Le pare-feu Windows n'intervient pas : l'agent parle au jeu sur la machine
-elle-même. Toute personne qui connaît l'adresse peut tenter de rejoindre (le jeu
-n'accepte qu'un invité et vérifie la version) : désactive le tunnel dans le tableau
-de bord, ou ferme l'agent, quand vous ne jouez pas.
-
-## Règles à deux
-
-- Vous êtes deux employés. Ton coéquipier porte une **veste bordeaux** ; son nom
-  est affiché au-dessus de sa tête et il apparaît en **orange** sur la minicarte.
-- Les collègues et le directeur **vous voient tous les deux**. Chacun réagit à celui
-  qui est le plus exposé ; le directeur en traque poursuit le plus proche.
-- **Si l'un de vous se fait repérer, vous perdez tous les deux.**
-- Les objets à récupérer (badge, portable…) sont **communs** : un seul suffit.
-- Photocopieuse, postes de travail et emotes fonctionnent pour les deux.
-- **Chacun garde sa tenue du vestiaire** : ton coéquipier te voit comme tu t'es
-  habillé (et inversement), y compris si tu changes de tenue pendant que vous êtes
-  connectés.
-- **La musique d'une emote s'entend chez les deux**, plus fort quand on est près du
-  danseur. Les collègues qui l'entendent **sans voir le danseur** se retournent vers
-  le son pendant 4,5 s : danse caché derrière un mur pendant que ton coéquipier passe
-  dans leur dos. Une fois toutes les 25 s par joueur ; un collègue déjà méfiant, ou le
-  directeur en traque, ne se laisse pas distraire.
-- L'étage est gagné quand **vous êtes sortis tous les deux**. Le premier sorti
-  attend l'autre et peut le regarder faire. L'hôte lance ensuite l'étage suivant.
-- **Échap** ouvre le menu **chez toi seulement** : la partie continue pour ton
-  coéquipier, et ton personnage reste où il est, visible.
-- **R** ne sert qu'après la fin de l'étage : l'hôte relance pour les deux. En pleine
-  partie, pas de retour au point de départ.
-
-## Si ça ne se connecte pas
-
-| Symptôme | Cause probable | Solution |
-|---|---|---|
-| « Aucune partie trouvée » | Wi-Fi « invité » ou isolation des appareils, réseaux différents | Même réseau pour les deux ; sinon taper l'IP de l'hôte |
-| « Aucune partie hébergée sur … » | Mauvaise IP, ou l'hôte n'a pas cliqué *Héberger* | Vérifier l'IP affichée chez l'hôte |
-| « Aucune réponse (délai dépassé) » | Pare-feu Windows de l'hôte | Paramètres → Pare-feu → *Autoriser une application* → cocher EscapeYourBoss (Privé). Si le réseau est classé « Public » dans Windows, le passer en « Privé » |
-| « Versions différentes » | Pas le même build | Renvoyer le dernier zip |
-| « Port 47800 déjà utilisé » | Une autre partie hébergée est ouverte | Fermer l'autre instance du jeu |
-| « Adresse invalide » | Adresse mal copiée | Forme `nom:port`, sans espace ni texte autour |
-| En ligne : « Aucune partie hébergée » | L'hôte n'a pas cliqué *Héberger*, ou le tunnel vise un autre port que 47800 | Vérifier le tunnel : `127.0.0.1`, port local `47800` |
-| En ligne : « délai dépassé » | Agent playit.gg fermé ou tunnel désactivé | Relancer l'agent, réactiver le tunnel |
-| En ligne : décalages, saccades | Tunnel routé loin (offre gratuite) | Tunnel régional (Premium) |
-
-Ports utilisés : **TCP 47800** (partie) et **UDP 47801** (découverte). En réseau
-local, rien ne passe par Internet ; en ligne, seul le tunnel playit.gg relaie la
-partie.
-
-## Publier sur GitHub
-
-Le dépôt est prêt (`.gitignore` exclut `node_modules/` et `dist/`) :
-
-```bash
-git init && git add . && git commit -m "Escape your boss 1.8.0"
-git remote add origin https://github.com/<toi>/escape-your-boss.git
-git push -u origin main
-```
-
-Le jeu compilé n'est pas dans le dépôt. Pour ton ami, le plus simple est une
-**Release** : sur GitHub → *Releases* → *Draft a new release* → tag `v1.8.0` →
-glisse `dist/EscapeYourBoss-win64.zip` dans les fichiers → *Publish*. Ton ami
-télécharge le zip depuis la page Releases.
-
-Ton ami peut aussi compiler lui-même (Node.js 20+ requis) :
-`npm install` puis `npm run build:win` → `dist/EscapeYourBoss-win32-x64/EscapeYourBoss.exe`.
-
-## Pour les développeurs
-
-- `electron/reseau.cjs` : sessions TCP (JSON par ligne), balises UDP, contrôle de
-  version, refus d'un 3ᵉ joueur, adresses `hôte:port` (`lireAdresse`) pour les
-  tunnels. Testé en Node : `npm run test:multijoueur`.
-- `electron/preload.cjs` : pont `jeuReseau` (aucun accès réseau direct au rendu).
-- `src/multijoueur.js` : posture des joueurs (20 Hz). L'hôte envoie l'état du monde
-  (chrono, objets, postes, collègues) à 15 Hz. Événements : `lancer`, `pret`,
-  `objet`, `action`, `emote`, `dire`, `perdu`, `gagne`, `menu`, `apparence` (tenue du
-  vestiaire, à la connexion et à l'enregistrement ; nettoyée à la réception). Pas de pause commune :
-  Échap n'ouvre qu'un menu local (`menuMulti`), l'hôte continue de simuler.
-- `src/npc.js` : perception de tous les joueurs de `game.joueurs` (solo inchangé).
-- Autotest de bout en bout à deux fenêtres : `EscapeYourBoss.exe --selftest --multi --out=DOSSIER`.
+- `npm run test:multijoueur` : quatre sessions TCP, découverte UDP, identité, relais,
+  destinataire individuel, cinquième joueur refusé, déconnexion et changement de version.
+- `EscapeYourBoss.exe --selftest --multi --multi4 --out=DOSSIER` : quatre fenêtres
+  réelles, partie à trois puis à quatre, sorties, interactions, dix départs et retour solo.
+- Le parcours historique à deux reste disponible avec `--selftest --multi`.

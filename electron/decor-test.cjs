@@ -8,6 +8,8 @@ module.exports = async ({ js, shot, step, wait }) => {
     if(version!==${JSON.stringify(require('../package.json').version)})throw Error('Mauvaise version : '+version);
     if(EMOTES.length!==10)throw Error('La roue contient '+EMOTES.length+' emotes');
     if(Object.keys(decor).length!==4+HUMOUR.length)throw Error('Décor Blender absent');
+    const {etatMobilier}=await import('./src/accessoires-blender.js');
+    if(Object.keys(etatMobilier()).length!==26)throw Error('Mobilier Blender v02 absent');
     if(document.getElementById('version-jeu').textContent!=='Version '+version)throw Error('Version non affichée');
     return {version,emotes:EMOTES.map(e=>e.nom||e.name||e.id),decor};
   })()`);

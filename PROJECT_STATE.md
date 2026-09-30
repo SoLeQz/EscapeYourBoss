@@ -2,7 +2,7 @@
 
 > Document de reprise. Il décrit ce qui existe, **pourquoi** c'est fait comme ça,
 > ce qui a déjà été essayé et raté, et ce qui reste ouvert.
-> Dernière mise à jour : 25 septembre 2026 (emote Ela Ké Leitada avec musique, version 1.5.0 §25).
+> Dernière mise à jour : 27 septembre 2026 (coopération 2–4 joueurs, §40).
 > Les mesures du 20 septembre restent des références historiques ; voir §9 pour la nouvelle passe.
 
 ---
@@ -13,9 +13,9 @@ Jeu d'infiltration humoristique en 3D. Tu es **Lao D**, employé de bureau. Il e
 18 h. Tu veux partir. Tes collègues, eux, ont « juste cinq minutes » à te
 prendre. Se faire repérer, c'est perdre.
 
-- **6 étages** enchaînés, de 18 h 00 à 21 h 00, sur **3 plans** de bureau.
+- **10 étages** sur **5 plans** de bureau et **4 orientations**, avec pièces secrètes et interactions (extension 1.9.0, §36).
 - Objectifs : parfois filer directement, parfois récupérer un objet (badge,
-  portable) avant de rejoindre l'**ascenseur** ou les **escaliers**.
+  portable) avant de rejoindre l'**ascenseur**, les **escaliers**, une **nacelle** ou une sortie secrète selon l’étage.
 - Deux modes : **campagne** (déblocage étage par étage) et **speedrun** (tout
   ouvert, chrono cumulé).
 - Livré comme **exécutable Windows**. Pas de version navigateur — décision
@@ -2224,3 +2224,235 @@ règles (nettoyage, déblocages, Surprise ×300, tenues, badge, remarques). Tout
 suites Node passent. Autotest Windows à lancer : `EscapeYourBoss.exe --selftest
 --vestiaire --out=DOSSIER` (vrais clics, captures corps/gros plan/tenues, rotation à
 la souris, annuler, enregistrer, tenue retrouvée en jeu, images/s).
+
+
+## 36. Reprise de l’extension exploration — 27 septembre 2026, 1.9.0
+
+**Demande.** Reprendre le chantier interrompu de Claude : étages trop répétitifs,
+collègues assis à l’envers aux niveaux 5/6, secrets et interactions pour prolonger
+la découverte. Le dépôt actif est `/home/nicleena/fun/EscapeYourBoss` ; l’ancien
+répertoire `/home/nicleena/fun/jeu` est vide.
+
+**Chantier repris.** Dix niveaux, cinq plans dont D (îlots / afterwork) et E
+(déménagement), quatre orientations via `repere.js`. Soleil, néons, textes,
+collisions, rondes, mini-carte, sons, studio et sorties suivent le même repère.
+Caméra initiale orientée selon le départ. Tous les 37 collègues assis sont contrôlés
+contre leurs vraies chaises. La correction de Zhou Min retourne son poste ; Xiao Li
+est remis face au sien.
+
+**Blender.** Onze accessoires déjà modélisés par Claude dans
+`art/accessoires-v01/accessoires-v01.blend`, source et export conservés. Chargeur
+strict `accessoires-blender.js`, matériaux partagés et canards instanciés. Les tests
+comparent l’asset livré à l’export. Planche relue ; décor complet mesuré avec tous
+les GLB : maximum 265 376 triangles, 108 lots, budgets 270 000 / 110.
+
+**Intégration terminée.** `interactifs.js` branche distributeur à retardement,
+disjoncteur (14 s, portée visuelle ×0,55), carton-cachette, café, robot aspirateur,
+bibliothèque pivotante, hamac, bouton disco, borne rétro. La pièce secrète débouche
+sur un toboggan ; le déménagement propose une nacelle. Sorties réellement animées,
+objets requis et textes adaptés. Ouvrir une bibliothèque ou déplacer un carton
+invalide la navigation. Sortir d’un carton ne téléporte plus le joueur dans un mur.
+Les messages précisent que le carton réduit la détection sans la supprimer.
+
+**Exploration.** Trois canards par niveau, douze secrets, carnet avec indices et
+compteurs. `store.js` conserve et nettoie la collection ; les découvertes survivent
+aux échecs. Collecte avec ligne de vue jusqu’à la tête du canard : plusieurs placements
+sur des plantes ou sous des tables ont été corrigés. Pas de repère de sortie secrète
+sur la mini-carte avant d’avoir ouvert la bibliothèque. Code Konami au menu : grosse
+tête cosmétique. La durée de première découverte n’est pas encore mesurée en playtest ;
+ne pas annoncer arbitrairement un nombre de minutes garanti.
+
+**Coopération.** L’hôte décide des interactions et envoie leur état avec le monde.
+Les cartons identifient leur porteur, les invités ne resimulent pas les robots et les
+diversions. Découvertes partagées et sauvegardées. Le crédit de travail est consommé
+chez l’hôte pour les deux joueurs : correction du crédit infini de l’invité.
+Messages portant un étage filtrés ; JSON non-objet refusé par la session réseau.
+Version 1.9.0 imposée aux deux joueurs.
+
+**Progression.** Seul un speedrun démarré au premier étage et ayant dix étapes
+valide le record complet. Les anciens records sont conservés comme
+`speedrunSixEtages`, et la cape déjà acquise reste accessible. Les écritures de
+sauvegarde sont séquentielles et remplacent le fichier après écriture temporaire.
+
+**Validation.** `test:etages` couvre chaises, huit secondes de départ sûr, 102 points
+atteignables avec visibilité des canards, interactions, reset, état coopératif,
+expiration de poste et persistance. `--selftest --etages` parcourt les dix étages,
+le carnet, les découvertes, leur sauvegarde, le carton et les vraies séquences de
+sortie. `--selftest --multi` couvre en plus coupure, bibliothèque, collection et
+carton à deux, puis l’épuisement réel du poste chez l’invité. Le parcours Windows solo (19 étapes : dix niveaux, menus à petite résolution, sorties jouées et persistance) et le parcours
+Windows à deux (vrai TCP/UDP, 17 étapes dont les nouveaux accessoires) passent sans
+exception de page. Une première relance coopérative reconstruisait inutilement le
+même niveau ; elle réutilise maintenant le décor. L’attente de peinture possède un
+repli borné pour une fenêtre masquée. Les rapports sont conservés dans
+`tests/etages/windows-solo` et `tests/etages/windows-multi`.
+
+**Livraison locale.** `C:\Users\nicol\EscapeYourBoss-1.9.0\EscapeYourBoss.exe`.
+La copie Windows 1.8.0 précédemment ouverte n’a pas été écrasée. Zip partageable :
+`dist/EscapeYourBoss-win64.zip`. Aucun tag, commit ni publication distante effectué.
+
+**Bilan final des suites Node :** les 17 suites passent, journal
+`tests/etages/validation-node.json`. `npm test` les lance toutes. Les menus longs
+sont défilables à petite résolution ; le parcours Electron le contrôle à 960 × 600.
+Les captures retenues se trouvent avec le rapport solo.
+
+
+## 37. Visibilité après la coopération — 1.9.1
+
+**Signalement.** Personnage invisible chez un ami en speedrun. Une sortie coopérative
+masque le modèle ; `Player.reset()` ne rétablissait pas sa visibilité. La 1.8.0
+n’effectuait cette restauration que dans la branche multijoueur du redémarrage.
+La 1.9.0 dépendait indirectement de la remise à zéro des accessoires pour l’effectuer.
+
+**Correction.** Le joueur restaure désormais son modèle et masque son ancien contour
+au reset. Les accessoires ne restaurent que les personnages cachés dans un carton.
+Un départ solo supprime le décalage de départ de l’invité et masque l’ancien coéquipier,
+y compris quand on rejoue le même étage sans reconstruire le décor.
+
+**Non-régression.** `test:confort` reproduit l’état invisible après sortie puis vérifie
+le reset. Un nouveau parcours Electron `--selftest --speedrun` vérifie la soumission
+réelle des maillages du joueur au rendu, son déplacement, les dix sorties et le bilan.
+Avec `--selftest --multi --speedrun`, il commence par une véritable victoire à deux,
+puis passe les deux joueurs en solo et effectue le speedrun complet chez l’ancien invité.
+Le test emploie une sauvegarde temporaire, sans toucher à la progression de l’utilisateur.
+
+**Validation 1.9.1.** Les six suites ciblées passent : confort, étages/accessoires,
+réseau, animations, garde-robe et ressources de transition. Le parcours Windows à deux
+suivi du speedrun passe ses 37 étapes, dont le rendu du joueur sur les dix étages et
+les dix sorties réelles. Rapport et captures : `tests/transitions/windows-speedrun-1.9.1`.
+Copie jouable : `C:\Users\nicol\EscapeYourBoss-1.9.1\EscapeYourBoss.exe`.
+Archive : `dist/EscapeYourBoss-1.9.1-win64.zip`. Les anciennes copies sont conservées.
+
+
+## 38. Vestiaire lisible — 1.9.2
+
+Les récompenses restent soumises aux mêmes déblocages. Les cartes verrouillées
+ne sont plus rendues à demi transparentes : condition en texte lisible, niveau de
+progression et titre exact du niveau (le numéro du niveau diffère de celui de
+l’étage du bâtiment), mention du solo. La cape précise les dix niveaux d’un
+speedrun commencé au premier ; les capes déjà obtenues restent acquises.
+Les tenues complètes affichent chaque pièce manquante et sa condition ; une pièce
+déjà débloquée disparaît de cette liste. Ces cartes occupent la largeur du panneau.
+
+Tous les nuanciers affichent des noms français sous les pastilles, ainsi que le
+nom de la teinte sélectionnée dans le titre de section. Infobulles et noms
+accessibles utilisent aussi ces libellés à la place des codes hexadécimaux. Les couleurs
+numériques des matériaux et sauvegardes restent identiques. Une ancienne teinte
+hors palette est nommée « Couleur personnalisée » sans être remplacée.
+
+Validation : suite `test:garde-robe` (catalogue, matériaux, règles et panneau),
+parcours Windows `--selftest --vestiaire` incluant conditions de déblocage,
+progression partielle, noms des couleurs, essais, annulation et sauvegarde.
+Livraison : `C:\Users\nicol\EscapeYourBoss-1.9.2\EscapeYourBoss.exe`,
+archive `dist/EscapeYourBoss-1.9.2-win64.zip`.
+
+Parcours Windows final : 18 étapes réussies, sans erreur de page. Captures relues et
+rapport conservé dans `tests/garde-robe/windows-1.9.2`.
+
+
+## 39. Release consolidée 1.9.0 — demande utilisateur
+
+La release à publier est numérotée **1.9.0**, à la demande explicite de l’utilisateur.
+Elle regroupe l’extension §36 et les correctifs §37–38, testés dans les copies locales
+1.9.1 et 1.9.2. Ces numéros décrivent les itérations de travail antérieures ; la release
+consolidée ne revient pas à leur ancien code. `package.json`, le lockfile et les
+métadonnées de l’exécutable portent 1.9.0.
+
+Notes prêtes pour GitHub : `docs/releases/v1.9.0.md`.
+ZIP : `dist/EscapeYourBoss-1.9.0-win64.zip`, copié dans le dossier Téléchargements
+Windows avec la description Markdown. Aucun tag, commit, upload ou publication GitHub
+n’est effectué par cette préparation.
+
+
+## 40. Coopération de deux à quatre joueurs — 1.10.0
+
+**Demande.** Permettre de jouer à trois ou quatre, en conservant les parties à deux.
+Le protocole change : tous les participants doivent utiliser 1.10.0.
+
+**Réseau.** Un hôte et trois sockets invités, identifiants attribués par l’hôte,
+liste de joueurs diffusée au salon et capacité dans les balises UDP. Postures et
+tenues relayées vers les autres invités avec un expéditeur authentifié ; monde,
+résultats et effets ciblés proviennent de l’hôte. Identifiant de manche pour ignorer
+les paquets d’avant une relance. Le cinquième joueur et les arrivées en cours d’étage
+sont refusés. Une déconnexion pendant un étage renvoie le groupe au salon ; pas de
+migration d’hôte.
+
+**Jeu.** `Game.coequipiers` et `Multijoueur.pairs` sont des Maps par identifiant.
+Le getter `coequipier` garde le premier pour les anciens outils de diagnostic ;
+la simulation utilise la collection entière. Départs distincts calculés hors des
+collisions, visibilité et tenue de chaque joueur, perception de tout le groupe,
+mini-carte, postures, travail limité et cachettes avec propriétaire. Le départ attend
+toutes les disponibilités ; la victoire attend toutes les sorties. Un café distant
+cible seulement son utilisateur. La piste musicale distante suit le danseur le plus
+proche pour éviter de superposer trois musiques.
+
+**Chargement.** Les changements de tenue reçus pendant la compilation sont différés ;
+les matériaux des joueurs ne sont pas libérés pendant cette compilation. Les commandes
+GPU sont explicitement envoyées avant d’attendre la disponibilité des shaders.
+Après deux secondes, un contrôle de liaison force la fin du préchauffage sur les
+pilotes qui attendent une utilisation effective du programme.
+
+**Contrôles.** Les 17 suites Node passent, dont réseau réel à quatre et simulation
+(départ, victoire, destinataires, manche et autorité). Le parcours graphique de
+`electron/multi4-test.cjs` contrôle trois puis quatre fenêtres : sorties, objets,
+carton, crédit de travail, détection, dix départs et retour solo. Le contrôle Windows
+à trois puis quatre joueurs réussit ses 16 étapes, sans erreur JavaScript, sur
+quatre fenêtres du même PC via TCP réel. Rapports et capture :
+`tests/multijoueur/windows-1.10.0/`. Ce contrôle ne mesure pas la latence Internet
+entre quatre machines. Le test des positions attend leur convergence : les
+600 ms initiales ne suffisaient pas toujours avec quatre rendus simultanés.
+
+Le parcours Windows historique à deux réussit aussi ses 17 étapes : découverte,
+perception, objets, relances, menu local, victoire, secrets, carton et déconnexion.
+Les contrôles Node des transitions, du réseau et des repères ont été relancés après
+les derniers correctifs. Les couleurs de mini-carte suivent la place dans le groupe
+pour rester distinctes après une reconnexion ; le salon nomme seulement l’hôte
+dans l’attente du lancement et signale les départs.
+
+**Livraison.** `dist/EscapeYourBoss-1.10.0-win64.zip` et
+`docs/releases/v1.10.0.md` sont destinés aux Téléchargements Windows. L’installation
+habituelle est `C:\Users\nicol\EscapeYourBoss`, avec sauvegarde préalable du dossier
+1.9.0. Les sauvegardes AppData restent intactes. Aucun upload GitHub n’est effectué.
+
+
+## 41. Mobilier refait dans Blender — 28 septembre 2026, 1.11.0
+
+**Demande.** « Essaie d'améliorer les choses déjà présentes avec Blender », après la
+reprise des étages (1.9.x) et la coopération à quatre (1.10.0).
+
+**Constat mesuré.** Un tiers du mobilier était encore construit en code. Un poste de
+travail coûtait ~15 000 triangles (dont ~9 500 d'objets codés, surtout le clavier à
+75 touches arrondies), soit ~122 000 par étage ; la bibliothèque du directeur 15 000
+à 22 000, chaque rangée de casiers ~3 600, chaque grille d'aération 864.
+
+**Kit `mobilier-v02`.** `tools/blender/creer_mobilier.py`, 26 modèles, sources et
+planche dans `art/mobilier-v02/`. Même contrat et même chargeur que les accessoires
+(`accessoires-blender.js`, cache séparé `prechargerMobilier` / `etatMobilier`, les
+11 accessoires restent comptés à part). Chaque fonction de `level.js` utilise le modèle
+quand le kit est chargé et garde sa version codée sinon. Obstacles poussés à
+l'identique (mêmes clés, même ordre) : l'empreinte des dix étages est recomparée avec
+le kit chargé. Écrans et affiches à texte restent des images de l'atlas posées aux
+mêmes coordonnées. Casiers (modules de 0,62 m), cloisons basses (modules de ~1,2 m) et
+luminaires sont assemblés et étirés par le jeu.
+
+**Résultat.** Lots 98–108 → 67–76, triangles 203 000–265 000 → 155 000–198 000.
+Budgets de test inchangés (110 / 270 000), désormais avec une large marge.
+
+**Contrôles ajoutés.** `test:decor-blender` : GLB du jeu identique à l'export, emprise
+de chaque meuble dans son obstacle (±5 cm), et 47 canards/objets posés sur leur meuble
+au demi-centimètre (rayon vers le bas, sans traverser un autre objet). Recalage des
+hauteurs (la plupart flottaient de 2–3 cm dès la version codée), portable de l'étage 10
+sorti de la tasse, canard de l'étage 8 posé sur l'appui de fenêtre (il flottait à 50 cm),
+canards de la photocopieuse des étages 5–6 sur le capot du scanner. La collecte exige
+de voir la tête du canard : posés sur l'assise, deux canards de canapé devenaient
+invisibles sous l'obstacle (0,85 m) ; ils perchent sur l'accoudoir (étages 3 et 9),
+et celui du hamac sur le poteau (étage 7).
+
+**Revue sans lancer le jeu.** `tools/exporter-etage.mjs` exporte un étage réellement
+construit (GLB chargés, fusion, orientation) en OBJ à couleurs de sommet ;
+`tools/blender/apercu_etage.py` le rend en vue de dessus coupée et en vues à hauteur
+d'yeux. Relus : étages 1, 5 et 7 (retourné), orientation et pose correctes de chaque
+meuble. Corrections issues de la planche : cadre d'horloge couché puis cadran masqué,
+pieds de cloison qui dépassaient de l'obstacle.
+
+**Validation.** Les 18 suites Node passent (`npm test`). Autotest Windows à relancer :
+`--selftest --decor` (contrôle aussi la présence des 26 modèles).

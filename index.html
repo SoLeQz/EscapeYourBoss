@@ -6,6 +6,10 @@
 <title>Escape your boss</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🏃</text></svg>">
 <style>
+  #menu-secrets{max-height:85vh;overflow-y:auto;padding:8px 14px}
+  .secret-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:18px 0}
+  .secret-carte{padding:14px;border:1px solid #ffffff24;border-radius:10px;background:#ffffff08}
+  .secret-carte p{font-size:12px;opacity:.78;margin:8px 0 0}.secret-carte.trouve{border-color:#96d8b588}
   :root{
     --gold:#f5b869; --amber:#ffd24a; --red:#ff4b3a; --green:#4ade80;
     --ink:#14121a; --paper:#f6f2e8;
@@ -142,7 +146,7 @@
   #win-stats span{opacity:.7}
   #win-stats b.grade{color:var(--gold);font-size:15px}
   /* ---------------- menus ---------------- */
-  .menu-pile{width:min(820px,94vw)}
+  .menu-pile{width:min(820px,94vw);max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;padding:8px}
   .menu-titre{font-size:44px;letter-spacing:3px;text-align:center;margin-bottom:2px}
   .menu-sous{font-size:12.5px;opacity:.65;letter-spacing:2px;text-align:center;
              text-transform:uppercase;margin-bottom:26px}
@@ -398,13 +402,19 @@
   .vest-carte i{font-style:normal;font-size:26px}
   .vest-carte:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(245,184,105,.65)}
   .vest-carte.choisi{background:rgba(245,184,105,.2);border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
-  .vest-carte.verrou{opacity:.5;cursor:not-allowed}
-  .vest-carte small{font-size:9.5px;color:var(--amber);opacity:.9}
-  .vest-nuancier{display:flex;flex-wrap:wrap;gap:7px}
-  .vest-teinte{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,.25);transition:transform .12s}
-  .vest-teinte:hover{transform:scale(1.12)}
-  .vest-teinte.choisi{border-color:var(--gold);box-shadow:0 0 0 2px #171b21,0 0 0 4px var(--gold)}
-  .vest-teinte.sans{background:repeating-linear-gradient(45deg,#2a2e35 0 5px,#3a3f47 5px 10px)}
+  .vest-carte.verrou{cursor:not-allowed;background:rgba(255,255,255,.025);border-style:dashed;color:#d6caba}
+  .vest-carte small{font-size:11px;line-height:1.45;color:var(--amber);white-space:pre-line;margin-top:4px}
+  .vest-tenues{grid-template-columns:1fr}
+  .vest-tenues .vest-carte{align-items:flex-start;text-align:left;padding:10px 12px}
+  .vest-nuancier{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .vest-teinte{display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 3px;min-width:0;
+    border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.04);
+    color:#f2ead8;font:inherit;font-size:11px;line-height:1.25;transition:transform .12s}
+  .vest-teinte i{display:block;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.4)}
+  .vest-teinte:hover{transform:translateY(-1px);border-color:var(--gold)}
+  .vest-teinte.choisi{border-color:var(--gold);background:rgba(245,184,105,.15);box-shadow:0 0 0 1px var(--gold) inset}
+  .vest-teinte:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .vest-teinte.sans i{background:repeating-linear-gradient(45deg,#2a2e35 0 5px,#666b75 5px 10px)}
   .vest-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   .vest-action{padding:8px 4px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.16);
     background:rgba(255,255,255,.06);color:#fff;font:inherit;font-size:11.5px;font-weight:600}
@@ -527,11 +537,12 @@
         <button class="menu-btn primaire" id="btn-campagne">
           Jouer normalement <em>progression par étage</em></button>
         <button class="menu-btn" id="btn-speedrun">
-          Speedrun <em>les 6 étages d'affilée, au chrono</em></button>
+          Speedrun <em>les 10 étages d'affilée, au chrono</em></button>
         <button class="menu-btn" id="btn-multi">
-          Multijoueur <em>à deux, sur le même réseau</em></button>
+          Multijoueur <em>2 à 4 joueurs, sur le même réseau</em></button>
         <button class="menu-btn" id="btn-vestiaire">
           Vestiaire <em>chapeaux, lunettes, capes et jetpack</em></button>
+        <button class="menu-btn" id="btn-secrets">Carnet des curiosités <em>30 canards et 12 découvertes à retrouver</em></button>
         <button class="menu-btn" id="btn-commandes">
           Commandes <em>personnaliser les touches</em></button>
         <button class="menu-btn" id="btn-options">
@@ -541,6 +552,14 @@
       </div>
     </div>
 
+    <div class="panneau-menu" id="menu-secrets" hidden>
+      <h1 class="menu-titre">Carnet des curiosités</h1>
+      <p class="menu-sous" id="secrets-compteur"></p>
+      <p>Explore à ton rythme. Une découverte reste acquise, même si le patron te rattrape.</p>
+      <h2>Les canards de débogage</h2><div class="secret-grille" id="secrets-canards"></div>
+      <h2>Les bruits de couloir</h2><div class="secret-grille" id="secrets-liste"></div>
+      <button class="menu-btn menu-retour" data-retour>Retour</button>
+    </div>
     <div class="panneau-menu" id="menu-niveaux" hidden>
       <h1 class="menu-titre">Choix de l'étage</h1>
       <div class="menu-sous" id="niveaux-sous">Termine un étage pour débloquer le suivant</div>
@@ -552,7 +571,7 @@
 
     <div class="panneau-menu" id="menu-multi" hidden>
       <h1 class="menu-titre">Multijoueur</h1>
-      <div class="menu-sous">À deux, en coopération, sur le même réseau (Wi-Fi ou câble)</div>
+      <div class="menu-sous">De 2 à 4 joueurs en coopération, sur le même réseau (Wi-Fi ou câble)</div>
       <label class="multi-champ">Ton nom <input id="multi-nom" maxlength="24" value="Lao D"></label>
       <div id="multi-connexion" class="menu-liste">
         <button class="menu-btn primaire" id="btn-heberger">Héberger une partie <em>ton ami te rejoint</em></button>

@@ -9,7 +9,7 @@ import { mixSpatial, GameAudio } from '../../src/audio.js';
 import { creerInteractions, lancerDiversion, actionAccessible, diversionMusique, DUREE_DIVERSION_MUSIQUE } from '../../src/office.js';
 import { DUREE_TRAVAIL, travailProtege, avancerTravail } from '../../src/travail.js';
 import { EMOTES } from '../../src/emotes.js';
-import { NIVEAUX, PLANS } from '../../src/levels.js';
+import { NIVEAUX, PLANS, pnjDuNiveau } from '../../src/levels.js';
 import { buildLevel } from '../../src/level.js';
 import { buildMaterials } from '../../src/materials.js';
 
@@ -75,7 +75,7 @@ const ctx=document.createElement().getContext();for(const key of ['save','restor
 const mat=buildMaterials();
 for(const niv of NIVEAUX) {
   const plan=PLANS[niv.plan],l=buildLevel(scene,mat,plan,niv);
-  const npcs=niv.pnj(plan).map(cfg=>({cfg}));
+  const npcs=pnjDuNiveau(niv).map(cfg=>({cfg}));
   const actions=creerInteractions(l,plan,npcs);
   assert.equal(actions.filter(a=>a.type==='travail').length,2,`Deux postes libres à l'étage ${niv.id}`);
   for(const it of actions) assert(actionAccessible(it,{pos:{x:it.x,z:it.z}},l.obstacles),`Action inaccessible : ${niv.id}/${it.id}`);

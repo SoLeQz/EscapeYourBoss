@@ -27,10 +27,13 @@ export class Minimap {
     g.fillStyle = 'rgba(18,16,22,0.82)';
     g.fillRect(0, 0, this.w, this.h);
 
-    // zones
+    // zones : couloir et hall d'ascenseur, placés selon l'orientation de l'étage
     g.fillStyle = 'rgba(255,225,180,0.07)';
-    g.fillRect(this.px(4), this.pz(-16), (12 - 4) * this.sx, 32 * this.sz);
-    g.fillRect(this.px(12), this.pz(-4), 8 * this.sx, 10 * this.sz);
+    const R = this.level.repere;
+    for (const zone of [{ x1: 4, x2: 12, z1: -16, z2: 16 }, { x1: 12, x2: 20, z1: -4, z2: 6 }]) {
+      const b = R ? R.boite(zone) : zone;
+      g.fillRect(this.px(b.x1), this.pz(b.z1), (b.x2 - b.x1) * this.sx, (b.z2 - b.z1) * this.sz);
+    }
 
     // obstacles
     for (const o of this.level.obstacles) {
@@ -52,12 +55,13 @@ export class Minimap {
 
     // sorties
     for (const it of this.level.interactables) {
+      if (it.secret && !game.interactifs?.liste.some(a => a.type === 'passage' && a.ouvert)) continue;
       g.fillStyle = it.id === 'elevator' ? '#4ade80' : '#60c8f0';
       g.beginPath(); g.arc(this.px(it.x), this.pz(it.z), 4, 0, 7); g.fill();
       g.fillStyle = '#0c0c10';
       g.font = 'bold 7px system-ui';
       g.textAlign = 'center';
-      g.fillText(it.id === 'elevator' ? 'A' : 'E', this.px(it.x), this.pz(it.z) + 2.5);
+      g.fillText(({elevator:'A', stairs:'E', nacelle:'N', toboggan:'T'})[it.id], this.px(it.x), this.pz(it.z) + 2.5);
     }
 
     // PNJ + cônes
@@ -87,11 +91,10 @@ export class Minimap {
     }
 
     // coéquipier (multijoueur) : même flèche, en orange
-    const co = game.coequipier;
-    if (co?.mesh.visible && game.mode === 'multi') {
+    for (const co of (game.coequipiers?.values() || [])) if ((co.mesh.visible || co.deguisement) && game.mode === 'multi') {
       g.save(); g.translate(this.px(co.pos.x), this.pz(co.pos.z)); g.rotate(Math.PI - co.yaw);
       g.beginPath(); g.moveTo(0, -6); g.lineTo(4.2, 4); g.lineTo(0, 1.6); g.lineTo(-4.2, 4); g.closePath();
-      g.fillStyle = '#ffab5c'; g.fill(); g.restore();
+      g.fillStyle = ['#ffab5c','#b89cff','#5ce0e6','#ff86ac'][Math.max(0, game.multi?.effectif.findIndex(p => p.id === co.reseauId) ?? 0) % 4]; g.fill(); g.restore();
     }
 
     // joueur

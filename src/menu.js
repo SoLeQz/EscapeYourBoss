@@ -1,7 +1,8 @@
 import { ACTIONS, nomTouche, touchesParDefaut } from './input.js';
+import { SECRETS, canardsTrouves } from './secrets.js';
 import { NIVEAUX, PLANS } from './levels.js';
 import { VISAGES, PIECES, PALETTES, TENUES, APPARENCE_DEFAUT, estDebloquee, conditionDeblocage, compterPieces,
-  tenue, tenueDisponible, apparenceSurprise, titreBadge } from './garde-robe.js';
+  tenue, tenueDisponible, apparenceSurprise, titreBadge, nomCouleur, piecesManquantes } from './garde-robe.js';
 
 const $ = id => document.getElementById(id);
 const fmt = (s) => {
@@ -30,7 +31,7 @@ const ONGLETS = [
 export class Menu {
   constructor(jeu) {
     this.jeu = jeu;
-    this.panneaux = ['menu-principal', 'menu-niveaux', 'menu-touches', 'menu-options', 'menu-multi'];
+    this.panneaux = ['menu-principal', 'menu-niveaux', 'menu-touches', 'menu-options', 'menu-multi', 'menu-secrets'];
     this.ecoute = null;          // action en cours de remappage
     this.mode = 'campagne';
 
@@ -39,6 +40,7 @@ export class Menu {
     $('btn-commandes').onclick = () => this.ouvrir('menu-touches');
     this.installerMulti();
     this.installerVestiaire();
+    $('btn-secrets').onclick = () => this.ouvrir('menu-secrets');
     $('btn-options').onclick = () => this.ouvrir('menu-options');
     $('btn-quitter').onclick = () => window.close();
     for (const b of document.querySelectorAll('[data-retour]'))
@@ -91,6 +93,7 @@ export class Menu {
     if (id === 'menu-niveaux') this.majNiveaux();
     if (id === 'menu-touches') this.majTouches();
     if (id === 'menu-options') this.majOptions();
+    if (id === 'menu-secrets') this.majSecrets();
     $(id).querySelector('button:not(:disabled), input')?.focus({ preventScroll: true });
   }
 
@@ -106,7 +109,7 @@ export class Menu {
       statut('Ouverture de la partie…');
       try {
         const r = await m.heberger(nom());
-        statut(`Partie ouverte. Sur le même réseau, ton ami la trouve avec « Rechercher », ou tape ton adresse : ${r.adresses.join(' ou ') || 'voir les paramètres réseau'}. En ligne, donne-lui l’adresse de ton tunnel playit.gg (nom:port). Si Windows demande l’accès réseau, accepte pour les réseaux privés.`);
+        statut(`Partie ouverte. Sur le même réseau, tes amis la trouvent avec « Rechercher », ou tape ton adresse : ${r.adresses.join(' ou ') || 'voir les paramètres réseau'}. En ligne, donne-leur l’adresse de ton tunnel playit.gg (nom:port). Si Windows demande l’accès réseau, accepte pour les réseaux privés.`);
       } catch (e) { statut('Impossible d’héberger : ' + e.message); }
       this.majMulti();
     };
@@ -124,7 +127,10 @@ export class Menu {
       for (const p of parties) {
         const b = document.createElement('button');
         b.className = 'menu-btn';
-        b.innerHTML = `Rejoindre ${p.nom} <em>${p.ip}${p.compatible ? '' : ' · autre version du jeu'}${p.place ? '' : ' · complète'}</em>`;
+        b.textContent = `Rejoindre ${p.nom} `;
+        const detail = document.createElement('em');
+        detail.textContent = `${p.ip} · ${p.joueurs}/${p.max}${p.compatible ? '' : ' · autre version du jeu'}${p.place ? '' : p.enPartie ? ' · en cours' : ' · complète'}`;
+        b.appendChild(detail);
         b.disabled = !p.compatible || !p.place;
         b.onclick = () => rejoindre(p.ip);
         $('multi-parties').appendChild(b);
@@ -135,6 +141,7 @@ export class Menu {
     $('btn-multi-retour').onclick = async () => { await m.quitter(); statut(''); this.ouvrir('menu-principal'); };
     m.ecouter(e => {
       if (e.type === 'connecte') statut(`Connecté à ${e.nom}.`);
+      if (e.type === 'parti') statut(`${e.nom} a quitté le salon. ${m.connecte ? 'Tu peux relancer avec les joueurs présents.' : 'En attente de joueurs…'}`);
       if (e.type === 'deconnecte') statut('Déconnecté : ' + (e.raison || ''));
       if (e.type === 'erreur') statut('Erreur réseau : ' + e.message);
       this.majMulti();
@@ -146,19 +153,27 @@ export class Menu {
     $('multi-salon').hidden = !salon;
     $('multi-nom').disabled = !!salon;
     const moi = $('multi-nom').value.trim() || 'Lao D';
-    $('multi-joueurs').innerHTML = m.connecte
-      ? `<b>${m.hote ? moi + ' (hôte)' : m.nomDistant + ' (hôte)'}</b><br><b>${m.hote ? m.nomDistant : moi}</b> (invité)`
-      : `<b>${moi}</b> (hôte) · en attente d’un coéquipier…`;
+    $('multi-joueurs').textContent = `${m.effectif.length || 1}/4 joueurs\n` + (m.effectif.length
+      ? m.effectif.map(p=>`${p.nom}${p.id===1?' (hôte)':''}${p.id===m.id?' · toi':''}`).join('\n')
+      : `${moi} (hôte) · en attente de joueurs…`);
+    $('multi-joueurs').style.whiteSpace='pre-line';
     $('multi-choix-etage').hidden = !m.hote;
     $('btn-multi-lancer').hidden = !m.hote;
     $('btn-multi-lancer').disabled = !m.connecte;
-    if (m.connecte && m.invite) $('multi-statut').textContent = `En attente que ${m.nomDistant} lance la partie.`;
+    if (m.connecte && m.invite) $('multi-statut').textContent = `En attente que ${m.effectif.find(p=>p.id===1)?.nom || 'l’hôte'} lance la partie.`;
   }
 
   afficher() {
     this.depuisPause = false;
     this.jeu.ui.show('start');
     this.ouvrir('menu-principal');
+  }
+
+  majSecrets() {
+    const etat = this.jeu.etat, trouve = etat.secrets || [];
+    $('secrets-compteur').textContent = `${canardsTrouves(etat)}/${NIVEAUX.length * 3} canards · ${trouve.length}/${SECRETS.length} découvertes`;
+    $('secrets-canards').innerHTML = NIVEAUX.map(n => `<div class="secret-carte"><b>${n.titre}</b><p>${'🦆'.repeat(canardsTrouves(etat, n.id))}${'○ '.repeat(3 - canardsTrouves(etat, n.id))}</p></div>`).join('');
+    $('secrets-liste').innerHTML = SECRETS.map(s => `<div class="secret-carte ${trouve.includes(s.id) ? 'trouve' : ''}"><b>${trouve.includes(s.id) ? s.icone + ' ' + s.nom : '◇ À découvrir'}</b><p>${s.indice}</p></div>`).join('');
   }
 
   // ---------------- choix de l'étage ----------------
@@ -185,7 +200,7 @@ export class Menu {
         <div class="nom">${niv.titre}</div>
         <div class="desc">${ouvert ? niv.sousTitre : 'Termine l’étage précédent pour débloquer.'}</div>
         <div class="pied">
-          <span>${niv.pnj(PLANS[niv.plan]).length} personnes · ${Math.round(niv.limite)} s</span>
+          <span>${niv.pnj(PLANS[niv.plan]).length} personnes · ${Math.round(niv.limite)} s · 🦆 ${canardsTrouves(etat, niv.id)}/3</span>
           <span>${fini ? 'record <b>' + fmt(etat.records['n' + niv.id]) + '</b>' : (ouvert ? 'jamais réussi' : '🔒')}</span>
         </div>`;
       if (ouvert) {
@@ -339,23 +354,25 @@ export class Menu {
     contenu.innerHTML = '';
     const titre = t => { const h = document.createElement('div'); h.className = 'vest-section'; h.textContent = t; contenu.appendChild(h); };
     const grille = (elements, choisi, clic) => {
-      const g = document.createElement('div'); g.className = 'vest-grille';
+      const g = document.createElement('div'); g.className = 'vest-grille' + (this.onglet === 'tenues' ? ' vest-tenues' : '');
       for (const p of elements) {
         const libre = estDebloquee(p, etat), b = document.createElement('button');
         b.className = 'vest-carte' + (p.id === choisi ? ' choisi' : '') + (libre ? '' : ' verrou');
-        b.innerHTML = `<i>${libre ? p.icone : '🔒'}</i><span>${p.nom}</span>${libre ? '' : `<small>${conditionDeblocage(p)}</small>`}`;
+        b.innerHTML = `<i>${libre ? p.icone : '🔒'}</i><span>${p.nom}</span>${libre ? '' : `<small>${p.condition || conditionDeblocage(p)}</small>`}`;
         b.disabled = !libre; b.onclick = () => clic(p);
         g.appendChild(b);
       }
       contenu.appendChild(g);
     };
-    const nuancier = (couleurs, choisie, clic) => {
+    const nuancier = (palette, choisie, clic) => {
       const g = document.createElement('div'); g.className = 'vest-nuancier';
-      for (const c of couleurs) {
+      for (const c of PALETTES[palette]) {
         const b = document.createElement('button');
         b.className = 'vest-teinte' + (c === choisie ? ' choisi' : '') + (c === null ? ' sans' : '');
-        if (c !== null) b.style.background = hex(c);
-        b.title = c === null ? 'Sans veste' : hex(c); b.onclick = () => clic(c);
+        const nom = nomCouleur(c, palette);
+        b.innerHTML = `<i${c !== null ? ` style="background:${hex(c)}"` : ''} aria-hidden="true"></i><span>${nom}</span>`;
+        b.title = nom; b.setAttribute('aria-label', nom); b.setAttribute('aria-pressed', String(c === choisie));
+        b.onclick = () => clic(c);
         g.appendChild(b);
       }
       contenu.appendChild(g);
@@ -364,21 +381,21 @@ export class Menu {
       if (type === 'visages') { titre('Visage'); grille(VISAGES, a.visage, p => essayer({ visage: p.id })); }
       else if (type === 'couleur') {
         if (cle === 'cravate' && !['cravate', 'noeud-papillon'].includes(a.cou)) continue;
-        titre(libelle); nuancier(PALETTES[cle], a[cle], c => essayer({ [cle]: c }));
+        titre(libelle + ' · ' + nomCouleur(a[cle], cle)); nuancier(cle, a[cle], c => essayer({ [cle]: c }));
       }
       else if (type === 'pieces') { titre(libelle); grille(PIECES[cle], a[cle], p => essayer({ [cle]: p.id })); }
       else if (type === 'accent') {
         const portee = PIECES[cle].find(p => p.id === a[cle]);
         if (!portee?.teinte) continue;
-        titre(libelle); nuancier(PALETTES.accent, a.couleurs[cle], c => essayer({ couleurs: { [cle]: c } }));
+        titre(libelle + ' · ' + nomCouleur(a.couleurs[cle], 'accent')); nuancier('accent', a.couleurs[cle], c => essayer({ couleurs: { [cle]: c } }));
       } else if (type === 'badge') {
         titre('Badge');
         grille([{ id: 'oui', nom: 'Badge au cou', icone: '🪪' }, { id: 'non', nom: 'Incognito', icone: '🥷' }], a.badge ? 'oui' : 'non', p => essayer({ badge: p.id === 'oui' }));
       } else if (type === 'tenues') {
         titre('Tenues toutes faites');
-        grille(TENUES.map(t => ({ ...t, debloque: tenueDisponible(t.id, etat) ? undefined : { autre: true } })), null,
+        grille(TENUES.map(t => ({ ...t, debloque: tenueDisponible(t.id, etat) ? undefined : { autre: true },
+          condition: piecesManquantes(t.id, etat).map(p => `${p.nom} : ${conditionDeblocage(p)}`).join('\n') })), null,
           t => { jeu.essayerTenue(tenue(t.id)); jeu.player.declencherEmote(); jeu.audio.start(); this.majVestiaire(); });
-        for (const c of contenu.querySelectorAll('.vest-carte.verrou small')) c.textContent = 'Pièces encore verrouillées';
       }
     }
     contenu.scrollTop = defilement; this.ongletAffiche = this.onglet;

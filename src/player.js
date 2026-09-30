@@ -6,6 +6,7 @@ import { animerGardeRobe } from './garde-robe-blender.js';
 import { libererArbre } from './resources.js';
 import { collide } from './level.js';
 import { EMOTES, adoucir, POIGNET_REPOS, POIGNET_CLAVIER } from './emotes.js';
+import { VITESSE_CARTON } from './interactifs.js';
 
 // Rapproche `v` de `cible` à un rythme indépendant du débit d'images.
 // Un simple lerp(dt * k) accélère quand le jeu rame : la sensation de
@@ -127,6 +128,9 @@ export class Player {
   }
 
   reset() {
+    // Sortie coopérative ou cachette : une nouvelle partie restaure le modèle.
+    this.mesh.visible = true;
+    this.outline.visible = false;
     this.pos.set(this.level.playerStart.x + this.decalage.x, 0, this.level.playerStart.z + this.decalage.z);
     this.yaw = this.level.playerStart.yaw;
     this.vel.set(0, 0, 0);
@@ -136,7 +140,7 @@ export class Player {
     this.running = false; this.moving = false; this.speed = 0;
     this.inclinaison = 0; this.inCover = false; this.crispation = 0; this.menace = 0;
     this.exitPose = null; this.workBlend = 0;
-    this.emote = null; this.working = null; this.workT = 0; this._bob = 0;
+    this.emote = null; this.working = null; this.workT = 0; this._bob = 0; this.deguisement = null;
     this._lastStepSign = 1;
     // sinon on réapparaît figé dans la foulée où on s'est fait prendre
     Object.assign(this._pose, {
@@ -172,11 +176,12 @@ export class Player {
     }
 
     // --- accroupi ---
-    this.wantCrouch = (!this.emote || this.emote.coupee) && !this.working && accroupir;
+    // Dans le carton-cachette (interactifs.js), on avance plié en deux.
+    this.wantCrouch = this.deguisement === 'carton' || ((!this.emote || this.emote.coupee) && !this.working && accroupir);
     this.crouch = amortir(this.crouch, this.wantCrouch ? 1 : 0, 9, dt);
 
     // --- course : consomme l'endurance ---
-    const wantRun = input.actif('courir') && this.crouch < 0.4;
+    const wantRun = !this.deguisement && input.actif('courir') && this.crouch < 0.4;
     // Hystérésis : maintenir Maj à vide ne doit pas faire osciller
     // vitesse, animation et champ de caméra à chaque image.
     if (this.stamina <= 0.03) this.epuise = true;
@@ -189,7 +194,7 @@ export class Player {
     // Avec un scalaire, changer de direction fait pivoter le déplacement
     // instantanément : c'est ce qui donnait la sensation de grille. Ici la
     // vitesse doit être infléchie, donc un demi-tour décrit une courbe.
-    const vMax = this.running ? 5.0 : THREE.MathUtils.lerp(2.9, 1.3, this.crouch);
+    const vMax = (this.running ? 5.0 : THREE.MathUtils.lerp(2.9, 1.3, this.crouch)) * (this.deguisement ? VITESSE_CARTON : 1);
     const cibleX = dirX * vMax, cibleZ = dirZ * vMax;
 
     // Relancer coûte plus cher que freiner, et on n'attaque jamais un
@@ -429,8 +434,13 @@ export class Player {
     if (this.exitPose) {
       const u = this.exitPose.progress;
       p.armR.rotation.x = -2.6 * u; p.elbowR.rotation.x = -.4 * u;
-      if (this.exitPose.id === 'elevator') this.mesh.position.x += .5*u;
-      else { this.mesh.position.z += .5*u; this.mesh.position.y -= .2*u; }
+      // Un pas vers la sortie : le sens dépend de l'orientation de l'étage.
+      const [dx, dz] = this.exitPose.dir || (this.exitPose.id === 'elevator' ? [1, 0] : [0, 1]);
+      const distance = this.exitPose.dist ?? .5;
+      this.mesh.position.x += distance*u*dx; this.mesh.position.z += distance*u*dz;
+      if (this.exitPose.descente != null) this.mesh.position.y -= this.exitPose.descente;
+      else if (this.exitPose.id !== 'elevator') this.mesh.position.y -= .2*u;
+      if (this.exitPose.id === 'toboggan') { p.upper.rotation.x -= .45 * u; p.legL.rotation.x = p.legR.rotation.x = -1.1 * u; }
     }
     this.mesh.rotation.y = this.yaw;
     if(!this.exitPose && this.workBlend<.005)this.ajusterAppui();
@@ -465,6 +475,7 @@ export class Player {
   // `index` vient de la roue. Sans index, on tire au sort sans répéter.
   declencherEmote(index) {
     if (this.emote && !this.emote.coupee) return null;
+    if (this.deguisement) return null;          // un carton ne danse pas
     let def;
     if (index != null) {
       if (!Number.isInteger(index) || index<0 || index>=EMOTES.length) return null;
@@ -483,7 +494,7 @@ export class Player {
   setOutline(level) {
     // level : 0 = rien, 0..1 = jaune → rouge
     this.menace = level;
-    if (level <= 0.02) { this.outline.visible = false; return; }
+    if (this.deguisement || level <= 0.02) { this.outline.visible = false; return; }
     this.outline.visible = true;
     this.syncOutline();
     const t = THREE.MathUtils.clamp((level - 0.25) / 0.7, 0, 1);

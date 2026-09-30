@@ -1,7 +1,7 @@
-// Réseau local pour le mode multijoueur (2 joueurs, même Wi-Fi / même réseau).
+// Réseau local pour le mode multijoueur (2 à 4 joueurs, même Wi-Fi / même réseau).
 //
 // - Partie : TCP, un message JSON par ligne. L'hôte écoute sur PORT_JEU et
-//   accepte un seul invité ; les deux s'annoncent (« bonjour ») et doivent
+//   accepte trois invités ; tous s'annoncent (« bonjour ») et doivent
 //   avoir la même version du jeu.
 // - Découverte : l'hôte émet une balise UDP par seconde sur PORT_DECOUVERTE
 //   (diffusion sur chaque réseau local + 127.0.0.1) ; l'invité écoute 1,5 s
@@ -12,6 +12,7 @@
 const net = require('node:net');
 const dgram = require('node:dgram');
 const os = require('node:os');
+const { StringDecoder } = require('node:string_decoder');
 
 const PORT_JEU = 47800;
 const PORT_DECOUVERTE = 47801;
@@ -51,8 +52,9 @@ function lireAdresse(saisie, portDefaut = PORT_JEU) {
 // Découpe un flux TCP en messages JSON (un par ligne).
 function lecteurLignes(surMessage, surErreur) {
   let tampon = '';
+  const decodeur = new StringDecoder('utf8');
   return chunk => {
-    tampon += chunk.toString('utf8');
+    tampon += decodeur.write(chunk);
     if (tampon.length > MAX_LIGNE) { tampon = ''; surErreur(new Error('Message trop long')); return; }
     let i;
     while ((i = tampon.indexOf('\n')) >= 0) {
@@ -68,95 +70,107 @@ function lecteurLignes(surMessage, surErreur) {
 //   {type:'ecoute', port} · {type:'connecte', role, nom} · {type:'message', msg}
 //   {type:'deconnecte', raison} · {type:'erreur', message}
 function creerSession({ version, evenement, adresseEcoute = '0.0.0.0', portJeu = PORT_JEU, portDecouverte = PORT_DECOUVERTE }) {
-  let serveur = null, socket = null, balise = null, role = null, nomLocal = 'Joueur', pret = false;
-
-  function brancher(s, r) {
-    socket = s; role = r; pret = false;
+  let serveur = null, liaison = null, balise = null, role = null, nomLocal = 'Joueur', prochainId = 2, enPartie = false;
+  const invites = new Map();
+  const envoyerBrut = (s, msg) => { if (s && !s.destroyed) s.write(JSON.stringify(msg) + '\n'); };
+  const diffuser = (msg, sauf = null) => { for (const p of invites.values()) if (p.pret && p.id !== sauf) envoyerBrut(p.s, msg); };
+  const joueurs = () => [{id:1,nom:nomLocal}, ...[...invites.values()].filter(p=>p.pret).map(p=>({id:p.id,nom:p.nom}))];
+  function effectif() {
+    const liste = joueurs();
+    diffuser({t:'effectif',joueurs:liste});
+    evenement({type:'effectif',id:1,joueurs:liste});
+  }
+  function brancher(s, r, id = 1) {
+    const p = {s,id,pret:false,nom:''};
+    if (r === 'hote') invites.set(id,p); else liaison = p;
     s.setNoDelay(true);
-    s.on('data', lecteurLignes(msg => {
-      if (!pret) {
-        if (msg.t === 'refus') { evenement({ type: 'deconnecte', raison: msg.raison }); s.destroy(); return; }
+    const delai = setTimeout(()=>s.destroy(),5000);
+    s.on('data',lecteurLignes(msg=>{
+      if (!msg || typeof msg !== 'object' || Array.isArray(msg) || typeof msg.t !== 'string') { s.destroy(); return; }
+      if (!p.pret) {
+        if (msg.t === 'refus') { evenement({type:'deconnecte',raison:String(msg.raison)}); s.destroy(); return; }
         if (msg.t !== 'bonjour') return;
         if (msg.version !== version) {
-          envoyerBrut(s, { t: 'refus', raison: `Versions différentes : ${version} ici, ${msg.version} en face. Installez la même version.` });
-          evenement({ type: 'deconnecte', raison: `Version différente chez ${msg.nom || 'l’autre joueur'} (${msg.version}).` });
-          s.end(); return;
+          envoyerBrut(s,{t:'refus',raison:`Versions différentes : ${version} ici, ${msg.version} en face. Installez la même version.`});s.end();return;
         }
-        pret = true;
-        evenement({ type: 'connecte', role, nom: String(msg.nom || 'Coéquipier').slice(0, 24) });
+        clearTimeout(delai);p.pret=true;p.nom=String(msg.nom || 'Coéquipier').slice(0,24);
+        evenement({type:'connecte',role:r,id:r==='hote'?1:msg.vous,pair:id,nom:p.nom});
+        if(r==='hote')effectif();
         return;
       }
-      evenement({ type: 'message', msg });
-    }, e => evenement({ type: 'erreur', message: e.message })));
-    s.on('close', () => {
-      if (socket === s) { socket = null; evenement({ type: 'deconnecte', raison: 'Connexion fermée' }); }
+      if(r==='invite') {
+        if(msg.t==='effectif')evenement({type:'effectif',id:msg.vous,joueurs:msg.joueurs});
+        else evenement({type:'message',msg});
+      } else {
+        // L'identité est attribuée par la connexion, jamais choisie par le client.
+        const {de,_pour,...contenu}=msg;const message={...contenu,de:id};
+        const permis=['joueur','apparence','pret','action','objet','emote','canard','secret','menu'];
+        if(!permis.includes(message.t))return;
+        if(message.t==='joueur'||message.t==='apparence')diffuser(message,id);
+        evenement({type:'message',msg:message});
+      }
+    },()=>s.destroy()));
+    s.on('close',()=>{
+      clearTimeout(delai);
+      if(r==='hote'&&invites.get(id)===p){invites.delete(id);if(p.pret){effectif();evenement({type:'parti',id,nom:p.nom,raison:'Connexion fermée'});}}
+      if(r==='invite'&&liaison===p){liaison=null;evenement({type:'deconnecte',raison:'Connexion avec l’hôte fermée'});}
     });
-    s.on('error', e => evenement({ type: 'erreur', message: e.message }));
-    envoyerBrut(s, { t: 'bonjour', version, nom: nomLocal });
+    s.on('error',e=>evenement({type:'erreur',message:e.message}));
+    envoyerBrut(s,{t:'bonjour',version,nom:nomLocal,...(r==='hote'?{vous:id}:{})});
+    return p;
   }
-  const envoyerBrut = (s, msg) => { if (s && !s.destroyed) s.write(JSON.stringify(msg) + '\n'); };
-
-  function arreterBalise() { if (balise) { clearInterval(balise.timer); balise.sock.close(); balise = null; } }
-
+  function arreterBalise(){if(balise){clearInterval(balise.timer);try{balise.sock.close()}catch{}balise=null;}}
   return {
-    get role() { return role; },
-    get connecte() { return !!socket && pret; },
-
-    heberger(nom) {
-      this.fermer();
-      nomLocal = String(nom || 'Hôte').slice(0, 24);
-      return new Promise((resolve, reject) => {
-        serveur = net.createServer(s => {
-          if (socket) { envoyerBrut(s, { t: 'refus', raison: 'Partie déjà complète (2 joueurs).' }); s.end(); return; }
-          brancher(s, 'hote');
+    get role(){return role},
+    get connecte(){return role==='hote'?[...invites.values()].some(p=>p.pret):!!liaison?.pret},
+    heberger(nom){
+      this.fermer();role='hote';nomLocal=String(nom||'Hôte').slice(0,24);prochainId=2;
+      return new Promise((resolve,reject)=>{
+        const srv=serveur=net.createServer(s=>{
+          if(enPartie||invites.size>=3){envoyerBrut(s,{t:'refus',raison:enPartie?'Partie en cours : rejoins le salon entre deux parties.':'Partie déjà complète (4 joueurs).'});s.end();return;}
+          brancher(s,'hote',prochainId++);
         });
-        serveur.once('error', e => reject(new Error(e.code === 'EADDRINUSE'
-          ? `Le port ${portJeu} est déjà utilisé : une autre partie est-elle ouverte ?` : e.message)));
-        serveur.listen(portJeu, adresseEcoute, () => {
-          // balise de découverte
-          const sock = dgram.createSocket({ type: 'udp4', reuseAddr: true });
-          sock.bind(() => {
+        srv.once('error',e=>reject(new Error(e.code==='EADDRINUSE'?`Le port ${portJeu} est déjà utilisé : une autre partie est-elle ouverte ?`:e.message)));
+        srv.listen(portJeu,adresseEcoute,()=>{
+          if(serveur!==srv)return;
+          const sock=dgram.createSocket({type:'udp4',reuseAddr:true});
+          sock.on('error',()=>{});
+          sock.bind(()=>{
+            if(serveur!==srv){sock.close();return;}
             sock.setBroadcast(true);
-            const envoyer = () => {
-              const data = Buffer.from(JSON.stringify({ jeu: 'EscapeYourBoss', version, nom: nomLocal, port: portJeu, place: !socket }));
-              const cibles = new Set(['127.0.0.1', '255.255.255.255', ...adressesLocales().map(a => a.diffusion)]);
-              for (const c of cibles) sock.send(data, portDecouverte, c, () => {});
+            const envoyer=()=>{
+              const data=Buffer.from(JSON.stringify({jeu:'EscapeYourBoss',version,nom:nomLocal,port:portJeu,place:!enPartie&&invites.size<3,joueurs:joueurs().length,max:4,enPartie}));
+              for(const cible of new Set(['127.0.0.1','255.255.255.255',...adressesLocales().map(a=>a.diffusion)]))sock.send(data,portDecouverte,cible,()=>{});
             };
-            balise = { sock, timer: setInterval(envoyer, 1000) }; envoyer();
+            balise={sock,timer:setInterval(envoyer,1000)};envoyer();
           });
-          evenement({ type: 'ecoute', port: portJeu, adresses: adressesLocales().map(a => a.ip) });
-          resolve({ port: portJeu, adresses: adressesLocales().map(a => a.ip) });
+          evenement({type:'ecoute',port:portJeu,adresses:adressesLocales().map(a=>a.ip)});effectif();
+          resolve({port:portJeu,adresses:adressesLocales().map(a=>a.ip)});
         });
       });
     },
-
-    rejoindre(adresse, nom, portDefaut = portJeu) {
-      // Une faute de frappe ne doit pas couper la session en cours.
-      let cible;
-      try { cible = lireAdresse(adresse, portDefaut); } catch (e) { return Promise.reject(e); }
-      const ip = String(adresse).trim();
-      this.fermer();
-      nomLocal = String(nom || 'Invité').slice(0, 24);
-      return new Promise((resolve, reject) => {
-        // Node essaie IPv6 puis IPv4 et, par défaut, abandonne chaque tentative
-        // (même la dernière) au bout de 250 ms : un relais playit.gg lointain
-        // échouait en « ETIMEDOUT » alors que le tunnel marchait.
-        const s = net.connect({ host: cible.hote, port: cible.port, timeout: 5000,
-          autoSelectFamily: true, autoSelectFamilyAttemptTimeout: 2500 });
-        s.once('connect', () => { s.setTimeout(0); brancher(s, 'invite'); resolve(true); });
-        s.once('timeout', () => { s.destroy(); reject(new Error(`Aucune réponse de ${ip} (délai dépassé).`)); });
-        s.once('error', e => reject(new Error(e.code === 'ECONNREFUSED'
-          ? `Aucune partie hébergée sur ${ip}.` : e.message)));
+    rejoindre(adresse,nom,portDefaut=portJeu){
+      let cible;try{cible=lireAdresse(adresse,portDefaut)}catch(e){return Promise.reject(e)}
+      this.fermer();role='invite';nomLocal=String(nom||'Invité').slice(0,24);
+      return new Promise((resolve,reject)=>{
+        const s=net.connect({host:cible.hote,port:cible.port,timeout:5000,autoSelectFamily:true,autoSelectFamilyAttemptTimeout:2500});
+        s.once('connect',()=>{s.setTimeout(0);brancher(s,'invite');resolve(true)});
+        s.once('timeout',()=>{s.destroy();reject(new Error(`Aucune réponse de ${adresse} (délai dépassé).`))});
+        s.once('error',e=>reject(new Error(e.code==='ECONNREFUSED'?`Aucune partie hébergée sur ${adresse}.`:e.message)));
       });
     },
-
-    envoyer(msg) { if (pret) envoyerBrut(socket, msg); },
-
-    fermer() {
-      arreterBalise();
-      if (socket) { const s = socket; socket = null; s.destroy(); }
-      if (serveur) { serveur.close(); serveur = null; }
-      role = null; pret = false;
+    envoyer(msg){
+      if(!msg||typeof msg!=='object')return;
+      if(role==='hote'){
+        if(msg.t==='lancer')enPartie=true;if(msg.t==='menu')enPartie=false;
+        const {_pour,de,...contenu}=msg;const message={...contenu,de:1};
+        if(_pour!=null){const p=invites.get(_pour);if(p?.pret)envoyerBrut(p.s,message)}else diffuser(message);
+      }else if(liaison?.pret)envoyerBrut(liaison.s,msg);
+    },
+    fermer(){
+      arreterBalise();const anciens=[...invites.values()];invites.clear();for(const p of anciens)p.s.destroy();
+      if(liaison){const p=liaison;liaison=null;p.s.destroy()}
+      if(serveur){serveur.close();serveur=null}role=null;enPartie=false;
     },
   };
 }
@@ -179,7 +193,7 @@ function rechercherParties({ duree = 1500, version = null, portDecouverte = PORT
         const ancienne = trouvees.get(cle);
         if (ancienne && ancienne.ip !== '127.0.0.1' && ip === '127.0.0.1') return;
         trouvees.set(cle, { nom: b.nom, ip, port: b.port, version: b.version,
-          compatible: version == null || b.version === version, place: b.place !== false });
+          compatible: version == null || b.version === version, place: b.place !== false, joueurs: b.joueurs || 1, max: b.max || 4, enPartie: !!b.enPartie });
       } catch {}
     });
     sock.on('error', fin);

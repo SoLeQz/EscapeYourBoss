@@ -13,6 +13,7 @@ import { mesurerVue } from './perception.js';
 const DEG = Math.PI / 180;
 
 // Fausse alerte : il se persuade qu'il n'a rien vu.
+const CARTON_DOUTE = ['Ce carton… il était là avant ?', 'Il a bougé, ce carton ?', 'Drôle d’endroit pour un carton.'];
 const HAUSSEMENTS = ['Bah…', 'J’ai cru voir un truc.', 'Mouais.',
   'Faut que je dorme.', 'Bref.'];
 
@@ -172,6 +173,7 @@ export class NPC {
         if (player.running) perceivedJ *= 1.75;
         else if (!player.moving) perceivedJ *= 0.7;
         if (game.hunting && this.isBoss) perceivedJ *= 1.4;
+        perceivedJ *= game.interactifs?.discretion(player) ?? 1;   // carton-cachette
       }
       // bruit : entendu même hors du champ de vision
       if (!protegeJ && !vue.visible && dist < player.noiseRadius && dist < 9) {
@@ -264,8 +266,12 @@ export class NPC {
     if (this.state === 'doute') {
       this.sursaut = 1;                    // petit relèvement de tête
       // La tenue du vestiaire se remarque (texte seulement, aucun effet sur la détection).
-      const remarque = remarqueTenue(this.dernierJoueur?.apparence);
-      if (remarque && Math.random() < 0.45) this.say(remarque, 2.2);
+      if (this.dernierJoueur?.deguisement === 'carton') {
+        if (Math.random() < 0.7) this.say(CARTON_DOUTE[(Math.random() * CARTON_DOUTE.length) | 0], 2.2);
+      } else {
+        const remarque = remarqueTenue(this.dernierJoueur?.apparence);
+        if (remarque && Math.random() < 0.45) this.say(remarque, 2.2);
+      }
     } else if (this.state === 'observation') {
       this.sursaut = 1.4;
       game.secousse = Math.max(game.secousse || 0, 0.35);

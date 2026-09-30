@@ -9,6 +9,8 @@ const ctx2d = {
   lineTo() {}, arcTo() {}, closePath() {}, fill() {}, stroke() {},
   createLinearGradient: () => ({ addColorStop() {} }),
   measureText: () => ({ width: 10 }),
+  // étages en miroir (repere.js) : les panneaux sont peints retournés
+  scale() {}, translate() {}, save() {}, restore() {}, setTransform() {}, transform() {}, arc() {},
 };
 globalThis.document = {
   createElement: () => ({ width: 0, height: 0, getContext: () => ctx2d, style: {} }),

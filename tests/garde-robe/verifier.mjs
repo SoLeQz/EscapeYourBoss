@@ -143,7 +143,7 @@ assert.equal(G.compterPieces({}).total - G.compterPieces({}).debloquees, 6);
 assert.equal(G.compterPieces(tout).debloquees, G.compterPieces(tout).total);
 assert.deepEqual(G.nouveautes({niveauxFinis: [1]}, {niveauxFinis: [1, 2]}).map(x => x.id), ['gilet-fluo']);
 assert.deepEqual(G.nouveautes({}, {records: {speedrun: 1}}).map(x => x.id), ['cape']);
-assert.match(G.conditionDeblocage(catalogue.find(x => x.id === 'couronne')), /étage 6/);
+assert.match(G.conditionDeblocage(catalogue.find(x => x.id === 'couronne')), /niveau 6 en solo/);
 assert.equal(G.restreindre({tete: 'couronne', torse: 'cape', dos: 'jetpack', yeux: 'aviateur'}, {}).tete, 'aucun');
 assert.equal(G.restreindre({torse: 'cape'}, {}).torse, 'aucun');
 assert.equal(G.restreindre({yeux: 'aviateur', dos: 'jetpack'}, {niveauxFinis: [5]}).dos, 'jetpack');
@@ -195,6 +195,7 @@ class El {
   *tous() { for (const c of this.children) { yield c; yield* c.tous(); } }
   querySelectorAll(sel) { if (sel.includes(' ')) return []; const cl = sel.split('.').filter(Boolean); return [...this.tous()].filter(e => cl.every(c => e.className.split(' ').includes(c))); }
   click() { if (!this.disabled) this.onclick?.(); }
+  setAttribute(k, v) { (this.attributes ??= {})[k] = v; }
   setPointerCapture() {}
 }
 const elements = new Map(), creer = document.createElement;
@@ -228,6 +229,8 @@ for (const [slot, liste] of Object.entries(G.PIECES)) for (const x of liste) {
   else { assert.equal(b()[slot], x.id, 'Clic sur ' + x.nom); assert(carte(x.nom).className.includes('choisi')); }
 }
 onglet('Chapeau'); carte('Casquette').click(); assert.equal(teintes().length, G.PALETTES.accent.length); teintes()[2].click();
+assert.equal(teintes()[2].title, 'Vert'); assert(teintes()[2].html.includes('<span>Vert</span>'));
+assert.equal(teintes()[2].attributes['aria-pressed'], 'true');
 assert.equal(b().couleurs.tete, G.PALETTES.accent[2]); assert.equal(p.mesh.getObjectByName('Garde-robe:casquette:teinte').material.color.getHex(), G.PALETTES.accent[2]);
 carte('Casque de chantier').click(); assert.equal(teintes().length, 0, 'Pas de nuancier pour une pièce aux couleurs fixes');
 onglet('Tenue'); teintes()[3].click(); assert.equal(b().chemise, G.PALETTES.chemise[3]);
@@ -235,7 +238,15 @@ teintes().find(t => t.className.includes('sans')).click(); assert.equal(b().vest
 carte('Incognito').click(); assert.equal(b().badge, false); assert.equal(p.parts.badge, undefined, 'Badge retiré');
 onglet('Cou'); carte('Col ouvert').click(); const sansCravate = teintes().length; carte('Nœud papillon').click();
 assert.equal(teintes().length, sansCravate + G.PALETTES.cravate.length, 'Couleur du nœud proposée'); teintes()[1].click(); assert.equal(b().cravate, G.PALETTES.cravate[1]);
-onglet('Tenues'); assert(carte('Employé du mois').disabled); carte('Agent secret').click(); assert.deepEqual(b(), G.tenue('agent'));
+onglet('Tenues'); assert(carte('Employé du mois').disabled);
+assert(carte('Employé du mois').html.includes('niveau 6 en solo'));
+assert(carte('Employé du mois').html.includes('niveau 5 en solo'));
+assert(carte('Héros de la pause café').html.includes('10 niveaux depuis le premier'));
+assert.deepEqual(G.piecesManquantes('mois', {niveauxFinis:[4,5]}).map(p=>p.id), ['couronne']);
+for(const [palette,couleurs] of Object.entries(G.PALETTES)) for(const c of couleurs) {
+  const nom=G.nomCouleur(c,palette);assert(nom&&!nom.includes('#')&&nom!=='Couleur personnalisée', 'Nom manquant dans '+palette);
+}
+assert.equal(G.nomCouleur(0x123456,'accent'), 'Couleur personnalisée'); carte('Agent secret').click(); assert.deepEqual(b(), G.tenue('agent'));
 $('vest-surprise').click(); assert.deepEqual(G.restreindre(b(), jeu.etat), b(), 'Surprise verrouillée');
 $('vest-zoom').click(); assert.equal(jeu.vestiaire.zoom, 'tete'); assert.match($('vest-zoom').textContent, /Corps/);
 $('vest-defaut').click(); assert.deepEqual(b(), G.nettoyerApparence(D));

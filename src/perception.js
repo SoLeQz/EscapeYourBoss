@@ -1,7 +1,8 @@
 import { hasLOS } from './level.js';
 
 // Source commune pour la détection, les emotes et les indications du HUD.
-// L'éclairage reste une ambiance : seule la géométrie interrompt le regard.
+// Les ombres sont une ambiance. Une coupure active réduit viewDist ;
+// la géométrie reste la seule occlusion, partagée par les PNJ et le HUD.
 export function mesurerVue(npc, player, obstacles) {
   const dx = player.pos.x - npc.pos.x, dz = player.pos.z - npc.pos.z;
   const distance = Math.hypot(dx, dz);

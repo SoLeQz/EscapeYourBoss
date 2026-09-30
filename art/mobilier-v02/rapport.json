@@ -1,0 +1,302 @@
+{
+ "poste": {
+  "objets": 94,
+  "triangles": 2280,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_boisFonce",
+   "ACC_cableNoir",
+   "ACC_eau",
+   "ACC_lumiere",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_plastiqueNoir",
+   "ACC_verni",
+   "ACC_verre"
+  ],
+  "roles": []
+ },
+ "poste-code": {
+  "objets": 7,
+  "triangles": 446,
+  "materiaux": [
+   "ACC_boisFonce",
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "poste-sheet": {
+  "objets": 11,
+  "triangles": 588,
+  "materiaux": [
+   "ACC_lumiere",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueNoir",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "poste-graph": {
+  "objets": 7,
+  "triangles": 184,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "cloison": {
+  "objets": 7,
+  "triangles": 276,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre",
+   "ACC_cloison"
+  ],
+  "roles": []
+ },
+ "cloison-notes": {
+  "objets": 13,
+  "triangles": 348,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre",
+   "ACC_cloison",
+   "ACC_papier",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "bibliotheque-direction": {
+  "objets": 240,
+  "triangles": 4426,
+  "materiaux": [
+   "ACC_boisFonce",
+   "ACC_carton",
+   "ACC_laiton",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "photocopieuse": {
+  "objets": 48,
+  "triangles": 2496,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_lumiere",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_plastiqueNoir",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "machine-cafe": {
+  "objets": 28,
+  "triangles": 1932,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_boisFonce",
+   "ACC_lumiere",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_plastiqueNoir",
+   "ACC_verni",
+   "ACC_verre"
+  ],
+  "roles": []
+ },
+ "fontaine": {
+  "objets": 12,
+  "triangles": 1476,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre",
+   "ACC_eau",
+   "ACC_plastiqueBlanc",
+   "ACC_plastiqueNoir",
+   "ACC_verni",
+   "ACC_verre"
+  ],
+  "roles": []
+ },
+ "casier": {
+  "objets": 17,
+  "triangles": 732,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "casier-b": {
+  "objets": 17,
+  "triangles": 732,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "plante-ficus": {
+  "objets": 145,
+  "triangles": 990,
+  "materiaux": [
+   "ACC_boisFonce",
+   "ACC_peint",
+   "ACC_terreCuite"
+  ],
+  "roles": []
+ },
+ "plante-sansevieria": {
+  "objets": 18,
+  "triangles": 426,
+  "materiaux": [
+   "ACC_beton",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "cartons-pile": {
+  "objets": 15,
+  "triangles": 468,
+  "materiaux": [
+   "ACC_carton",
+   "ACC_papier",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "canape": {
+  "objets": 18,
+  "triangles": 1624,
+  "materiaux": [
+   "ACC_bois",
+   "ACC_peint",
+   "ACC_tissuCanape"
+  ],
+  "roles": []
+ },
+ "fauteuil": {
+  "objets": 9,
+  "triangles": 652,
+  "materiaux": [
+   "ACC_bois",
+   "ACC_tissuCanape"
+  ],
+  "roles": []
+ },
+ "table-basse": {
+  "objets": 7,
+  "triangles": 662,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_bois",
+   "ACC_boisFonce",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc"
+  ],
+  "roles": []
+ },
+ "bureau-direction": {
+  "objets": 29,
+  "triangles": 2844,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_bois",
+   "ACC_boisFonce",
+   "ACC_laiton",
+   "ACC_peint",
+   "ACC_plastiqueNoir"
+  ],
+  "roles": []
+ },
+ "table-reunion": {
+  "objets": 31,
+  "triangles": 2146,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre",
+   "ACC_bois",
+   "ACC_boisFonce",
+   "ACC_lumiere",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_plastiqueNoir",
+   "ACC_verre"
+  ],
+  "roles": []
+ },
+ "extincteur": {
+  "objets": 9,
+  "triangles": 752,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre",
+   "ACC_cableNoir",
+   "ACC_papier",
+   "ACC_peint",
+   "ACC_plastiqueBlanc",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "horloge": {
+  "objets": 17,
+  "triangles": 622,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "tableau-blanc": {
+  "objets": 10,
+  "triangles": 864,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_peint",
+   "ACC_plastiqueBlanc"
+  ],
+  "roles": []
+ },
+ "ecran-mural": {
+  "objets": 4,
+  "triangles": 336,
+  "materiaux": [
+   "ACC_aluSombre",
+   "ACC_lumiere",
+   "ACC_plastiqueNoir"
+  ],
+  "roles": []
+ },
+ "luminaire": {
+  "objets": 3,
+  "triangles": 324,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre"
+  ],
+  "roles": []
+ },
+ "bouche": {
+  "objets": 8,
+  "triangles": 192,
+  "materiaux": [
+   "ACC_alu",
+   "ACC_aluSombre"
+  ],
+  "roles": []
+ }
+}

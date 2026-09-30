@@ -14,6 +14,34 @@ module.exports = async ({ js, shot, step, wait }) => {
     return {compteur:$('vest-compteur').textContent,titre:$('vest-titre-badge').textContent,verrousOngletChapeau:verrous};
   })()`);
   await wait(900); await shot('vestiaire-01-ouverture.jpg');
+  await step('conditions-et-couleurs', `(async()=>{${outils}
+    const {PIECES,conditionDeblocage,nomCouleur,PALETTES}=await import('./src/garde-robe.js');
+    const onglets={tete:'Chapeau',yeux:'Lunettes',torse:'Cou',dos:'Dos'},verrous=[];
+    for(const [slot,nom] of Object.entries(onglets)){
+      onglet(nom);for(const p of PIECES[slot].filter(p=>p.debloque)){
+        const b=carte(p.nom);ok(b.disabled&&b.querySelector('small')?.textContent===conditionDeblocage(p),'Condition absente : '+p.nom);
+        ok(getComputedStyle(b).opacity==='1','Condition trop effacée');verrous.push(p.nom);
+      }
+    }
+    onglet('Tenues');ok(carte('Employé du mois').textContent.includes('niveau 6 en solo'),'Couronne sans objectif');
+    ok(carte('Employé du mois').textContent.includes('niveau 5 en solo'),'Jetpack sans objectif');
+    ok(carte('Héros').textContent.includes('10 niveaux depuis le premier'),'Speedrun incomplet');
+    const finis=[...g.etat.niveauxFinis];g.etat.niveauxFinis=[4,5];g.menu.majVestiaire();
+    ok(!carte('Employé du mois').textContent.includes('niveau 5 en solo'),'Objectif déjà obtenu encore affiché');
+    ok(carte('Employé du mois').disabled,'Tenue débloquée trop tôt');g.etat.niveauxFinis=finis;
+    onglet('Chapeau');clic(carte('Casquette'));
+    const boutons=[...document.querySelectorAll('.vest-teinte')];
+    for(const [i,b] of boutons.entries())ok(b.textContent===nomCouleur(PALETTES.accent[i],'accent')&&b.title===b.textContent,'Nom de couleur absent');
+    clic(boutons[1]);ok(document.querySelector('.vest-teinte.choisi').getAttribute('aria-label')==='Bleu azur','Mauvais nom sélectionné');
+    return {verrous,couleurs:boutons.map(b=>b.textContent)};
+  })()`);
+  await step('nuancier-lisible',`(()=>{${outils}
+    const dernier=[...document.querySelectorAll('.vest-teinte')].at(-1);dernier.scrollIntoView({block:'end'});
+    ok(dernier.getBoundingClientRect().bottom<=$('vest-contenu').getBoundingClientRect().bottom+1,'Couleurs inaccessibles');return true;
+  })()`);
+  await wait(600);await shot('vestiaire-couleurs-nommees.jpg');
+  await step('conditions-tenues',`(()=>{${outils}onglet('Tenues');carte('Employé du mois').scrollIntoView({block:'end'});return carte('Employé du mois').textContent})()`);
+  await wait(600);await shot('vestiaire-conditions-tenues.jpg');
   await step('essayer', `(async()=>{${outils}
     onglet('Chapeau');ok(carte('Couronne').disabled,'La couronne doit être verrouillée sur un profil neuf');
     clic(carte('Bonnet'));ok(g.vestiaire.brouillon.tete==='bonnet','Bonnet non essayé');

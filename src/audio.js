@@ -123,6 +123,40 @@ export class GameAudio {
   }
   cafe(pos) { this.noiseHit({ dur: 1.1, vol: 0.06, freq: 300, q: 0.7, pos }); }
   porteLointaine(pos) { this.door(pos); }
+  // --- accessoires des étages (1.9) ---
+  couac(pos) {
+    this.burst({ freq: 1500, dur: 0.09, type: 'sine', vol: 0.11, sweep: 900, pos });
+    this.burst({ freq: 1300, dur: 0.14, type: 'triangle', vol: 0.08, sweep: -500, pos, delay: 0.1 });
+  }
+  distributeur(pos) {
+    this.noiseHit({ dur: 1.6, vol: 0.05, freq: 220, q: 0.7, type: 'lowpass', pos });
+    this.burst({ freq: 95, dur: 1.5, type: 'sawtooth', vol: 0.025, pos });
+  }
+  clang(pos) {
+    this.noiseHit({ dur: 0.5, vol: 0.2, freq: 2100, q: 5, pos });
+    this.noiseHit({ dur: 0.35, vol: 0.18, freq: 140, q: 0.8, type: 'lowpass', pos });
+    this.burst({ freq: 620, dur: 0.6, type: 'triangle', vol: 0.06, sweep: -120, pos });
+  }
+  disjoncteur(allume, pos) {
+    this.noiseHit({ dur: 0.05, vol: 0.18, freq: 2600, q: 2, pos });
+    this.burst({ freq: allume ? 50 : 220, dur: 0.9, type: 'sawtooth', vol: 0.05, sweep: allume ? 170 : -180 });
+  }
+  froissement(pos) { for (const d of [0, 0.09, 0.2]) this.noiseHit({ dur: 0.08, vol: 0.05, freq: 1900, q: 1.1, pos, delay: d }); }
+  bipRobot(pos) { for (const d of [0, 0.18]) this.burst({ freq: 1650, dur: 0.1, type: 'square', vol: 0.05, pos, delay: d }); }
+  glissade(pos) {
+    this.noiseHit({ dur: 1.0, vol: 0.12, freq: 700, q: 0.6, pos });
+    this.burst({ freq: 300, dur: 0.9, type: 'sine', vol: 0.06, sweep: 900, pos });
+  }
+  moteurNacelle(pos) { this.burst({ freq: 70, dur: 2.4, type: 'sawtooth', vol: 0.05, sweep: -10, pos }); }
+  disco() {
+    [392, 494, 587, 784, 587, 494, 392, 784].forEach((freq, i) =>
+      this.burst({ freq, dur: 0.16, type: 'square', vol: 0.045, delay: i * 0.14 }));
+  }
+  arcade(pos) {
+    [659, 784, 988, 1319, 988, 1319, 1568].forEach((freq, i) =>
+      this.burst({ freq, dur: 0.1, type: 'square', vol: 0.04, pos, delay: i * 0.1 }));
+  }
+  ronflement(pos) { for (const d of [0, 1.2]) this.noiseHit({ dur: 0.9, vol: 0.06, freq: 160, q: 0.9, type: 'lowpass', pos, delay: d }); }
   success() {
     [523, 659, 784, 1046].forEach((freq, i) =>
       this.burst({ freq, dur: 0.35, type: 'triangle', vol: 0.1, delay: i * 0.12 }));

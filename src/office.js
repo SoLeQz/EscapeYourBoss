@@ -5,25 +5,27 @@ import { makeLabelSprite } from './characters.js';
 
 // Réutilise les meubles du décor et ignore les postes déjà occupés.
 export function creerInteractions(level, plan, npcs) {
-  const libres = plan.postes.map(([x, z, type, rot], i) => {
+  const R = level.repere, depart = level.playerStart;
+  const libres = plan.postes.map(([x, z, type, rot = 0], i) => {
     const lx = -0.25, lz = 1.05;
-    return { id: `travail-${i}`, type: 'travail', x: x + lx * Math.cos(rot) + lz * Math.sin(rot),
-      z: z - lx * Math.sin(rot) + lz * Math.cos(rot), yaw: rot + Math.PI,
+    return { id: `travail-${i}`, type: 'travail', ...R.p(x + lx * Math.cos(rot) + lz * Math.sin(rot),
+      z - lx * Math.sin(rot) + lz * Math.cos(rot)), yaw: R.yaw(rot + Math.PI),
       r: 1.25, label: 'Faire semblant de travailler', restant: DUREE_TRAVAIL };
   }).filter(it => {
     if (npcs.some(n => Math.hypot(n.cfg.x - it.x, n.cfg.z - it.z) < 1.5)) return false;
     const p = new THREE.Vector3(it.x, 0, it.z); collide(level.obstacles, p, 0.34);
     return Math.hypot(p.x - it.x, p.z - it.z) < 0.01;
   });
-  libres.sort((a, b) => Math.hypot(a.x - plan.depart.x, a.z - plan.depart.z)
-    - Math.hypot(b.x - plan.depart.x, b.z - plan.depart.z));
-  const actions = [{ id: 'imprimante', type: 'diversion', x: -18.4, z: -13.2,
-    source: { x: -18.4, z: -14.5 }, r: 1.6, label: 'Lancer 200 photocopies · 1 utilisation',
+  libres.sort((a, b) => Math.hypot(a.x - depart.x, a.z - depart.z)
+    - Math.hypot(b.x - depart.x, b.z - depart.z));
+  const actions = [{ id: 'imprimante', type: 'diversion', ...R.p(-18.4, -13.2),
+    source: R.p(-18.4, -14.5), r: 1.6, label: 'Lancer 200 photocopies · 1 utilisation',
     utilise: false, restant: 0 }, ...libres.slice(0, 2)];
   for (const it of actions) {
     const m = makeLabelSprite(it.type === 'travail' ? 'POSTE LIBRE' : 'PHOTOCOPIEUSE',
       it.type === 'travail' ? `Abri · ${DUREE_TRAVAIL} s max` : 'Diversion unique');
-    m.position.set(it.x, 1.8, it.z); m.scale.multiplyScalar(0.85);
+    // Le repère est retourné avec l'étage : on le pose en coordonnées d'origine.
+    m.position.set(R.x(it.x), 1.8, R.z(it.z)); m.scale.multiplyScalar(0.85);
     m.visible = false; level.root.add(m); it.marker = m;
   }
   return actions;

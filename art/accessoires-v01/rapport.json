@@ -1,0 +1,113 @@
+{
+ "canard": {
+  "objets": 8,
+  "triangles": 740,
+  "materiaux": [
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "distributeur": {
+  "objets": 78,
+  "triangles": 2216,
+  "materiaux": [
+   "ACC_lumiere",
+   "ACC_peint",
+   "ACC_verni",
+   "ACC_verre"
+  ],
+  "roles": []
+ },
+ "disjoncteur": {
+  "objets": 9,
+  "triangles": 612,
+  "materiaux": [
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": [
+   "levier"
+  ]
+ },
+ "carton": {
+  "objets": 18,
+  "triangles": 968,
+  "materiaux": [
+   "ACC_carton",
+   "ACC_lumiere",
+   "ACC_peint"
+  ],
+  "roles": [
+   "yeux"
+  ]
+ },
+ "aspirateur": {
+  "objets": 8,
+  "triangles": 728,
+  "materiaux": [
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "nacelle": {
+  "objets": 32,
+  "triangles": 1872,
+  "materiaux": [
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "toboggan": {
+  "objets": 24,
+  "triangles": 1040,
+  "materiaux": [
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": [
+   "trappe"
+  ]
+ },
+ "hamac": {
+  "objets": 16,
+  "triangles": 1484,
+  "materiaux": [
+   "ACC_boisFonce",
+   "ACC_peint"
+  ],
+  "roles": []
+ },
+ "bouton-rouge": {
+  "objets": 14,
+  "triangles": 782,
+  "materiaux": [
+   "ACC_peint",
+   "ACC_verni",
+   "ACC_verre"
+  ],
+  "roles": [
+   "bouton"
+  ]
+ },
+ "borne-arcade": {
+  "objets": 19,
+  "triangles": 1200,
+  "materiaux": [
+   "ACC_lumiere",
+   "ACC_peint",
+   "ACC_verni"
+  ],
+  "roles": []
+ },
+ "etagere-secrete": {
+  "objets": 97,
+  "triangles": 2028,
+  "materiaux": [
+   "ACC_boisFonce",
+   "ACC_peint"
+  ],
+  "roles": [
+   "porte"
+  ]
+ }
+}

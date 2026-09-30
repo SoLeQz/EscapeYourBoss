@@ -1,0 +1,87 @@
+[
+  {
+    "suite": "test:personnages",
+    "exit": 0,
+    "secondes": 2.35
+  },
+  {
+    "suite": "test:appels",
+    "exit": 0,
+    "secondes": 1.08
+  },
+  {
+    "suite": "test:confort",
+    "exit": 0,
+    "secondes": 1.15
+  },
+  {
+    "suite": "test:sauvegarde",
+    "exit": 0,
+    "secondes": 0.06
+  },
+  {
+    "suite": "test:environnement",
+    "exit": 0,
+    "secondes": 7.14
+  },
+  {
+    "suite": "test:transitions",
+    "exit": 0,
+    "secondes": 3.02
+  },
+  {
+    "suite": "test:gameplay",
+    "exit": 0,
+    "secondes": 18.44
+  },
+  {
+    "suite": "test:blender",
+    "exit": 0,
+    "secondes": 0.25
+  },
+  {
+    "suite": "test:animations",
+    "exit": 0,
+    "secondes": 7.26
+  },
+  {
+    "suite": "test:decor-blender",
+    "exit": 0,
+    "secondes": 8.73
+  },
+  {
+    "suite": "test:textures",
+    "exit": 0,
+    "secondes": 12.35
+  },
+  {
+    "suite": "test:humour",
+    "exit": 0,
+    "secondes": 10.43
+  },
+  {
+    "suite": "test:anatomie",
+    "exit": 0,
+    "secondes": 22.91
+  },
+  {
+    "suite": "test:tendances",
+    "exit": 0,
+    "secondes": 51.08
+  },
+  {
+    "suite": "test:garde-robe",
+    "exit": 0,
+    "secondes": 6.79
+  },
+  {
+    "suite": "test:etages",
+    "exit": 0,
+    "secondes": 18.81
+  },
+  {
+    "suite": "test:multijoueur",
+    "exit": 0,
+    "secondes": 1.66
+  }
+]

@@ -94,12 +94,19 @@ ipcMain.handle('asset:lire', async (_e, nom) => {
   } catch (e) { console.error('asset illisible :', nom, e.message); return null; }
 });
 
-ipcMain.handle('store:sauver', async (_e, donnees) => {
-  try {
-    await fsp.mkdir(app.getPath('userData'), { recursive: true });
-    await fsp.writeFile(cheminSauvegarde(), JSON.stringify(donnees, null, 2), 'utf8');
-    return true;
-  } catch (e) { console.error('sauvegarde impossible :', e.message); return false; }
+let ecritureSauvegarde = Promise.resolve();
+ipcMain.handle('store:sauver', (_e, donnees) => {
+  const contenu = JSON.stringify(donnees, null, 2);
+  ecritureSauvegarde = ecritureSauvegarde.catch(() => {}).then(async () => {
+    try {
+      await fsp.mkdir(app.getPath('userData'), { recursive: true });
+      const fichier = cheminSauvegarde(), temporaire = fichier + '.tmp';
+      await fsp.writeFile(temporaire, contenu, 'utf8');
+      await fsp.rename(temporaire, fichier);
+      return true;
+    } catch (e) { console.error('sauvegarde impossible :', e.message); return false; }
+  });
+  return ecritureSauvegarde;
 });
 
 // --- multijoueur en réseau local : une session réseau par fenêtre ---
@@ -182,8 +189,8 @@ async function runSelfTest(target) {
       pnj: window.__game ? window.__game.npcs.length : 0,
       obstacles: window.__game ? window.__game.level.obstacles.length : 0 })`);
 
-  if (process.argv.includes('--blender') || process.argv.includes('--personnage') || process.argv.includes('--gameplay') || process.argv.includes('--decor') || process.argv.includes('--transitions') || process.argv.includes('--multi') || process.argv.includes('--vestiaire')) {
-    const test = process.argv.includes('--multi') ? './multi-test.cjs' : process.argv.includes('--vestiaire') ? './vestiaire-test.cjs' : process.argv.includes('--blender') ? (process.argv.includes('--collegues') ? './blender-collegues-test.cjs' : process.argv.includes('--visuel') ? './blender-visuel-test.cjs' : './blender-test.cjs') : process.argv.includes('--personnage') ? (process.argv.includes('--tendances') ? './tendances-test.cjs' : process.argv.includes('--anatomie') ? './anatomie-test.cjs' : process.argv.includes('--animations') ? './animations-test.cjs' : './personnage-test.cjs') : process.argv.includes('--gameplay') ? './gameplay-test.cjs'
+  if (process.argv.includes('--speedrun') || process.argv.includes('--etages') || process.argv.includes('--blender') || process.argv.includes('--personnage') || process.argv.includes('--gameplay') || process.argv.includes('--decor') || process.argv.includes('--transitions') || process.argv.includes('--multi') || process.argv.includes('--vestiaire')) {
+    const test = process.argv.includes('--multi4') ? './multi4-test.cjs' : process.argv.includes('--speedrun') && !process.argv.includes('--multi') ? './speedrun-test.cjs' : process.argv.includes('--etages') ? './etages-test.cjs' : process.argv.includes('--multi') ? './multi-test.cjs' : process.argv.includes('--vestiaire') ? './vestiaire-test.cjs' : process.argv.includes('--blender') ? (process.argv.includes('--collegues') ? './blender-collegues-test.cjs' : process.argv.includes('--visuel') ? './blender-visuel-test.cjs' : './blender-test.cjs') : process.argv.includes('--personnage') ? (process.argv.includes('--tendances') ? './tendances-test.cjs' : process.argv.includes('--anatomie') ? './anatomie-test.cjs' : process.argv.includes('--animations') ? './animations-test.cjs' : './personnage-test.cjs') : process.argv.includes('--gameplay') ? './gameplay-test.cjs'
       : process.argv.includes('--transitions') ? './transitions-test.cjs' : './decor-test.cjs';
     await require(test)({ js, shot, step, wait });
     const erreursPage = await js('window.__erreurs || []');

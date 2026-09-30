@@ -20,7 +20,7 @@ const emprises=[[[18.28,1.4,-1.50],[18.92,2.10,-.90]],
  [[16.9,.79,-10.15],[17.6,1.60,-9.5]],[[2.925,1.85,.95],[3.72,3.25,2.10]],
  [[14.15,.79,10.80],[14.85,1.40,11.70]]];
 assert.equal(new Set(HUMOUR.map(h=>h.modele)).size,6,'Les étages doivent avoir des accessoires distincts');
-for(const [i,n] of NIVEAUX.entries()){
+for(const [i,n] of NIVEAUX.slice(0,HUMOUR.length).entries()){
  const l=buildLevel(scene,mat,PLANS[n.plan],n),h=l.root.userData.humour;
  assert(h.charge,'Accessoire Blender absent du niveau '+n.id);
  const [min,max]=emprises[i],b=h.limites;

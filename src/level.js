@@ -6,7 +6,9 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { solAvecTremie, construireEscalier, cabineAscenseur, ossatureBureau } from './architecture.js';
 import { screenContent } from './materials.js';
-import { habillerBureau, panneauGraphique, personnaliserPoste, feuilleFicus, construireVille } from './environment.js';
+import { habillerBureau, panneauGraphique, personnaliserPoste, feuilleFicus, construireVille, definirMiroirTexte } from './environment.js';
+import { repereDuNiveau } from './repere.js';
+import { poserAccessoire, lotsAccessoire, materiauxAccessoires } from './accessoires-blender.js';
 
 // ============================================================
 //  NIVEAU — open space, couloir, bureau du boss, hall
@@ -146,9 +148,11 @@ function fusionnerStatiques(root) {
     }
     const g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
     g.applyMatrix4(o.matrixWorld);
-    // mergeGeometries exige des jeux d'attributs identiques
+    // mergeGeometries exige des jeux d'attributs identiques. Les accessoires
+    // Blender gardent leurs couleurs de sommet (lot à part, même matériau partagé).
+    const garder = o.material.vertexColors ? ['position', 'normal', 'uv', 'color'] : ['position', 'normal', 'uv'];
     for (const nom of Object.keys(g.attributes))
-      if (!['position', 'normal', 'uv'].includes(nom)) g.deleteAttribute(nom);
+      if (!garder.includes(nom)) g.deleteAttribute(nom);
     lot.geos.push(g);
     lot.src.push(o);
   }
@@ -204,13 +208,20 @@ function palette() {
   return PAL;
 }
 
+const tapisCache = new Map();
+
 // Les écrans ne portent que trois contenus : on partage les textures.
+// Sur un étage en miroir, une variante retournée garde le texte lisible.
 const ecranCache = new Map();
+let miroirEcrans = false;
 function materiauEcran(kind) {
-  let m = ecranCache.get(kind);
+  const cle = kind + (miroirEcrans ? ':miroir' : '');
+  let m = ecranCache.get(cle);
   if (!m) {
-    m = new THREE.MeshBasicMaterial({ map: screenContent(kind) });
-    ecranCache.set(kind, partager(m));
+    let map = screenContent(kind);
+    if (miroirEcrans) { map = map.clone(); map.wrapS = THREE.RepeatWrapping; map.repeat.x = -1; map.offset.x = 1; map.needsUpdate = true; }
+    m = new THREE.MeshBasicMaterial({ map });
+    ecranCache.set(cle, partager(m));
   }
   return m;
 }
@@ -291,6 +302,14 @@ function geometrieTableReunion() {
 }
 
 export function buildLevel(scene, MAT, plan, niveau) {
+  // Tout est construit dans le repère d'origine, puis retourné d'un bloc.
+  const repere = repereDuNiveau(niveau);
+  miroirEcrans = repere.miroir; definirMiroirTexte(repere.miroir);
+  try { return construire(scene, MAT, plan, niveau, repere); }
+  finally { miroirEcrans = false; definirMiroirTexte(false); }
+}
+
+function construire(scene, MAT, plan, niveau, repere) {
   const elevatorPanels = [];
   let elevatorLed = null;
   for (const mat of Object.values(MAT)) if (mat?.isMaterial) partager(mat);
@@ -346,7 +365,14 @@ export function buildLevel(scene, MAT, plan, niveau) {
   for (const [a,b] of [[-20,4],[12,20]]) box(a,16,b,16.3,WALL_H,MAT.mur,{ghost:true});
   for (const [a,b] of [[-16,-.08],[3.08,16]]) box(20,a,20.3,b,WALL_H,MAT.mur,{ghost:true});
   box(20,-.08,20.3,3.08,WALL_H,MAT.mur,{ghost:true,y0:2.8});
-  baieVitree(-20, -16, 16);
+  // Étage en travaux : une vitre est déposée, la nacelle du laveur attend derrière.
+  const nacelle = niveau.sorties.includes('nacelle') && plan.nacelle;
+  if (nacelle) {
+    const [za, zb] = [nacelle.z - 1, nacelle.z + 1];
+    baieVitree(-20, -16, za); baieVitree(-20, zb, 16);
+    mesh(rbox(0.34, 0.46, zb - za, 0.02), MAT.murAccent, -20.15, 0.23, nacelle.z);
+    mesh(rbox(0.34, 0.30, zb - za, 0.02), MAT.murAccent, -20.15, 3.45, nacelle.z);
+  } else baieVitree(-20, -16, 16);
 
   // ---------- plinthes ----------
   plinthe(-19.98, -16, -19.9, 16);
@@ -378,6 +404,13 @@ export function buildLevel(scene, MAT, plan, niveau) {
   box(4, 11.85, 7, 12.15, WALL_H, MAT.mur, { r: 0.03 });
   box(9, 11.85, 12, 12.15, WALL_H, MAT.mur, { r: 0.03 });
   encadrement(8, 12, 3.0, true);
+
+  // ---------- murs propres au plan (pièces fermées) ----------
+  for (const [x1, z1, x2, z2] of plan.murs || []) {
+    box(x1, z1, x2, z2, WALL_H, MAT.mur, { r: 0.03 });
+    if (z2 - z1 < x2 - x1) { plinthe(x1, z1 - 0.02, x2, z1); plinthe(x1, z2, x2, z2 + 0.02); }
+    else { plinthe(x1 - 0.02, z1, x1, z2); plinthe(x2, z1, x2 + 0.02, z2); }
+  }
 
   // ---------- postes de travail ----------
   for (const [x, z, ecran, rot] of plan.postes) poste(x, z, ecran, rot || 0);
@@ -428,6 +461,16 @@ export function buildLevel(scene, MAT, plan, niveau) {
   const ramassables = [];
   for (const o of (niveau.objets || [])) ramassables.push(objetRamassable(o));
 
+  for (const a of niveau.affiches || []) panneauGraphique(root, ...a);
+
+  // ---------- accessoires, secrets et canards ----------
+  const accessoires = [];
+  for (const a of [...(plan.accessoires || []), ...(niveau.accessoires || [])]) accessoires.push(accessoire(a));
+  if (plan.pieceSecrete) accessoires.push(...pieceSecrete(plan.pieceSecrete));
+  if (nacelle) accessoires.push(nacelleLaveur(nacelle));
+  accessoires.push({ id: 'cafe', type: 'cafe', x: 17.85, z: -1.2, r: 1.3, label: 'Boire un café' });
+  const canards = poserCanards(niveau.canards || []);
+
   // ---------- faux plafond + luminaires ----------
   const plafond = mesh(new THREE.PlaneGeometry(41, 33), MAT.plafond, 0, 3.62, 0,
     { cast: false, receive: false });
@@ -461,6 +504,109 @@ export function buildLevel(scene, MAT, plan, niveau) {
   // ==========================================================
   //  Éléments
   // ==========================================================
+
+  // Mobilier v02 (tools/blender/creer_mobilier.py) : quand le kit est chargé, il
+  // remplace la version codée ; emprises, écrans et affiches ne changent pas.
+  function kit(id) { return lotsAccessoire(id).length > 0; }
+
+  // Emprise au sol d'un meuble tourné d'un quart de tour ou non.
+  function emprise(x, z, w, d, yaw) {
+    const droit = Math.abs(Math.sin(yaw)) < 0.5, dx = (droit ? w : d) / 2, dz = (droit ? d : w) / 2;
+    return { x1: x - dx, z1: z - dz, x2: x + dx, z2: z + dz };
+  }
+  // Point devant un objet orienté (yaw regarde vers sin/cos).
+  function devant(x, z, yaw, d) { return { x: x + Math.sin(yaw) * d, z: z + Math.cos(yaw) * d }; }
+
+  // Accessoires interactifs (modèles Blender, accessoires-blender.js). Chaque entrée
+  // décrit la règle de jeu : où se placer, rayon, libellé. Le jeu (interactifs.js)
+  // les anime et les résout.
+  function accessoire(a) {
+    const { id, x, z, yaw = 0 } = a;
+    if (id === 'distributeur') {
+      const pose = poserAccessoire('distributeur', root, MAT, { x, z, yaw });
+      obstacles.push({ ...emprise(x, z, 0.95, 0.85, yaw), h: 1.85, kind: 'accessoire' });
+      return { id, type: 'distributeur', ...devant(x, z, yaw, 0.95), source: { x, z }, r: 1.3,
+        label: 'Acheter un snack · diversion dans 4 s', ...pose };
+    }
+    if (id === 'disjoncteur') {
+      const pose = poserAccessoire('disjoncteur', root, MAT, { x, z, yaw });
+      return { id, type: 'disjoncteur', ...devant(x, z, yaw, 0.75), r: 1.2, label: 'Couper la lumière · 14 s', ...pose };
+    }
+    if (id === 'carton') {
+      const pose = poserAccessoire('carton', root, MAT, { x, z, yaw, mobile: true });
+      if (pose.roles.yeux) pose.roles.yeux.visible = false;
+      const obstacle = { ...emprise(x, z, 0.82, 0.82, 0), h: 1.0, kind: 'accessoire' };
+      obstacles.push(obstacle);
+      return { id, type: 'carton', x, z, yaw, r: 1.15, label: 'Se cacher dans le carton', obstacle, ...pose };
+    }
+    if (id === 'aspirateur') {
+      const [x0, z0] = a.route[0];
+      const pose = poserAccessoire('aspirateur', root, MAT, { x: x0, z: z0, mobile: true, ombre: false });
+      return { id, type: 'aspirateur', x: x0, z: z0, route: a.route, r: 0, ...pose };
+    }
+    throw Error('Accessoire inconnu : ' + id);
+  }
+
+  // Salle de sieste clandestine : un coin de l'open space fermé par deux murs, une
+  // étagère pivotante pour porte (livre rouge), et de quoi s'occuper. Son toboggan
+  // d'évacuation est une troisième sortie, pour qui l'a trouvée.
+  function pieceSecrete(ps) {
+    const { x1, z1, x2, z2, porte } = ps;
+    const e = 0.15, zp1 = porte.z - 0.65, zp2 = porte.z + 0.65;
+    box(x1, z1 - e, x2 + e, z1 + e, WALL_H, MAT.mur, { r: 0.03, kind: 'secret' });
+    box(x2 - e, z1 + e, x2 + e, zp1, WALL_H, MAT.mur, { r: 0.03, kind: 'secret' });
+    box(x2 - e, zp2, x2 + e, z2, WALL_H, MAT.mur, { r: 0.03, kind: 'secret' });
+    mesh(rbox(2 * e, WALL_H - 2.32, 1.3, 0.02), MAT.mur, x2, 2.32 + (WALL_H - 2.32) / 2, porte.z);
+    plinthe(x1, z1 + e, x2 - e, z1 + e + 0.02); plinthe(x2 + e, z1, x2 + e + 0.02, zp1); plinthe(x2 + e, zp2, x2 + e + 0.02, z2);
+    const obstaclePorte = { x1: x2 - 0.2, z1: zp1, x2: x2 + 0.2, z2: zp2, h: 2.3, kind: 'secret' };
+    obstacles.push(obstaclePorte);
+    const etagere = poserAccessoire('etagere-secrete', root, MAT, { x: x2, z: porte.z, yaw: Math.PI / 2 });
+    const liste = [{ id: 'etagere-secrete', type: 'passage', x: x2 + 0.7, z: porte.z, r: 1.25,
+      label: 'Tirer le livre rouge', obstacle: obstaclePorte, ...etagere }];
+    const m = ps.meubles;
+    const hamac = poserAccessoire('hamac', root, MAT, { x: m.hamac[0], z: m.hamac[1] });
+    obstacles.push({ x1: m.hamac[0] - 1.42, z1: m.hamac[1] - 0.45, x2: m.hamac[0] + 1.42, z2: m.hamac[1] + 0.45, h: 0.95, kind: 'secret' });
+    liste.push({ id: 'hamac', type: 'sieste', x: m.hamac[0], z: m.hamac[1] - 0.85, r: 1.2, label: 'Faire une petite sieste', ...hamac });
+    const arcade = poserAccessoire('borne-arcade', root, MAT, { x: m.arcade[0], z: m.arcade[1], yaw: Math.PI / 2 });
+    obstacles.push({ ...emprise(m.arcade[0], m.arcade[1], 0.66, 0.78, Math.PI / 2), h: 1.72, kind: 'secret' });
+    liste.push({ id: 'borne-arcade', type: 'arcade', ...devant(m.arcade[0], m.arcade[1], Math.PI / 2, 0.85), r: 1.1,
+      label: 'Jouer à Escape Your Boss (1985)', ...arcade });
+    const bouton = poserAccessoire('bouton-rouge', root, MAT, { x: m.bouton[0], z: m.bouton[1] });
+    obstacles.push({ x1: m.bouton[0] - 0.22, z1: m.bouton[1] - 0.22, x2: m.bouton[0] + 0.22, z2: m.bouton[1] + 0.22, h: 1.05, kind: 'secret' });
+    liste.push({ id: 'bouton-rouge', type: 'bouton', x: m.bouton[0], z: m.bouton[1] + 0.6, r: 1.0, label: 'NE PAS APPUYER', ...bouton });
+    const tob = poserAccessoire('toboggan', root, MAT, { x: m.toboggan[0], z: z1 + e });
+    obstacles.push({ x1: m.toboggan[0] - 0.5, z1: z1 + e, x2: m.toboggan[0] + 0.5, z2: z1 + e + 0.18, h: 1.4, kind: 'secret' });
+    liste.push({ id: 'toboggan', type: 'decor', x: m.toboggan[0], z: z1 + e, r: 0, ...tob });
+    panneauGraphique(root, 'sieste', 1.5, 0.75, m.bouton[0] - 0.2, 2.25, z1 + e + 0.02, 0);
+    tapis((x1 + x2) / 2 + 0.2, (z1 + z2) / 2 + 0.3, 3.2, 2.4, 0x7a2e4f);
+    return liste;
+  }
+
+  function nacelleLaveur(n) {
+    const pose = poserAccessoire('nacelle', root, MAT, { x: -20.78, y: -0.02, z: n.z, yaw: Math.PI / 2, mobile: true });
+    // rubalise : on ne tombe pas par la fenêtre sans la nacelle
+    obstacles.push({ x1: -20.3, z1: n.z - 1, x2: -19.8, z2: n.z + 1, h: 1.0, kind: 'accessoire' });
+    for (const s of [-1, 1]) mesh(rbox(0.06, 1.0, 0.06, 0.01), MAT.aluSombre, -19.86, 0.5, n.z + s * 0.95);
+    for (let i = 0; i < 6; i++)
+      mesh(rbox(0.02, 0.07, 0.3, 0.005), i % 2 ? MAT.plastiqueBlanc : palette().rouge, -19.86, 0.95, n.z - 0.75 + i * 0.3, { cast: false });
+    return { id: 'nacelle', type: 'decor', x: -20.78, z: n.z, r: 0, ...pose };
+  }
+
+  // Canards de débogage : un seul maillage instancié par matériau pour tout l'étage.
+  function poserCanards(liste) {
+    const instances = [];
+    for (const lot of lotsAccessoire('canard')) {
+      const im = new THREE.InstancedMesh(lot.geometry, materiauxAccessoires()[lot.materiau], Math.max(1, liste.length));
+      im.name = 'Canards:' + lot.materiau; im.userData.noFusion = true; im.castShadow = true;
+      root.add(im); instances.push(im);
+    }
+    const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e1 = new THREE.Vector3(1, 1, 1);
+    return liste.map(([x, y, z], i) => {
+      m4.compose(new THREE.Vector3(x, y, z), q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), i * 2.1 + x), e1);
+      for (const im of instances) { im.setMatrixAt(i, m4); im.instanceMatrix.needsUpdate = true; }
+      return { id: 'canard', index: i, x, y, z, pris: false, instances, matrice: m4.clone() };
+    });
+  }
 
   function plinthe(x1, z1, x2, z2) {
     mesh(rbox(x2 - x1, 0.12, z2 - z1, 0.008), MAT.plastiqueBlanc,
@@ -607,6 +753,20 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function cloisonBasse(x1, z1, x2, z2) {
+    if (kit('cloison')) {
+      // modules Blender d'environ 1,2 m posés bout à bout ; même obstacle que la version codée
+      obstacles.push({ x1, z1, x2, z2, h: 1.15, seeThrough: false, noClip: false, kind: 'solid' });
+      const lx = x2 - x1, lz = z2 - z1, selonX = lx >= lz, long = Math.max(lx, lz);
+      const n = Math.max(1, Math.round(long / 1.2)), pas = long / n;
+      for (let i = 0; i < n; i++) {
+        const t = (i + 0.5) * pas;
+        const x = selonX ? x1 + t : (x1 + x2) / 2, z = selonX ? (z1 + z2) / 2 : z1 + t;
+        const notes = (i * 7 + Math.abs(Math.round(x1 * 3 + z1 * 5))) % 3 === 0;
+        const p = poserAccessoire(notes ? 'cloison-notes' : 'cloison', root, MAT, { x, z, yaw: selonX ? 0 : Math.PI / 2 });
+        p.groupe.scale.set(pas / 1.2, 1, Math.min(lx, lz) / 0.16);
+      }
+      return;
+    }
     box(x1, z1, x2, z2, 1.15, MAT.cloison, { r: 0.012 });
     // rail alu en couronnement : accroche la lumière rasante
     mesh(rbox(x2 - x1 + 0.04, 0.05, z2 - z1 + 0.04, 0.012), MAT.alu,
@@ -659,62 +819,67 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
     }
 
-    // écran
+    const kitPoste = kit('poste');
+    if (kitPoste) { poserAccessoire('poste', g, MAT); poserAccessoire('poste-' + typeEcran, g, MAT); }
+
+    // écran : la dalle (code, tableur, graphique) reste dessinée par le jeu
     const ecran = new THREE.Group();
     ecran.position.set(-0.35, 0, -0.2);
     ecran.rotation.y = 0.17;
     g.add(ecran);
-    const coque = new THREE.Mesh(rbox(0.63, 0.39, 0.035, 0.008), MAT.plastiqueNoir);
-    coque.position.y = 1.05; coque.castShadow = true; ecran.add(coque);
     const dalle = new THREE.Mesh(new THREE.PlaneGeometry(0.585, 0.345),
       materiauEcran(typeEcran));
     dalle.position.set(0, 1.05, 0.019); ecran.add(dalle);
     emissifs.push(dalle);
-    const pied = new THREE.Mesh(rbox(0.05, 0.16, 0.05, 0.01), MAT.aluSombre);
-    pied.position.y = 0.87; pied.castShadow = true; ecran.add(pied);
-    const socle = new THREE.Mesh(rbox(0.26, 0.018, 0.17, 0.008), MAT.aluSombre);
-    socle.position.y = 0.782; socle.castShadow = true; ecran.add(socle);
+    if (!kitPoste) {
+      const coque = new THREE.Mesh(rbox(0.63, 0.39, 0.035, 0.008), MAT.plastiqueNoir);
+      coque.position.y = 1.05; coque.castShadow = true; ecran.add(coque);
+      const pied = new THREE.Mesh(rbox(0.05, 0.16, 0.05, 0.01), MAT.aluSombre);
+      pied.position.y = 0.87; pied.castShadow = true; ecran.add(pied);
+      const socle = new THREE.Mesh(rbox(0.26, 0.018, 0.17, 0.008), MAT.aluSombre);
+      socle.position.y = 0.782; socle.castShadow = true; ecran.add(socle);
 
-    for (let i = 0; i < 2 + (Math.abs(Math.round(x + z)) % 2); i++) {
-      const pt = new THREE.Mesh(new THREE.PlaneGeometry(0.058, 0.058),
-        palette().postits[i % 3]);
-      pt.position.set(0.335, 1.16 - i * 0.07, 0.02);
-      pt.rotation.z = (i % 2 ? 1 : -1) * 0.08;
-      ecran.add(pt);
+      for (let i = 0; i < 2 + (Math.abs(Math.round(x + z)) % 2); i++) {
+        const pt = new THREE.Mesh(new THREE.PlaneGeometry(0.058, 0.058),
+          palette().postits[i % 3]);
+        pt.position.set(0.335, 1.16 - i * 0.07, 0.02);
+        pt.rotation.z = (i % 2 ? 1 : -1) * 0.08;
+        ecran.add(pt);
+      }
+
+      // clavier à touches modelées
+      const clavier = new THREE.Group();
+      clavier.position.set(-0.35, 0.775, 0.14);
+      clavier.rotation.y = 0.06;
+      g.add(clavier);
+      const base = new THREE.Mesh(rbox(0.44, 0.016, 0.155, 0.006), MAT.plastiqueNoir);
+      base.castShadow = true; clavier.add(base);
+      const touches = new THREE.Mesh(geometrieClavier(), MAT.plastiqueNoir);
+      touches.castShadow = true;
+      clavier.add(touches);
+      m(new THREE.PlaneGeometry(0.28, 0.22), MAT.cableNoir, 0.12, 0.772, 0.16,
+        { cast: false }).rotation.x = -Math.PI / 2;
+      m(rbox(0.055, 0.03, 0.095, 0.014), MAT.plastiqueNoir, 0.12, 0.787, 0.16);
+
+      m(new THREE.CylinderGeometry(.043,.038,.098,16),MAT.plastiqueBlanc,.42,.821,.1);
+      m(new THREE.CircleGeometry(.034,16),MAT.boisFonce,.42,.87,.1,{cast:false}).rotation.x=-Math.PI/2;
+      const anse = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.008, 8, 16), MAT.plastiqueBlanc);
+      anse.position.set(0.473, 0.823, 0.1); anse.rotation.y = Math.PI / 2;
+      anse.castShadow = true; g.add(anse);
+      m(rbox(0.3, 0.02, 0.22, 0.004), MAT.papier, 0.8, 0.781, -0.14).rotation.y = 0.28;
+      m(rbox(0.26, 0.016, 0.19, 0.004), MAT.papier, 0.83, 0.797, -0.1).rotation.y = -0.15;
+      m(new THREE.CylinderGeometry(0.035, 0.035, 0.2, 14), MAT.verre, -0.92, 0.85, -0.2);
+
+      const courbe = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-0.35, 0.74, -0.36),
+        new THREE.Vector3(-0.3, 0.42, -0.5),
+        new THREE.Vector3(-0.2, 0.06, -0.42),
+      ]);
+      m(new THREE.TubeGeometry(courbe, 12, 0.008, 6, false), MAT.cableNoir, 0, 0, 0,
+        { receive: false });
     }
 
-    // clavier à touches modelées
-    const clavier = new THREE.Group();
-    clavier.position.set(-0.35, 0.775, 0.14);
-    clavier.rotation.y = 0.06;
-    g.add(clavier);
-    const base = new THREE.Mesh(rbox(0.44, 0.016, 0.155, 0.006), MAT.plastiqueNoir);
-    base.castShadow = true; clavier.add(base);
-    const touches = new THREE.Mesh(geometrieClavier(), MAT.plastiqueNoir);
-    touches.castShadow = true;
-    clavier.add(touches);
-    m(new THREE.PlaneGeometry(0.28, 0.22), MAT.cableNoir, 0.12, 0.772, 0.16,
-      { cast: false }).rotation.x = -Math.PI / 2;
-    m(rbox(0.055, 0.03, 0.095, 0.014), MAT.plastiqueNoir, 0.12, 0.787, 0.16);
-
-    m(new THREE.CylinderGeometry(.043,.038,.098,16),MAT.plastiqueBlanc,.42,.821,.1);
-    m(new THREE.CircleGeometry(.034,16),MAT.boisFonce,.42,.87,.1,{cast:false}).rotation.x=-Math.PI/2;
-    const anse = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.008, 8, 16), MAT.plastiqueBlanc);
-    anse.position.set(0.473, 0.823, 0.1); anse.rotation.y = Math.PI / 2;
-    anse.castShadow = true; g.add(anse);
-    m(rbox(0.3, 0.02, 0.22, 0.004), MAT.papier, 0.8, 0.781, -0.14).rotation.y = 0.28;
-    m(rbox(0.26, 0.016, 0.19, 0.004), MAT.papier, 0.83, 0.797, -0.1).rotation.y = -0.15;
-    m(new THREE.CylinderGeometry(0.035, 0.035, 0.2, 14), MAT.verre, -0.92, 0.85, -0.2);
-
-    const courbe = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.35, 0.74, -0.36),
-      new THREE.Vector3(-0.3, 0.42, -0.5),
-      new THREE.Vector3(-0.2, 0.06, -0.42),
-    ]);
-    m(new THREE.TubeGeometry(courbe, 12, 0.008, 6, false), MAT.cableNoir, 0, 0, 0,
-      { receive: false });
-
-    personnaliserPoste(g, MAT, typeEcran);
+    personnaliserPoste(g, MAT, typeEcran, kitPoste);
 
     // la chaise vit dans le repère monde : on transforme sa position
     const cs = Math.cos(rot), sn = Math.sin(rot);
@@ -763,8 +928,18 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function bureauDirection(x, z, sens = 1) {
-    const plateau = mesh(rbox(3.0, 0.06, 1.5, 0.014), MAT.boisFonce, x, 0.75, z);
     obstacles.push({ x1: x - 1.5, z1: z - 0.8, x2: x + 1.5, z2: z + 0.8, h: 0.82, kind: 'desk' });
+    const dalle = new THREE.Mesh(new THREE.PlaneGeometry(0.87, 0.48), materiauEcran('graph'));
+    dalle.position.set(x, 1.1, z - 0.341 * sens);
+    dalle.rotation.y = sens > 0 ? Math.PI : 0;
+    root.add(dalle);
+    emissifs.push(dalle);
+    if (kit('bureau-direction')) {
+      poserAccessoire('bureau-direction', root, MAT, { x, z, yaw: sens > 0 ? 0 : Math.PI });
+      chaise(x, z - 1.3 * sens, sens > 0 ? 0 : Math.PI);
+      return;
+    }
+    const plateau = mesh(rbox(3.0, 0.06, 1.5, 0.014), MAT.boisFonce, x, 0.75, z);
     colliderMeshes.push(plateau);
     for(const dx of [-1.18,1.18]) {
       mesh(rbox(.48,.63,1.22,.012),MAT.boisFonce,x+dx,.40,z);
@@ -779,12 +954,6 @@ export function buildLevel(scene, MAT, plan, niveau) {
     mesh(rbox(.34,.025,.21,.009),MAT.aluSombre,x,.796,z-.32*sens);
     mesh(rbox(.44,.02,.15,.006),MAT.plastiqueNoir,x,.80,z-.60*sens);
     mesh(rbox(0.92, 0.53, 0.035, 0.01), MAT.plastiqueNoir, x, 1.1, z - 0.32 * sens);
-    const dalle = new THREE.Mesh(new THREE.PlaneGeometry(0.87, 0.48),
-      materiauEcran('graph'));
-    dalle.position.set(x, 1.1, z - 0.341 * sens);
-    dalle.rotation.y = sens > 0 ? Math.PI : 0;
-    root.add(dalle);
-    emissifs.push(dalle);
     mesh(rbox(0.34, 0.03, 0.24, 0.006), MAT.papier, x + 0.9, 0.795, z + 0.2).rotation.y = 0.2;
     mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.1, 18), MAT.plastiqueBlanc, x - 0.95, 0.8, z + 0.25);
     // lampe de bureau
@@ -798,8 +967,13 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function tableReunion(x, z) {
-    const plateau = mesh(geometrieTableReunion(), MAT.bois, x, 0.75, z);
     obstacles.push({ x1: x - 2.2, z1: z - 0.9, x2: x + 2.2, z2: z + 0.9, h: 0.8, kind: 'desk' });
+    if (kit('table-reunion')) {
+      poserAccessoire('table-reunion', root, MAT, { x, z });
+      for (const dz of [-1.4, 1.4]) for (const dx of [-1.3, 0, 1.3]) chaise(x + dx, z + dz, dz < 0 ? 0 : Math.PI);
+      return;
+    }
+    const plateau = mesh(geometrieTableReunion(), MAT.bois, x, 0.75, z);
     colliderMeshes.push(plateau);
     for (const dx of [-1.7, 1.7])
       mesh(rbox(0.12, 0.71, 0.9, 0.02), MAT.aluSombre, x + dx, 0.36, z);
@@ -816,8 +990,8 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
   function ecranMural(x, z, yaw) {
     const g = new THREE.Group(); g.position.set(x, 1.65, z); g.rotation.y = yaw; root.add(g);
-    const c = new THREE.Mesh(rbox(2.0, 1.16, 0.06, 0.012), MAT.plastiqueNoir);
-    c.castShadow = true; g.add(c);
+    if (kit('ecran-mural')) poserAccessoire('ecran-mural', g, MAT);
+    else { const c = new THREE.Mesh(rbox(2.0, 1.16, 0.06, 0.012), MAT.plastiqueNoir); c.castShadow = true; g.add(c); }
     const d = new THREE.Mesh(new THREE.PlaneGeometry(1.94, 1.1),
       materiauEcran('graph'));
     d.position.z = 0.032; g.add(d);
@@ -825,9 +999,18 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function casiers(x1, z1, x2, z2) {
-    box(x1, z1, x2, z2, 1.85, MAT.aluSombre, { r: 0.016 });
     const n = Math.max(1, Math.round((z2 - z1) / 0.62));
     const pas = (z2 - z1 - 0.08) / n;
+    if (kit('casier')) {
+      obstacles.push({ x1, z1, x2, z2, h: 1.85, seeThrough: false, noClip: false, kind: 'solid' });
+      const modele = Math.round(z1) % 2 ? 'casier-b' : 'casier';
+      for (let i = 0; i < n; i++) {
+        const p = poserAccessoire(modele, root, MAT, { x: (x1 + x2) / 2, z: z1 + 0.04 + pas * (i + 0.5), yaw: -Math.PI / 2 });
+        p.groupe.scale.x = pas / 0.62;
+      }
+      return;
+    }
+    box(x1, z1, x2, z2, 1.85, MAT.aluSombre, { r: 0.016 });
     for (let i = 0; i < n; i++) for (let j = 0; j < 2; j++) {
       const z = z1 + 0.04 + pas * (i + 0.5);
       const y = 0.5 + j * 0.88;
@@ -838,6 +1021,13 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function photocopieuse(x,z) {
+    if (kit('photocopieuse')) {
+      obstacles.push({ x1: x - 1, z1: z - .9, x2: x + 1, z2: z + .9, h: 1.05, seeThrough: false, noClip: false, kind: 'solid' });
+      poserAccessoire('photocopieuse', root, MAT, { x, z });
+      const e = mesh(new THREE.PlaneGeometry(.34, .15), materiauEcran('copie'), x + .57, 1.17, z + .746, { cast: false });
+      e.rotation.x = -Math.PI / 2 + .34; emissifs.push(e);
+      return;
+    }
     box(x-1,z-.9,x+1,z+.9,1.05,MAT.plastiqueBlanc,{r:.025}).removeFromParent();
     mesh(rbox(1.80,.12,1.6,.015),MAT.aluSombre,x,.10,z);
     mesh(rbox(1.85,.70,1.65,.025),MAT.plastiqueBlanc,x,.49,z);
@@ -858,6 +1048,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function fontaine(x,z) {
+    if (kit('fontaine')) {
+      obstacles.push({ x1: x - .25, z1: z - .25, x2: x + .25, z2: z + .25, h: 1.5, seeThrough: false, noClip: false, kind: 'solid' });
+      poserAccessoire('fontaine', root, MAT, { x, z });
+      return;
+    }
     box(x-.25,z-.25,x+.25,z+.25,1.5,MAT.plastiqueBlanc,{r:.03}).removeFromParent();
     mesh(rbox(.48,.70,.46,.025),MAT.plastiqueBlanc,x,.37,z);
     mesh(rbox(.44,.07,.43,.01),MAT.aluSombre,x,.035,z);
@@ -873,6 +1068,13 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function machineCafe(x,z) {
+    if (kit('machine-cafe')) {
+      obstacles.push({ x1: x - .32, z1: z - .3, x2: x + .32, z2: z + .3, h: 1.4, seeThrough: false, noClip: false, kind: 'solid' });
+      poserAccessoire('machine-cafe', root, MAT, { x, z, yaw: -Math.PI / 2 });
+      const p = mesh(new THREE.PlaneGeometry(.24, .12), materiauEcran('cafe'), x - .322, 1.29, z, { cast: false });
+      p.rotation.y = -Math.PI / 2; emissifs.push(p);
+      return;
+    }
     box(x-.32,z-.3,x+.32,z+.3,1.4,MAT.plastiqueNoir,{r:.02}).removeFromParent();
     mesh(rbox(.60,.78,.58,.018),MAT.boisFonce,x,.40,z);
     mesh(rbox(.63,.035,.6,.009),MAT.alu,x,.802,z);
@@ -890,6 +1092,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function tableBasse(x, z) {
+    if (kit('table-basse')) {
+      obstacles.push({ x1: x - 0.6, z1: z - 0.6, x2: x + 0.6, z2: z + 0.6, h: 0.7, kind: 'desk' });
+      poserAccessoire('table-basse', root, MAT, { x, z });
+      return;
+    }
     const t = mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.05, 28), MAT.bois, x, 0.66, z);
     obstacles.push({ x1: x - 0.6, z1: z - 0.6, x2: x + 0.6, z2: z + 0.6, h: 0.7, kind: 'desk' });
     colliderMeshes.push(t);
@@ -899,6 +1106,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function fauteuil(x, z, yaw) {
+    if (kit('fauteuil')) {
+      obstacles.push({ x1: x - 0.3, z1: z - 0.3, x2: x + 0.3, z2: z + 0.3, h: 0.85, kind: 'desk' });
+      poserAccessoire('fauteuil', root, MAT, { x, z, yaw });
+      return;
+    }
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = yaw; root.add(g);
     const add = (geo, m, py, pz, px = 0) => {
       const o = new THREE.Mesh(geo, m); o.position.set(px, py, pz);
@@ -913,6 +1125,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function canape(x, z) {
+    if (kit('canape')) {
+      obstacles.push({ x1: x - 0.55, z1: z - 1.1, x2: x + 0.55, z2: z + 1.1, h: 0.85, kind: 'desk' });
+      poserAccessoire('canape', root, MAT, { x, z, yaw: Math.PI / 2 });
+      return;
+    }
     const g = new THREE.Group(); g.position.set(x, 0, z); root.add(g);
     const add = (geo, px, py, pz) => {
       const o = new THREE.Mesh(geo, MAT.tissuCanape); o.position.set(px, py, pz);
@@ -926,6 +1143,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function bibliotheque(x1, z1, x2, z2) {
+    if (kit('bibliotheque-direction')) {
+      obstacles.push({ x1, z1, x2, z2, h: 1.9, seeThrough: false, noClip: false, kind: 'solid' });
+      poserAccessoire('bibliotheque-direction', root, MAT, { x: (x1 + x2) / 2, z: (z1 + z2) / 2, yaw: -Math.PI / 2 });
+      return;
+    }
     // Même obstacle, mais un vrai meuble ouvert : la boîte pleine cachait
     // tous les livres. Les fonds sont à l'est, les dos orientés vers la pièce.
     obstacles.push({ x1, z1, x2, z2, h: 1.9, seeThrough: false, noClip: false, kind: 'solid' });
@@ -946,13 +1168,18 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function tapis(x, z, w, d, couleur) {
-    const t = mesh(new THREE.PlaneGeometry(w, d),
-      new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.98 }),
-      x, 0.006, z, { cast: false });
+    // une matière par couleur, partagée : les tapis d'un étage fusionnent
+    if (!tapisCache.has(couleur)) tapisCache.set(couleur, partager(new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.98 })));
+    const t = mesh(new THREE.PlaneGeometry(w, d), tapisCache.get(couleur), x, 0.006, z, { cast: false });
     t.rotation.x = -Math.PI / 2;
   }
 
   function cartons(x, z) {
+    if (kit('cartons-pile')) {
+      obstacles.push({ x1: x - 0.42, z1: z - 0.38, x2: x + 0.42, z2: z + 0.38, h: 1.28, kind: 'prop' });
+      poserAccessoire('cartons-pile', root, MAT, { x, z });
+      return;
+    }
     const tailles = [[0.7, 0.5, 0.6, 0], [0.55, 0.42, 0.5, 0.5], [0.45, 0.35, 0.42, 0.92]];
     for (const [w, h, d, y] of tailles) {
       const b = mesh(rbox(w, h, d, 0.012), MAT.carton, x + (y ? 0.06 : 0), y + h / 2, z + (y ? -0.05 : 0));
@@ -966,6 +1193,13 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function plante(x, z) {
+    if (kit('plante-ficus')) {
+      obstacles.push({ x1: x - 0.3, z1: z - 0.3, x2: x + 0.3, z2: z + 0.3, h: 1.45, kind: 'prop' });
+      // un tiers de sansevierias, orientées au hasard mais toujours de la même façon
+      const h = Math.abs(Math.round(x * 3 + z * 7));
+      poserAccessoire(h % 3 === 0 ? 'plante-sansevieria' : 'plante-ficus', root, MAT, { x, z, yaw: h * 0.7 });
+      return;
+    }
     mesh(new THREE.CylinderGeometry(0.26, 0.2, 0.38, 20), MAT.terreCuite, x, 0.19, z);
     mesh(new THREE.CylinderGeometry(0.235, 0.235, 0.025, 16), palette().terreau, x, 0.376, z, { cast: false });
     for (let j = 0; j < 3; j++) {
@@ -1005,6 +1239,15 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function luminaire(x, z, longueur) {
+    if (kit('luminaire')) {
+      if(x !== 8)for(const dz of [-longueur*.32,longueur*.32])
+        mesh(rbox(.012,.43,.012,.002),MAT.alu,x,3.365,z+dz,{cast:false});
+      poserAccessoire('luminaire', root, MAT, { x, y: x === 8 ? 3.32 : 3.12, z, ombre: false }).groupe.scale.z = longueur;
+      const tube = new THREE.Mesh(new THREE.PlaneGeometry(0.13, longueur - 0.06), palette().neon);
+      tube.position.set(x, x === 8 ? 3.282 : 3.082, z); tube.rotation.x = Math.PI / 2;
+      root.add(tube); emissifs.push(tube);
+      return;
+    }
     if(x !== 8)for(const dz of [-longueur*.32,longueur*.32])
       mesh(rbox(.012,.43,.012,.002),MAT.alu,x,3.365,z+dz,{cast:false});
     const corps = mesh(rbox(0.16, 0.07, longueur, 0.02), MAT.alu, x, x === 8 ? 3.32 : 3.12, z, { cast: false });
@@ -1016,6 +1259,7 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function bouche(x, z) {
+    if (kit('bouche')) { poserAccessoire('bouche', root, MAT, { x, y: x === 8 ? 3.34 : 3.6, z, ombre: false }); return; }
     mesh(rbox(0.6, 0.03, 0.6, 0.01), MAT.alu, x, x === 8 ? 3.34 : 3.6, z, { cast: false });
     for (let i = 0; i < 7; i++)
       mesh(rbox(0.52, 0.012, 0.025, 0.004), MAT.aluSombre, x, x === 8 ? 3.318 : 3.578, z - 0.24 + i * 0.08,
@@ -1023,6 +1267,7 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function horloge(x, y, z, ry) {
+    if (kit('horloge')) { poserAccessoire('horloge', root, MAT, { x, y, z, yaw: ry }); return; }
     const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; root.add(g);
     const corps = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.05, 32), MAT.aluSombre);
     corps.rotation.x = Math.PI / 2; corps.castShadow = true; g.add(corps);
@@ -1043,6 +1288,11 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
   function tableauBlanc(x, y, z, ry) {
     const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = ry; root.add(g);
+    if (kit('tableau-blanc')) {
+      poserAccessoire('tableau-blanc', g, MAT);
+      panneauGraphique(g, 'planning', 2.98, 1.48, 0, 0, 0.033);
+      return;
+    }
     const cadre = new THREE.Mesh(rbox(3.1, 1.6, 0.06, 0.012), MAT.alu);
     cadre.castShadow = true; g.add(cadre);
     panneauGraphique(g, 'planning', 2.98, 1.48, 0, 0, 0.033);
@@ -1056,6 +1306,7 @@ export function buildLevel(scene, MAT, plan, niveau) {
   }
 
   function extincteur(x, z) {
+    if (kit('extincteur')) { poserAccessoire('extincteur', root, MAT, { x, z, yaw: -Math.PI / 2 }); return; }
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = -Math.PI / 2; root.add(g);
     const corps = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.42, 16),
       palette().rouge);
@@ -1070,6 +1321,7 @@ export function buildLevel(scene, MAT, plan, niveau) {
     const cv = document.createElement('canvas');
     cv.width = 320; cv.height = 96;
     const g = cv.getContext('2d');
+    if (repere.miroir) { g.translate(320, 0); g.scale(-1, 1); }
     g.fillStyle = '#' + fond.toString(16).padStart(6, '0');
     g.fillRect(0, 0, 320, 96);
     g.fillStyle = '#ffffff';
@@ -1096,16 +1348,35 @@ export function buildLevel(scene, MAT, plan, niveau) {
 
   const statsFusion = fusionnerStatiques(root);
 
+  // `dir` : sens du dernier pas du joueur quand il sort (animation de sortie).
   const TOUTES_SORTIES = [
-    { id: 'elevator', x: 18.4, z: 1.5, r: 2.0, label: "Appeler l'ascenseur" },
-    { id: 'stairs', x: 8.0, z: 13.0, r: 2.0, label: 'Prendre les escaliers' },
+    { id: 'elevator', x: 18.4, z: 1.5, r: 2.0, dir: [1, 0], label: "Appeler l'ascenseur" },
+    { id: 'stairs', x: 8.0, z: 13.0, r: 2.0, dir: [0, 1], label: 'Prendre les escaliers' },
   ];
+  if (nacelle) TOUTES_SORTIES.push({ id: 'nacelle', x: -19.25, z: nacelle.z, r: 1.4, dir: [-1, 0], label: 'Monter dans la nacelle' });
+  const toboggan = accessoires.find(a => a.id === 'toboggan');
+  if (toboggan) TOUTES_SORTIES.push({ id: 'toboggan', x: toboggan.x, z: toboggan.z + 0.75, r: 1.2, dir: [0, -1],
+    label: 'Plonger dans le toboggan', secret: true });
   const interactables = TOUTES_SORTIES.filter(e => sorties.includes(e.id));
+
+  // ---------- orientation de l'étage ----------
+  // Le décor fusionné est retourné d'un bloc ; les données de jeu, une à une.
+  root.scale.set(repere.sx, 1, repere.sz);
+  for (const o of obstacles) Object.assign(o, repere.boite(o));
+  for (const it of interactables) Object.assign(it, repere.p(it.x, it.z), { dir: [repere.sx * it.dir[0], repere.sz * it.dir[1]] });
+  for (const o of ramassables) Object.assign(o, repere.p(o.x, o.z));
+  for (const a of accessoires) {
+    Object.assign(a, repere.p(a.x, a.z), a.yaw != null ? { yaw: repere.yaw(a.yaw) } : {});
+    if (a.source) a.source = repere.p(a.source.x, a.source.z);
+    if (a.route) a.route = repere.points(a.route);
+  }
+  for (const c of canards) Object.assign(c, repere.p(c.x, c.z));
+  const depart = { ...plan.depart, ...repere.p(plan.depart.x, plan.depart.z), yaw: repere.yaw(plan.depart.yaw) };
 
   return {
     root, obstacles, colliderMeshes, interactables, emissifs, ramassables, statsFusion,
-    escalier, elevatorPanels, get elevatorLed() { return elevatorLed; },
-    playerStart: { ...plan.depart },
+    escalier, elevatorPanels, get elevatorLed() { return elevatorLed; }, repere, accessoires, canards,
+    playerStart: depart,
     // libère la scène entre deux niveaux
     dispose() {
       libererArbre(root);

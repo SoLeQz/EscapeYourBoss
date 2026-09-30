@@ -7,7 +7,11 @@
 //  contraintes d'une page web pour aucun bénéfice ici.
 // ============================================================
 
+import { nettoyerSecrets } from './secrets.js';
+import { NIVEAUX } from './levels.js';
+
 export const DEFAUT = {
+  canards: {}, secrets: [], campagne: 2,
   niveauxFinis: [],          // ids des niveaux validés
   records: {},               // { "n1": secondes, "speedrun": secondes }
   touches: null,             // null = valeurs d'usine
@@ -25,6 +29,11 @@ function fusionner(brut) {
   if (brut.touches && typeof brut.touches === 'object') d.touches = brut.touches;
   if (brut.options && typeof brut.options === 'object') Object.assign(d.options, brut.options);
   if (brut.apparence && typeof brut.apparence === 'object') d.apparence = brut.apparence;  // nettoyée à l'usage
+  Object.assign(d, nettoyerSecrets(brut, NIVEAUX.map(n => n.id)));
+  // Les records de la campagne à six étages restent consultables séparément.
+  if (brut.campagne !== 2 && d.records.speedrun != null) {
+    d.records.speedrunSixEtages = d.records.speedrun; delete d.records.speedrun;
+  }
   if (!Number.isFinite(d.options.sensibilite)) d.options.sensibilite = 1;
   d.options.sensibilite = Math.max(0.3, Math.min(2, d.options.sensibilite));
   return d;
@@ -43,8 +52,10 @@ export async function charger() {
 export async function sauver(data) {
   memoire = data;
   try {
-    if (window.jeuStore) await window.jeuStore.sauver(data);
+    if (window.jeuStore && await window.jeuStore.sauver(data) === false) throw Error('Le disque a refusé l’écriture');
+    return true;
   } catch (e) {
     console.warn('écriture de la sauvegarde impossible :', e.message);
+    return false;
   }
 }

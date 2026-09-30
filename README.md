@@ -32,8 +32,8 @@ cloisons, fais semblant de travailler quand un regard se pose sur toi, lance la
 photocopieuse pour détourner l'attention… et file avant la fin de la réunion du
 directeur.
 
-Dix étages, dix services, trente canards de débogage cachés, une machine à sous
-clandestine, un vestiaire plein d'accessoires absurdes et jusqu'à trois collègues
+Dix étages, dix services, trente canards de débogage cachés, des passages
+secrets, un vestiaire plein d'accessoires absurdes et jusqu'à trois collègues
 pour s'enfuir avec toi. Premier volet de la série **Escape…**
 
 ---
@@ -178,23 +178,6 @@ parlent boutique. Le tableau ci-dessous suit l'ordre de la descente.
   temps intermédiaires. Un échec ne remet pas le chrono à zéro : il te coûte le
   temps de recommencer l'étage.
 - **Départ groupé** : les dix étages en coopération, de 2 à 4 joueurs.
-
----
-
-## « Juste 5 minutes »
-
-Dans la salle de sieste clandestine, une borne d'arcade attend les employés
-qui ont vraiment fini leur journée. Derrière elle, une **machine à sous complète**
-aux couleurs du bureau : 5 rouleaux, 14 lignes, canards multiplicateurs, pause café
-en tours gratuits, achat de bonus et célébrations. On joue en tickets restaurant
-fictifs : aucun argent réel, rien à acheter.
-
-<table>
-  <tr>
-    <td width="50%"><img src="docs/captures/juste-5-minutes.jpg" alt="Machine à sous Juste 5 minutes : agrafeuses, trombones, post-it « Partir 18h » et mugs" width="100%"></td>
-    <td width="50%"><img src="docs/captures/mega-gain.jpg" alt="Célébration Méga gain sur la machine à sous" width="100%"></td>
-  </tr>
-</table>
 
 ---
 

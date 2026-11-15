@@ -47,7 +47,7 @@ export class Player {
     this._pose = {
       legL: 0, legR: 0, kneeL: 0, kneeR: 0, footL: 0, footR: 0,
       armL: 0, armR: 0, elbowL: -0.22, elbowR: -0.22,
-      armLz: this.parts.anatomieBlender ? -.03 : .06, armRz: this.parts.anatomieBlender ? .03 : -.06, upperY: 0, upperZ: 0,
+      armLz: this.parts.anatomieBlender ? -.11 : .06, armRz: this.parts.anatomieBlender ? .11 : -.06, upperY: 0, upperZ: 0,
     };
     this.emote = null;
     this.derniereEmote = null;
@@ -149,7 +149,7 @@ export class Player {
     Object.assign(this._pose, {
       legL: 0, legR: 0, kneeL: 0, kneeR: 0, footL: 0, footR: 0,
       armL: 0, armR: 0, elbowL: -0.22, elbowR: -0.22,
-      armLz: this.parts.anatomieBlender ? -.03 : .06, armRz: this.parts.anatomieBlender ? .03 : -.06, upperY: 0, upperZ: 0,
+      armLz: this.parts.anatomieBlender ? -.11 : .06, armRz: this.parts.anatomieBlender ? .11 : -.06, upperY: 0, upperZ: 0,
     });
     this.phase = 0; this.oisif = 0; this.regard = 0; this.tempsAnimation = 0;
   }
@@ -306,8 +306,8 @@ export class Player {
       // bras en opposition, coudes fléchis
       q.armL = amortir(q.armL, -s * 0.44 * k, 20, dt);
       q.armR = amortir(q.armR, s * 0.44 * k, 20, dt);
-      q.armLz = amortir(q.armLz, (p.anatomieBlender ? -.03 : .06) + s * 0.05 * k, 20, dt);
-      q.armRz = amortir(q.armRz, (p.anatomieBlender ? .03 : -.06) + s * 0.05 * k, 20, dt);
+      q.armLz = amortir(q.armLz, (p.anatomieBlender ? -.11 : .06) + s * 0.05 * k, 20, dt);
+      q.armRz = amortir(q.armRz, (p.anatomieBlender ? .11 : -.06) + s * 0.05 * k, 20, dt);
       q.elbowL = amortir(q.elbowL, -0.28 - Math.max(0, -s) * 0.45 * k, 20, dt);
       q.elbowR = amortir(q.elbowR, -0.28 - Math.max(0, s) * 0.45 * k, 20, dt);
 
@@ -324,8 +324,8 @@ export class Player {
         q[key] += (0 - q[key]) * r;
       q.elbowL += (-0.22 - q.elbowL) * r;
       q.elbowR += (-0.22 - q.elbowR) * r;
-      q.armLz += ((p.anatomieBlender ? -.03 : .06) - q.armLz) * r;
-      q.armRz += ((p.anatomieBlender ? .03 : -.06) - q.armRz) * r;
+      q.armLz += ((p.anatomieBlender ? -.11 : .06) - q.armLz) * r;
+      q.armRz += ((p.anatomieBlender ? .11 : -.06) - q.armRz) * r;
       q.upperY += (0 - q.upperY) * r;
       q.upperZ += (0 - q.upperZ) * r;
       this._bob = (this._bob || 0) * (1 - r);

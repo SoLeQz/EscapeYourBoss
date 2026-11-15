@@ -10,6 +10,7 @@ import * as THREE from 'three';
 import {prechargerAnatomieBlender} from '../../src/anatomie-blender.js';
 import {prechargerGardeRobe, etatGardeRobe, gardeRobeDisponible, animerGardeRobe, FICHIER_GARDE_ROBE} from '../../src/garde-robe-blender.js';
 import {Player} from '../../src/player.js';
+import {ECHELLE_TETE} from '../../src/characters.js';
 import * as G from '../../src/garde-robe.js';
 
 const fichier = n => readFileSync(new URL('../../' + n, import.meta.url));
@@ -56,10 +57,12 @@ const appelsOrigine = appels();
 p.changerApparence(G.APPARENCE_DEFAUT);
 assert.equal(appels(), appelsOrigine, 'Tenue par défaut : aucun appel de dessin en plus');
 
+// Cotes relevées sur la tête à l'échelle 1 : elles suivent l'agrandissement de la tête (ECHELLE_TETE).
+const k = ECHELLE_TETE;
 const FORMES = {
-  tete: (b, h) => b.max.y > h.y + .07 && Math.hypot((b.min.x + b.max.x) / 2 - h.x, (b.min.z + b.max.z) / 2 - h.z) < .06,
-  yeux: (b, h) => b.max.z > h.z + .1 && b.max.z < h.z + .135 && b.min.y > h.y - .03 && b.max.y < h.y + .04 && b.max.x - b.min.x > .16,
-  moustache: (b, h) => b.min.z > h.z + .085 && b.max.y < h.y - .025 && b.min.y > h.y - .075,
+  tete: (b, h) => b.max.y > h.y + .07 * k && Math.hypot((b.min.x + b.max.x) / 2 - h.x, (b.min.z + b.max.z) / 2 - h.z) < .06 * k,
+  yeux: (b, h) => b.max.z > h.z + .1 * k && b.max.z < h.z + .135 * k && b.min.y > h.y - .03 * k && b.max.y < h.y + .04 * k && b.max.x - b.min.x > .16 * k,
+  moustache: (b, h) => b.min.z > h.z + .085 * k && b.max.y < h.y - .025 * k && b.min.y > h.y - .075 * k,
   cou: (b, h) => b.max.y < h.y - .14 && b.min.y > 1.25 && b.max.z > .1,
   torse: b => b.min.z < -.15 && b.max.x - b.min.x > .38 && b.min.y < 1.02 && b.max.y > 1.4,
   dos: b => b.min.z < -.12 && b.max.y < 1.45,

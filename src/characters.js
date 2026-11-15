@@ -5,7 +5,7 @@ import { poserGardeRobe } from './garde-robe-blender.js';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { buildCharacterMaterials } from './materials.js';
+import { buildCharacterMaterials, lisere } from './materials.js';
 import { construireSquelette, lierSquelette, geometriesCorps, geometrieAccessoire,
          nomsOs, surfaceTete, surfaceBuste, surfaceBassin,
          BOUTON_VESTE_LOCAL } from './body.js';
@@ -25,6 +25,7 @@ import { construireSquelette, lierSquelette, geometriesCorps, geometrieAccessoir
 //  chemise : c'est ce qui donnait un buste sans matière.
 // ============================================================
 
+export const ECHELLE_TETE = 1.14;
 export const HEIGHT = {
   hip: 0.85,
   eye: 1.63,
@@ -144,7 +145,7 @@ export function makeCharacter(o = {}) {
     if (!hex) return base;
     const m = base.clone();
     m.color = new THREE.Color(hex);
-    return m;
+    return base.onBeforeCompile === m.onBeforeCompile ? m : lisere(m);   // le clone a perdu le liseré
   };
   const matChemise = teinte(M.chemise, c.chemise);
   const matPantalon = teinte(M.pantalon, c.pantalon);
@@ -193,6 +194,9 @@ export function makeCharacter(o = {}) {
   parts.torso = nomOs('buste');
   parts.head = nomOs('teteBase');        // piloté par le jeu et les emotes
   parts.teteMicro = nomOs('tete');       // réservé aux micro-mouvements
+  // Tête agrandie autour des yeux (le pivot) : sur la carrure du corps sculpté, la tête
+  // à l'échelle réelle faisait tête d'épingle. La hauteur des yeux ne bouge pas.
+  parts.teteMicro.scale.setScalar(ECHELLE_TETE);
   parts.armL = nomOs('epauleL'); parts.elbowL = nomOs('coudeL');
   parts.armR = nomOs('epauleR'); parts.elbowR = nomOs('coudeR');
   parts.legL = nomOs('hancheL'); parts.kneeL = nomOs('genouL'); parts.footL = nomOs('chevilleL');
@@ -300,6 +304,8 @@ export function makeCharacter(o = {}) {
   parts.mainR = nomOs('mainR');
   // Repos naturel des mains (les PNJ ne pilotent pas leurs poignets).
   parts.mainL.rotation.y = POIGNET_REPOS; parts.mainR.rotation.y = -POIGNET_REPOS;
+  // Mains à l'échelle des avant-bras du corps sculpté (les mains v03 étaient taillées pour des bras fins).
+  parts.mainL.scale.setScalar(1.12); parts.mainR.scale.setScalar(1.12);
   if(!anatomie) for (const cote of [-1, 1]) {
     const main = nomOs(cote < 0 ? 'mainL' : 'mainR');
     const doigts = new THREE.Group();
@@ -448,9 +454,9 @@ export function makeCharacter(o = {}) {
   }else{
     // La sculpture Blender porte déjà ses nuances locales (pommettes, lèvres,
     // oreilles, ongles). Le teint du personnage reste personnalisable.
-    const peauBlender=matPeauCorps.clone();peauBlender.vertexColors=true;
+    const peauBlender=lisere(matPeauCorps.clone());peauBlender.vertexColors=true;
     peauBlender.normalScale.set(.10,.10);peauBlender.specularIntensity=.32;
-    const cheveuxBlender=matCheveux.clone();cheveuxBlender.vertexColors=true;
+    const cheveuxBlender=lisere(matCheveux.clone());cheveuxBlender.vertexColors=true;
     poserAnatomieBlender(parts,c,{peau:peauBlender,cheveux:cheveuxBlender,
       blancOeil:M.blancOeil,iris:M.iris,pupille:M.pupille,reflet:M.reflet,monture:M.monture});
     g.userData.anatomieBlender=parts.anatomieBlender;

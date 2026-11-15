@@ -50,5 +50,6 @@ for(const c of [0,.25,.5,.75,1]) {
 }
 let appels=0,tris=0;group.traverse(o=>{if(o.isMesh){appels++;tris+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;}});
 assert(appels<=44,`Budget : ${appels} appels, plafond 44`);
-assert(tris<38000,`Budget : ${tris} triangles, plafond 38000`);
+// Corps sculpté (assets/corps-v01.js) : +5 400 triangles, aucun appel de dessin de plus. Plafond relevé de 38 000 à 44 000.
+assert(tris<44000,`Budget : ${tris} triangles, plafond 44000`);
 console.log(`Refonte : orientation, clignement, couches, appui au sol et perception OK. ${appels} appels, ${tris} triangles.`);

@@ -403,14 +403,16 @@ function texFacade(rideau) {
 }
 
 let villeMats;
-export function construireVille(root) {
+export function construireVille(root, nuit = false) {
   if (!villeMats) {
     const pierre = texFacade(false), verre = texFacade(true);
     villeMats = [[pierre, '#b9b4b0'], [verre, '#b4c0cc'], [pierre, '#97969e']]
       .map(([map, color]) => new THREE.MeshBasicMaterial({ map, color, fog: true }));
     villeMats.push(new THREE.MeshBasicMaterial({ color: '#4f555e', fog: true }));
-    villeMats.forEach(partager);
+    villeMats.forEach(m => { partager(m); m.userData.jour = m.color.clone(); });
   }
+  // Matières partagées entre les étages : la nuit, les façades s'éteignent, les fenêtres restent.
+  for (const m of villeMats) m.color.copy(m.userData.jour).multiply(nuit ? new THREE.Color(0.42, 0.50, 0.74) : new THREE.Color(1, 1, 1));
   const ville = new THREE.Group(); ville.name = 'quartier-meridien'; root.add(ville);
   // Silhouettes composées en trois plans, avec retraits et toitures. Le pied
   // est 45 m sous l'étage, pour ne pas donner l'impression d'être au RDC.

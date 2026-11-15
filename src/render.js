@@ -5,6 +5,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { skyTexture, SKY_SCALE } from './materials.js';
 
 // ============================================================
@@ -15,6 +16,10 @@ import { skyTexture, SKY_SCALE } from './materials.js';
 //  (IBL) : sans elle, MeshStandardMaterial n'a rien à réfléchir
 //  et tout paraît en plastique mat.
 // ============================================================
+
+// L'heure dorée doit ENTRER dans l'étage : le soleil est la lumière principale, les néons
+// l'appoint. À force égale avec treize néons, ses taches sur la moquette étaient à peine lisibles.
+const FORCE_SOLEIL = 1.2;
 
 // Soleil rasant de fin de journée, plein ouest.
 // Position du soleil, ajustée à chaque niveau (heure de la journée).
@@ -47,7 +52,9 @@ export const QUALITES = ['ultra', 'haut', 'moyen', 'bas'];
 // fait sur les passes, pas sur la résolution.
 const PRESETS = {
   ultra: { pixelRatio: 1.25, msaa: 4, ombre: 3072, gtao: 16, dof: true,  bloom: true,  composer: true },
-  haut:  { pixelRatio: 1.0,  msaa: 0, ombre: 2048, gtao: 8,  dof: false, bloom: true,  composer: true },
+  // MSAA 4x : sans lui, la cible HDR du composer n'avait aucun anticrénelage (l'option du
+  // renderer ne vaut que pour le rendu direct). Chaque arête de bureau scintillait.
+  haut:  { pixelRatio: 1.0,  msaa: 4, ombre: 2048, gtao: 8,  dof: false, bloom: true,  composer: true },
   moyen: { pixelRatio: 1.0,  msaa: 0, ombre: 2048, gtao: 0,  dof: false, bloom: true,  composer: true },
   bas:   { pixelRatio: 1.0,  msaa: 0, ombre: 1536, gtao: 0,  dof: false, bloom: false, composer: false },
 };
@@ -101,7 +108,7 @@ export function createRenderer(canvas) {
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;   // lu par OutputPass
-  renderer.toneMappingExposure = 0.95;
+  renderer.toneMappingExposure = 0.92;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   return renderer;
@@ -161,13 +168,13 @@ export function buildEnvironment(renderer) {
 
   const R = 10;
   // baie vitrée ouest : la source dominante
-  panneau(0xffcd9c, 4.4, 2 * R, 7, [-R, 2, 0], [0, Math.PI / 2, 0]);
+  panneau(0xffc48c, 3.8, 2 * R, 7, [-R, 2, 0], [0, Math.PI / 2, 0]);
   // ciel plus froid au-dessus de l'horizon, côté ouest
   panneau(0xbcd2ff, 1.1, 2 * R, 3, [-R, 6, 0], [0, Math.PI / 2, 0]);
   // plafond : néons tièdes
-  panneau(0xf0f2eb, 1.35, 2 * R, 2 * R, [0, R, 0], [Math.PI / 2, 0, 0]);
+  panneau(0xdfe9f6, 1.35, 2 * R, 2 * R, [0, R, 0], [Math.PI / 2, 0, 0]);
   // murs de rebond
-  panneau(0xc9d5cc, 0.55, 2 * R, 7, [R, 2, 0], [0, Math.PI / 2, 0]);
+  panneau(0xb9cbe0, 0.6, 2 * R, 7, [R, 2, 0], [0, Math.PI / 2, 0]);
   panneau(0xd9dacf, 0.45, 2 * R, 7, [0, 2, -R], [0, 0, 0]);
   panneau(0xd9dacf, 0.45, 2 * R, 7, [0, 2, R], [0, 0, 0]);
   // sol moquette : rebond sombre et chaud
@@ -184,11 +191,19 @@ export function buildEnvironment(renderer) {
 // ------------------------------------------------------------
 //  Lumières
 // ------------------------------------------------------------
+// Soleil couché : sous l'horizon il n'éclairait plus aucune surface, et les étages de nuit
+// n'avaient que leurs néons. La lune prend le relais, haute et froide, par la même baie.
+const nuit = () => SUN.elevationDeg < 1;
+function directionAstre() {
+  if (!nuit()) return SUN.direction;
+  return new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(90 - 30), THREE.MathUtils.degToRad(SUN.azimuthDeg));
+}
+
 export function addLights(scene, preset) {
-  const dir = SUN.direction;
+  const dir = directionAstre();
 
   // Soleil : rasant, chaud, ombres longues
-  const soleil = new THREE.DirectionalLight(0xffc98f, SUN.intensite);
+  const soleil = new THREE.DirectionalLight(0xffc98f, SUN.intensite * FORCE_SOLEIL);
   soleil.position.copy(dir).multiplyScalar(60);
   soleil.target.position.set(-2, 0, 0);
   soleil.castShadow = true;
@@ -203,7 +218,7 @@ export function addLights(scene, preset) {
   scene.add(soleil, soleil.target);
 
   // Appoint froid côté est, pour que les ombres ne soient pas noires
-  const appoint = new THREE.DirectionalLight(0x9fb8e8, 0.42);
+  const appoint = new THREE.DirectionalLight(0x7f9fe8, 0.75);
   appoint.position.set(30, 16, 18);
   scene.add(appoint);
 
@@ -212,14 +227,15 @@ export function addLights(scene, preset) {
 
 // Applique l'heure du niveau : hauteur du soleil, teinte, appoint.
 export function majSoleil(lumieres) {
-  const dir = SUN.direction;
+  const dir = directionAstre();
   lumieres.soleil.position.copy(dir).multiplyScalar(60);
-  lumieres.soleil.intensity = SUN.intensite;
+  if (nuit()) { lumieres.soleil.intensity = 1.5; lumieres.soleil.color.set(0x8fb0ff); lumieres.appoint.intensity = 0.45; return; }
+  lumieres.soleil.intensity = SUN.intensite * FORCE_SOLEIL;
   // plus le soleil descend, plus il rougit
   const t = THREE.MathUtils.clamp(SUN.elevationDeg / 12, 0, 1);
-  lumieres.soleil.color.setHSL(THREE.MathUtils.lerp(0.035, 0.085, t), 0.85,
-    THREE.MathUtils.lerp(0.55, 0.72, t));
-  lumieres.appoint.intensity = 0.25 + 0.25 * t;
+  lumieres.soleil.color.setHSL(THREE.MathUtils.lerp(0.03, 0.075, t), 1.0,
+    THREE.MathUtils.lerp(0.5, 0.62, t));
+  lumieres.appoint.intensity = 0.5 + 0.25 * t;
 }
 
 // ------------------------------------------------------------
@@ -269,14 +285,35 @@ export function createComposer(renderer, scene, camera, qualite, masquerOverlays
   }
 
   if (preset.bloom) {
-    bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.24, 0.35, 1.35);
+    // Seuil sous 1 : le ciel derrière la baie, les néons et les écrans rayonnent.
+    bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.30, 0.55, 1.0);
     composer.addPass(bloom);
   }
 
   composer.addPass(new OutputPass());   // ACES + sRGB
+  composer.addPass(new ShaderPass(ETALONNAGE));
 
   return { composer, gtao, bokeh, bloom, preset, cible };
 }
+
+// Étalonnage, après ACES, en valeurs d'écran : saturation, contraste en S, hautes
+// lumières chaudes sur ombres froides, vignette. C'est la signature de l'image.
+const ETALONNAGE = {
+  uniforms: { tDiffuse: { value: null } },
+  vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+  fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+    void main() {
+      vec4 c = texture2D(tDiffuse, vUv); vec3 x = c.rgb;
+      float l = dot(x, vec3(0.2126, 0.7152, 0.0722));
+      x = mix(vec3(l), x, 1.24);
+      x = mix(x, x * x * (3.0 - 2.0 * x), 0.38);
+      x += vec3(0.035, 0.012, -0.030) * smoothstep(0.35, 1.0, l);
+      x += vec3(-0.030, 0.004, 0.050) * (1.0 - smoothstep(0.0, 0.5, l));
+      vec2 d = (vUv - 0.5) * vec2(1.0, 0.82);
+      x *= 1.0 - 0.34 * smoothstep(0.36, 0.86, length(d));
+      gl_FragColor = vec4(clamp(x, 0.0, 1.0), c.a);
+    }`,
+};
 
 // GTAO et Bokeh redessinent la scène pour obtenir profondeur et normales.
 // Les sprites d'interface et le contour du joueur n'ont rien à y faire :

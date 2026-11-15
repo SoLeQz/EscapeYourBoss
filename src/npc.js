@@ -505,6 +505,12 @@ export class NPC {
       p.upper.rotation.y += (0 - p.upper.rotation.y) * r;
       this._bob = (this._bob || 0) * (1 - r);
     }
+    // Debout : bras décollés du corps et coudes souples, la carrure se lit. Bras collés
+    // et tendus, c'était la raideur « figurine » ; assis, le poste impose sa pose.
+    if (!this.isSeatedNow) {
+      p.armL.rotation.z = -BRAS_REPOS; p.armR.rotation.z = BRAS_REPOS;
+      if (this.speed <= 0.05) { p.elbowL.rotation.x = -0.26; p.elbowR.rotation.x = -0.26; }
+    }
     p.head.rotation.y = (p.head.rotation.y || 0) * 0.5 + (this.regard || 0) * 0.55;
     animerVisage(p, dt, { tension: this.suspicion, parle: !!this.bubble });
     this.apply();
@@ -568,6 +574,7 @@ export class NPC {
   }
 }
 
+const BRAS_REPOS = 0.11;
 function setStanding(parts) {
   for (const k of ['legL', 'legR', 'kneeL', 'kneeR', 'footL', 'footR',
                    'armL', 'armR', 'elbowL', 'elbowR'])

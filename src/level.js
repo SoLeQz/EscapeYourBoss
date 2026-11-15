@@ -10,6 +10,7 @@ import { solAvecTremie, construireEscalier, cabineAscenseur, ossatureBureau } fr
 import { screenContent } from './materials.js';
 import { habillerBureau, panneauGraphique, personnaliserPoste, feuilleFicus, construireVille, definirMiroirTexte } from './environment.js';
 import { repereDuNiveau } from './repere.js';
+import { rayonsDeSoleil } from './atmosphere.js';
 import { poserAccessoire, lotsAccessoire, materiauxAccessoires } from './accessoires-blender.js';
 
 // ============================================================
@@ -500,7 +501,8 @@ function construire(scene, MAT, plan, niveau, repere) {
   // ---------- direction artistique commune et quartier extérieur ----------
   habillerBureau(root, MAT, plan, niveau);
   accessoires.push(habillerDepartement(root,MAT,plan,niveau));
-  construireVille(root);
+  construireVille(root, niveau.soleil.elevation < 1);
+  rayonsDeSoleil(root, niveau.soleil);
   ossatureBureau(root, MAT, plan);
   cabineAscenseur(root, MAT);
   const escalier = construireEscalier(root, MAT, niveau, obstacles, porteSalleSud);

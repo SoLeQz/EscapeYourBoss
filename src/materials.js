@@ -559,6 +559,8 @@ export function skyTexture(sunDir) {
     }
   };
 
+  // Nuit : le couchant s'éteint avec le soleil. Sans cela le ciel de 23 h était celui de 18 h.
+  const jour = Math.max(0, Math.min(1, (sunDir.y + 0.14) / 0.2));
   for (let py = 0; py < H; py++) {
     const tv = py / (H - 1);
     const theta = (1 - tv) * Math.PI;      // convention UV de SphereGeometry
@@ -585,6 +587,9 @@ export function skyTexture(sunDir) {
       g = mix(g, g * 0.6 + 0.27, nuage);
       b = mix(b, b * 0.65 + 0.17, nuage);
 
+      // ciel nocturne : bleu profond, lueur de ville à l'horizon
+      const lueur = Math.exp(-((sy / 0.16) ** 2));
+      r = mix(0.014 + 0.050 * lueur, r, jour); g = mix(0.020 + 0.040 * lueur, g, jour); b = mix(0.050 + 0.055 * lueur, b, jour);
       const i = (py * W + px) * 4;
       d[i] = Math.min(255, (r / SKY_SCALE) * 255);
       d[i + 1] = Math.min(255, (g / SKY_SCALE) * 255);
@@ -647,6 +652,20 @@ export function cityTexture() {
 // ============================================================
 //  Matières des personnages
 // ============================================================
+
+// Liseré : un contre-jour chaud sur la tranche de la silhouette, comme si la baie était
+// toujours derrière. C'est ce qui détache un personnage du décor, de dos et dans l'ombre.
+// À rappeler après chaque clone() : three ne copie ni onBeforeCompile ni sa clé de cache.
+export function lisere(m) {
+  m.onBeforeCompile = shader => {
+    shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+  float lisere = pow(1.0 - saturate(dot(normal, normalize(vViewPosition))), 3.2);
+  totalEmissiveRadiance += vec3(1.0, 0.70, 0.45) * lisere * 0.4;`);
+  };
+  m.customProgramCacheKey = () => 'lisere';
+  return m;
+}
+
 export function buildCharacterMaterials() {
   // Luminance d'armure seule, sans teinte : la couleur du vêtement est
   // portée par material.color, sinon les deux se multiplient et brunissent.
@@ -665,7 +684,7 @@ export function buildCharacterMaterials() {
   const std = (o) => new THREE.MeshStandardMaterial(o);
   const phys = (o) => new THREE.MeshPhysicalMaterial(o);
 
-  return {
+  const M = {
     // La peau a besoin d'un lobe diffus large et d'un reflet rasant
     // chaud. Sans ça elle réagit comme du plastique peint, quelle que
     // soit la texture.
@@ -762,6 +781,8 @@ export function buildCharacterMaterials() {
       sheen: 0.8, sheenColor: new THREE.Color(0xff9aa6), sheenRoughness: 0.35,
       side: THREE.DoubleSide }),
   };
+  for (const k of ['peau', 'cheveux', 'chemise', 'pantalon', 'veste', 'sac', 'chaussure', 'soie']) lisere(M[k]);
+  return M;
 }
 
 // ============================================================

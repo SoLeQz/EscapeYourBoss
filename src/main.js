@@ -12,6 +12,7 @@ import { buildLevel, hasLOS, distanceObstacle, collide } from './level.js';
 import { buildMaterials, setAnisotropy, setTextureScale } from './materials.js';
 import { initCharacterMaterials } from './characters.js';
 import * as R from './render.js';
+import { ombreDeContact } from './atmosphere.js';
 import { Player } from './player.js';
 import { libererArbre } from './resources.js';
 import { NPC } from './npc.js';
@@ -276,10 +277,22 @@ class Game {
     }
     // Même piège pour le coéquipier : son étiquette de nom, oubliée ici,
     // devenait un rectangle noir au-dessus de sa tête en multijoueur.
+    this.overlays.push(...this.ombres || []);
     for (const c of this.coequipiers.values()) {
       this.overlays.push(c.outline);
       c.mesh.traverse(o => { if (o.isSprite) this.overlays.push(o); });
     }
+  }
+
+  // Un disque d'ombre sous chaque personnage visible (réserve qui grandit à la demande).
+  majOmbres() {
+    const persos = [this.player, ...this.npcs, ...this.coequipiers.values()].filter(p => p && p !== this.player || p?.mesh.visible);
+    this.ombres ??= [];
+    while (this.ombres.length < persos.length) { const o = ombreDeContact(); this.scene.add(o); this.ombres.push(o); this.overlays = null; }
+    this.ombres.forEach((o, i) => {
+      const p = persos[i]; o.visible = !!p && p.mesh.visible;
+      if (o.visible) o.position.set(p.pos.x, (p.pos.y || 0) + 0.026, p.pos.z);
+    });
   }
 
   masquerOverlays() {
@@ -308,6 +321,8 @@ class Game {
     this.lumieres.soleil.shadow.map?.dispose();
     this.lumieres.soleil.shadow.map = null;
     this.buildComposer();
+    // Sans composer, pas d'étalonnage : un filtre du compositeur en tient lieu.
+    this.renderer.domElement.style.filter = preset.composer ? '' : 'saturate(1.04) contrast(1.05)';
     this.onResize();
     if (!silencieux) {
       const detail = preset.composer
@@ -331,7 +346,8 @@ class Game {
     if (!this.sky) this.sky = R.addSky(this.scene);
     else R.majCiel(this.sky);
     if (!this.lumieres) this.lumieres = R.addLights(this.scene, { ombre: this.tailleOmbre() });
-    else R.majSoleil(this.lumieres);
+    R.majSoleil(this.lumieres);
+    this.scene.fog?.color.set(niv.soleil.elevation < 1 ? 0x1a2540 : 0xd39a63);
     this.scene.environmentIntensity = 0.80 * (0.5 + 0.5 * niv.eclairage);
 
     // géométrie
@@ -423,9 +439,9 @@ class Game {
       for (const [x, z] of pos) {
         // Au-dessus du plan du plafond : sous lui, chaque source y brûlait une
         // tache blanche. Le plafond reçoit sa lumière par sa part émissive.
-        const l = new THREE.PointLight(0xf0f2eb, 10, 14, 2);
+        const l = new THREE.PointLight(0xf0f2eb, 7.5, 14, 2);
         l.position.set(x, 3.70, z);
-        l.userData.base = 10; l.userData.origine = [x, z];
+        l.userData.base = 7.5; l.userData.origine = [x, z];
         this.scene.add(l);
         this.lampes.push(l);
       }
@@ -1275,6 +1291,7 @@ class Game {
       const u = this.post.bokeh.materialBokeh.uniforms;
       u.focus.value += (d - u.focus.value) * (1 - Math.exp(-4 * dt));
     }
+    this.majOmbres();
     // la borne couvre tout l'écran d'un fond opaque : inutile de dessiner l'étage derrière
     if (this.machine?.ouverte) return;
     if (this.post.composer) this.post.composer.render(dt);

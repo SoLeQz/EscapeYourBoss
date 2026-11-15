@@ -2,7 +2,7 @@
 
 > Document de reprise. Il décrit ce qui existe, **pourquoi** c'est fait comme ça,
 > ce qui a déjà été essayé et raté, et ce qui reste ouvert.
-> Dernière mise à jour : 15 novembre 2026 (matières v02, §47 ; personnages, coiffures et accueil, §48).
+> Dernière mise à jour : 15 novembre 2026 (matières §47, coiffures et accueil §48, corps sculpté §49, image §50).
 > Les mesures du 20 septembre restent des références historiques ; voir §9 pour la nouvelle passe.
 
 ---
@@ -135,6 +135,10 @@ forme change de comportement selon le framerate et devient instable si `dt`
 monte. C'est une règle tenue dans tout le code.
 
 ### 4.5 Personnages : tubes balayés + skinning
+
+> Depuis la 1.18.0 (§49), le tronc, les bras et les jambes ne sont plus des tubes mais un
+> corps sculpté (`assets/corps-v01.js`). Ce qui suit vaut encore pour la tête procédurale de
+> secours, les rubans de vêtement et le squelette.
 
 Les personnages ne sont pas des assemblages de primitives. `body.js` génère des
 **surfaces continues** en balayant des sections le long de chaînes de points de
@@ -2852,3 +2856,139 @@ captures du README montrent l'ancien jeu.
 **Livraison.** 1.17.0 Windows ; notes `docs/releases/v1.17.0.md`. ZIP et notes dans
 les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.17.0`, dossier
 habituel remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.15.0-20261115-152246`).
+
+## 49. Corps sculpté à la place des tubes — 1.18.0, 15 novembre 2026
+
+**Demande.** Après la 1.17.0 : « ça fait très Roblox », arriver à un physique dans
+l'esprit de Fortnite, ce qui aiderait aussi les emotes. Affiner les tubes (§48) ne
+pouvait pas y répondre : le défaut venait de la construction même (§4.5), des
+cylindres balayés sans épaule, sans dos ni mollet, bras tendus le long du corps.
+
+**Principe.** Le tronc, les bras et les jambes ne sont plus générés par `tube()` :
+`src/body.js` assemble les couches de `assets/corps-v01.js`, taillées par
+`tools/blender/sculpter_corps.py` sur le « Body Male - Stylized » du *Human Base
+Meshes Bundle* de Blender Studio (CC0, comme les visages v02 ; bundle non versionné,
+voir `art/personnages/corps-v01/README.md`). Le squelette de 16 os, ses pivots, les
+hauteurs de perception, les têtes v03, les mains v03, les souliers, le vestiaire et
+les neuf emotes ne changent pas.
+
+**Ce que fait le script** (constantes en tête de chaque étape, rien à la main).
+
+1. Repère du jeu, posture redressée (la base se tient ventre en avant, cou projeté),
+   largeur × 1,12 et profondeur × 0,93.
+2. Articulations relevées sur la base par centres de sections : coude à 1,145 m,
+   poignet à 0,951 m, genou à 0,50 m. L'avant-bras de la base ne mesure que 21 cm :
+   il est étiré à 26 cm. Son tibia mesure 38 cm comme celui du jeu, mais 8 cm plus
+   haut : le genou est descendu au pivot (0,42 m).
+3. Poids de peau calculés par position le long de chaque membre (deux à quatre os),
+   puis repose en mélange linéaire : bras de la pose A (33° et 23°) à la verticale,
+   jambes alignées sur l'axe du jeu.
+4. Vêtements : décalage le long des normales, lissage (2 tours pour la chemise, 7
+   pour la veste), rayon minimal autour de l'axe des manches et des jambes, bords
+   coupés net (les faces à cheval sont gardées, leurs sommets ramenés sur le plan),
+   V de la veste découpé avec la même loi que `ouvertureVeste()`.
+5. Sections mesurées (demi-largeur, profondeur avant et arrière) pour body.js.
+
+Coût : chemise 5 476 triangles, pantalon 5 856, veste 5 356, plastron 1 588 ;
+`corps-v01.js` pèse 0,9 Mo. Lao D complet : 41 604 triangles au lieu de 36 211,
+toujours 42 appels de dessin (plafond de test relevé de 38 000 à 44 000).
+
+**Dans le jeu** (`src/body.js`). `CHAINE_TORSE`, `CHAINE_VESTE` et `CHAINE_BASSIN`
+sont construites à partir des sections mesurées : elles ne dessinent plus rien,
+elles portent les os et servent de repli. `sur()` et `surX()` lancent un rayon sur
+la vraie couche (`toucher`, force brute, quelques centaines de rayons une seule
+fois) : col, cravate, patte, revers, cordon, sangles, boutons, poche et badge se
+posent sur la poitrine réelle, pas sur une superellipse. Supprimés : `habit()`,
+`chaineBras`, `chaineManche`, `chaineJambe`, les plis procéduraux et le filtrage
+de `hautHabille`.
+
+**Échelles et pose.** `ECHELLE_TETE` = 1,14 sur l'os `tete` (pivot aux yeux : la
+hauteur des yeux ne bouge pas, les pièces de tête du vestiaire suivent) ; mains
+× 1,12. Bras de repos écartés de 0,11 rad au lieu de 0,03 pour le joueur, et pour
+les collègues debout (`BRAS_REPOS`, coudes à −0,26).
+
+**Pièges rencontrés.** Le cube par défaut de `--factory-startup` cachait tout sous
+la poitrine. Le menton de la base descend sous l'encolure, 14 cm devant le cou : il
+part avec la tête. Mesurer une section après la coupe ramasse les sommets ramenés
+sur le plan : les sections se mesurent sur les hauteurs d'avant la coupe. La
+ceinture (anneau en superellipse) traversait la veste à la taille : la basque est
+décalée de 8 mm de plus. Les cotes du test de garde-robe étaient relevées sur la
+tête à l'échelle 1 : elles suivent maintenant `ECHELLE_TETE`.
+
+**Limites.** Un seul corps, masculin, pour tous, y compris les profils à chignon ;
+le bundle contient un « Body Female - Stylized » qui passerait par le même script,
+mais body.js n'a qu'un jeu de chaînes. Le visage reste celui, réaliste, des têtes
+v02/v03 : le corps est stylisé, la tête l'est par sa taille seulement. Les pièces
+de torse du vestiaire, modelées sur l'ancien torse, ont été contrôlées en capture
+(gilet, cape, jetpack, sac de livreur, nœud papillon) mais pas régénérées.
+
+**Vérification.** 19 suites Node validées. Planche Blender ; captures en jeu sous
+six angles, en six poses (signe, floss, griddy, main au front, accroupi, marche),
+vestiaire, tenue en chemise, collègue debout, directeur assis, menu. Rendu logiciel.
+
+**Non vérifié.** Rien sur un vrai GPU ni dans l'exécutable. Les emotes n'ont été
+vues qu'en une image chacune (quatre sur neuf) : un pli ou une traversée à un autre
+instant reste possible. Coopération, sieste et sorties non revues. Autotests
+Electron non relancés ; leurs portraits et budgets montreront des écarts attendus.
+
+**Livraison.** 1.18.0 Windows ; notes `docs/releases/v1.18.0.md`. ZIP et notes dans
+les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.18.0`. Le dossier
+habituel reste en 1.17.0 : son remplacement n'a pas été demandé cette fois.
+
+## 50. Refonte de l'image : heure dorée — 1.19.0, 15 novembre 2026
+
+**Demande.** « Je veux vraiment voir une nette amélioration graphique, jusqu'à présent je
+ne la ressens pas en jeu ; je veux une refonte visuelle entière. » Les trois passes
+précédentes (matières, modèles, corps) changeaient ce qu'on voit de près. Ce qu'on
+ressent en jouant, caméra à cinq mètres, c'est la lumière et le traitement de l'image :
+ils n'avaient pas bougé.
+
+**Constat, sur la vraie image de jeu** (qualité « haut », celle d'une carte dédiée ;
+captures dans le banc avec `g.setQualite('haut')`, pas en « bas » comme jusque-là).
+Éclairage plat : treize néons à force 10 contre un soleil à 4,4, donc un couchant qui
+restait dehors. Aucun anticrénelage : `antialias` du renderer ne vaut que pour le rendu
+direct, la cible HDR du composer avait `samples: 0`. Halo presque nul (seuil 1,35).
+Aucune ombre hors de la bande de soleil : les néons n'en portent pas, les personnages
+flottaient. Ciel de 23 h identique à celui de 18 h, et sous l'horizon le soleil
+n'éclairait plus aucune surface.
+
+**Ce qui change.**
+
+- **Le soleil devient la lumière principale** (`src/render.js`) : `FORCE_SOLEIL` 1,2,
+  teinte saturée ; néons de 10 à 7,5 ; appoint froid plus fort ; panneaux de l'IBL
+  bleutés au plafond et côté est, pour que l'ombre réponde au soleil.
+- **Rais de soleil** (`src/atmosphere.js`, `rayonsDeSoleil`) : voiles additifs parallèles
+  à la lumière, du vitrage au sol — verticaux (vus le long de la baie) et couchés (vus
+  par la caméra de jeu). Un seul maillage, une matière. Absents quand le soleil est à
+  moins de 2°.
+- **Ombres de contact** (`ombreDeContact`, `Game.majOmbres`) : un disque sombre sous
+  chaque personnage visible ; masqué pendant les passes GTAO comme les autres calques.
+- **Liseré** (`lisere` dans `src/materials.js`) : contre-jour chaud sur la tranche des
+  personnages, injecté dans `emissivemap_fragment`. À rappeler après chaque `clone()` :
+  three ne copie ni `onBeforeCompile` ni sa clé de cache.
+- **Chaîne d'image** : MSAA 4× en « haut » ; halo 0,30 / rayon 0,55 / seuil 1,0 ;
+  passe d'étalonnage après ACES (saturation 1,24, contraste en S, hautes lumières
+  chaudes, ombres froides, vignette) ; exposition 0,92. En « bas », sans composer, un
+  filtre CSS léger sur le canvas.
+- **Nuit** (étages 5 à 10) : la lune remplace le soleil (30° de hauteur, bleue, par la
+  même baie) ; le ciel s'assombrit avec l'élévation (`skyTexture`) ; brume bleu nuit ;
+  façades de la ville éteintes, fenêtres allumées (`construireVille(root, nuit)`).
+
+**Réglages essayés et écartés.** `FORCE_SOLEIL` 2,1 puis 1,5 : image monochrome orange,
+hall brûlé (un mur crème en plein soleil sature ACES et perd sa couleur). Halo 0,42 au
+seuil 0,92 : tout bave. Filtre CSS `saturate(1.22) contrast(1.1)` en « bas » : le rendu
+direct est déjà plus saturé que le composer, l'image virait au rouge.
+
+**Vérification.** 19 suites Node validées. Captures avant/après en « haut » à cadrages
+constants (vue de jeu, open space, baie, hall, personnage de dos et de face), étage 22
+de jour et étage 7 de nuit ; vue de jeu avec HUD en « haut » et en « bas ».
+
+**Non vérifié.** Tout a été jugé en rendu logiciel : ni la fréquence d'images réelle
+(MSAA 4× sur cible demi-flottante, voiles additifs en surimpression), ni « moyen » ni
+« ultra », ni l'aspect exact du halo sur un vrai GPU. Les étages 3, 4 (soleil à 3°,
+rais très longs), 6 et 8 à 10 n'ont pas été regardés. Le menu n'a pas été recapturé.
+Si « haut » passe sous 24 images/s, le repli automatique descend en « moyen », sans MSAA.
+
+**Livraison.** 1.19.0 Windows ; notes `docs/releases/v1.19.0.md`. ZIP et notes dans les
+Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.19.0`, dossier habituel
+remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.17.0-20261115-165123`).

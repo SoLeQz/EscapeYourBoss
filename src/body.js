@@ -1,5 +1,6 @@
 import { partager } from './resources.js';
 import * as THREE from 'three';
+import CORPS from '../assets/corps-v01.js';
 
 // ============================================================
 //  Corps articulé
@@ -47,6 +48,8 @@ const OS = [
 ];
 
 const INDEX = new Map(OS.map((o, i) => [o[0], i]));
+// Les poids du corps sculpté sont indexés dans cet ordre.
+if (CORPS.os.join() !== OS.map(o => o[0]).join()) throw new Error('assets/corps-v01.js : squelette différent, relancer sculpter_corps.py');
 
 // Position absolue d'un os en pose de repos.
 const MONDE = (() => {
@@ -283,11 +286,47 @@ function profil(chaine, y) {
   };
 }
 
+// Premier triangle d'une couche sculptée rencontré par un rayon venu de l'extérieur.
+// Force brute : quelques centaines de rayons sur 5 000 triangles, une seule fois.
+function toucher(couche, o, d) {
+  const { pos, idx } = couche;
+  let tMin = Infinity, n = null;
+  for (let i = 0; i < idx.length; i += 3) {
+    const a = idx[i] * 3, b = idx[i + 1] * 3, c = idx[i + 2] * 3;
+    const e1 = [pos[b] - pos[a], pos[b + 1] - pos[a + 1], pos[b + 2] - pos[a + 2]];
+    const e2 = [pos[c] - pos[a], pos[c + 1] - pos[a + 1], pos[c + 2] - pos[a + 2]];
+    const h = [d[1] * e2[2] - d[2] * e2[1], d[2] * e2[0] - d[0] * e2[2], d[0] * e2[1] - d[1] * e2[0]];
+    const det = e1[0] * h[0] + e1[1] * h[1] + e1[2] * h[2];
+    if (det < 1e-12) continue;                       // parallèle, ou face vue de l'intérieur
+    const s = [o[0] - pos[a], o[1] - pos[a + 1], o[2] - pos[a + 2]];
+    const u = (s[0] * h[0] + s[1] * h[1] + s[2] * h[2]) / det;
+    if (u < 0 || u > 1) continue;
+    const q = [s[1] * e1[2] - s[2] * e1[1], s[2] * e1[0] - s[0] * e1[2], s[0] * e1[1] - s[1] * e1[0]];
+    const v = (d[0] * q[0] + d[1] * q[1] + d[2] * q[2]) / det;
+    if (v < 0 || u + v > 1) continue;
+    const t = (e2[0] * q[0] + e2[1] * q[1] + e2[2] * q[2]) / det;
+    if (t > 1e-6 && t < tMin) { tMin = t; n = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]]; }
+  }
+  if (!n) return null;
+  const l = Math.hypot(...n);
+  return { p: [o[0] + d[0] * tMin, o[1] + d[1] * tMin, o[2] + d[2] * tMin], n: n.map(v => v / l) };
+}
+// La surface réelle derrière chaque chaîne mesurée.
+const coucheDe = chaine => chaine === CHAINE_TORSE ? CORPS.haut : chaine === CHAINE_VESTE ? CORPS.veste
+  : chaine === CHAINE_BASSIN ? CORPS.bas : null;
+const pose = (h, s, decal) => ({ p: h.p.map((v, i) => v + h.n[i] * decal), n: h.n, os: [s.osA, s.osB, s.melange] });
+
 // Point de la surface à la hauteur y et à l'angle `ang`, poussé de
 // `decal` le long de la normale. Renvoie aussi la normale et les os
 // porteurs, pour que le ruban suive la même déformation que le tube.
 function sur(chaine, y, ang, decal = 0) {
-  const s = profil(chaine, y);
+  const s = profil(chaine, y), couche = coucheDe(chaine);
+  // Dans le V de la veste le rayon passe au travers : on se décale vers la lèvre.
+  for (let k = 0; couche && k < 6; k++) {
+    const a = ang + Math.sign(ang || 1) * k * 0.03, dir = [Math.sin(a), 0, Math.cos(a)];
+    const h = toucher(couche, [s.p[0] + dir[0] * 0.7, y, s.p[2] + dir[2] * 0.7], [-dir[0], 0, -dir[2]]);
+    if (h) return pose(h, s, decal);
+  }
   const [dx, dz] = section(ang, s.r[0], s.r[1], s.rzB, s.exp);
   const rz = dz >= 0 ? s.r[1] : s.rzB;
   let nx = dx / (s.r[0] * s.r[0]), nz = dz / (rz * rz);
@@ -303,7 +342,9 @@ function sur(chaine, y, ang, decal = 0) {
 
 // Même chose à l'abscisse x donnée, côté avant (cote = 1) ou arrière.
 function surX(chaine, y, x, cote = 1, decal = 0) {
-  const s = profil(chaine, y);
+  const s = profil(chaine, y), couche = coucheDe(chaine);
+  const h = couche && toucher(couche, [x, y, cote * 0.7], [0, 0, -cote]);
+  if (h) return pose(h, s, decal);
   const cible = Math.min(Math.abs(x), s.r[0] * 0.999);
   let lo = 0, hi = Math.PI / 2;
   for (let k = 0; k < 24; k++) {
@@ -428,66 +469,6 @@ const P = (x, y, z, rx, rz, os) => ({ p: [x, y, z], r: [rx, rz], os });
 const Q = (x, y, z, rx, rzAvant, rzArriere, exp) =>
   ({ p: [x, y, z], r: [rx, rzAvant], rzB: rzArriere, exp, os: 'tete' });
 
-// Bras de chemise : manche LONGUE, jusqu'à la manchette.
-//
-// Correctif du « Rayman » : les deux premiers points de contrôle sont
-// portés par `buste`, pas par l'épaule. La naissance du bras est donc
-// COUSUE au torse — quand l'épaule tourne, ces sommets restent sur le
-// tronc et la surface s'étire au lieu de se décoller.
-//
-// Le troisième point est le deltoïde : c'est le volume qui manquait et
-// qui faisait lire « cylindre posé à côté du torse ».
-// La naissance du bras est SOUS la ligne d'épaule du torse (1,425 à
-// 1,468). Elle était à 1,482, soit au-dessus : le tube dépassait du
-// tronc et montait jusqu'au cou, ce qui donnait deux rouleaux pendants
-// en guise d'épaules et effaçait toute la carrure.
-function chaineBras(cote) {
-  const x = MONDE.get(cote < 0 ? 'epauleL' : 'epauleR')[0];
-  const eL = cote < 0 ? 'epauleL' : 'epauleR';
-  const cL = cote < 0 ? 'coudeL' : 'coudeR';
-  const mL = cote < 0 ? 'mainL' : 'mainR';
-  // Rayons MESURÉS contre le corps : le deltoïde faisait 8,1 cm de
-  // rayon, soit 16 cm de diamètre pour un torse de 36 cm de large. Le
-  // bras débordait de 11 cm au-delà de la carrure et chevauchait le
-  // tronc de 6 cm — d'où deux rouleaux pendus de part et d'autre, sans
-  // ligne d'épaule. Un deltoïde d'adulte fait 5,5 cm de rayon.
-  // Silhouette 1.17 : bras affinés de 4 à 5 mm de rayon, pour qu'un jour
-  // passe entre le bras et la taille au lieu d'un bloc épaules-hanches.
-  return [P(x * 0.50, 1.450, -0.005, 0.034, 0.034, 'buste'),   // naissance, noyée dans le trapèze
-          P(x * 0.78, 1.434, -0.002, 0.045, 0.044, 'buste'),   // transition cousue au torse
-          P(x * 0.97, 1.402, 0, 0.052, 0.051, eL),             // deltoïde
-          P(x, 1.340, 0, 0.049, 0.048, eL),
-          P(x, 1.225, 0, 0.044, 0.043, eL),                    // biceps
-          P(x, 1.118, 0, 0.040, 0.039, cL),                    // coude
-          P(x, 1.040, 0, 0.040, 0.038, cL),
-          P(x, 0.960, 0, 0.037, 0.036, cL),                    // avant-bras
-          P(x, 0.905, 0, 0.035, 0.034, cL),
-          P(x, 0.884, 0, 0.035, 0.033, mL),                    // manchette
-          P(x, 0.872, 0, 0.034, 0.032, mL)];
-}
-
-// Manche de veste : la même chaîne, gonflée, ouverte en bas pour que
-// la manchette de chemise dépasse.
-// Le bouchon du haut est un dôme RENTRANT (voir tube) : trop profond,
-// il creuse un cratère à l'épaule. 0,2 suffit à fermer la surface.
-const BOMBE_MANCHE = 0.2;
-function chaineManche(cote) {
-  const x = MONDE.get(cote < 0 ? 'epauleL' : 'epauleR')[0];
-  const eL = cote < 0 ? 'epauleL' : 'epauleR';
-  const cL = cote < 0 ? 'coudeL' : 'coudeR';
-  return [P(x * 0.48, 1.456, -0.007, 0.040, 0.040, 'buste'),
-          P(x * 0.76, 1.438, -0.003, 0.054, 0.053, 'buste'),
-          P(x * 0.98, 1.404, 0, 0.061, 0.060, eL),             // épaule de veste, rembourrée
-          P(x, 1.340, 0, 0.057, 0.056, eL),
-          P(x, 1.225, 0.000, 0.052, 0.051, eL),
-          P(x, 1.118, 0.000, 0.048, 0.047, cL),
-          P(x, 1.040, 0.005, 0.046, 0.043, cL),
-          P(x, 0.960, 0, 0.044, 0.042, cL),
-          // la manchette de chemise ne dépasse que de 1,6 cm : à 4,6 cm
-          // elle lisait comme un gant blanc
-          P(x, 0.900, 0.000, 0.041, 0.039, cL)];
-}
-
 // Peau du poignet et de la main : le tube part de SOUS la manchette et
 // se prolonge dans la paume. Le poignet se resserre puis la main
 // s'élargit, d'un seul tenant ; les doigts partent de sa base.
@@ -502,52 +483,16 @@ function chaineMain(cote) {
           P(x, 0.776, 0.006, 0.032, 0.020, mL)];               // base des doigts
 }
 
-// Jambes. Le premier point est porté par `racine` et NOYÉ dans le
-// bassin : le haut de cuisse reste soudé quand la hanche pivote.
-function chaineJambe(cote) {
-  const x = MONDE.get(cote < 0 ? 'hancheL' : 'hancheR')[0];
-  const h = cote < 0 ? 'hancheL' : 'hancheR';
-  const g = cote < 0 ? 'genouL' : 'genouR';
-  const c = cote < 0 ? 'chevilleL' : 'chevilleR';
-  // Silhouette 1.17 : pantalon droit. La cuisse faisait 9,8 cm de rayon : les deux
-  // jambes mesuraient 40,6 cm de large pour une basque de veste de 35,6 cm et
-  // sortaient dessous en deux lobes (« culotte de cheval », surtout de dos).
-  return [P(x * 0.84, 0.905, 0, 0.074, 0.082, 'racine'),   // naissance, dans le bassin
-          P(x * 0.96, 0.845, 0, 0.073, 0.086, h),
-          P(x, 0.760, 0, 0.072, 0.084, h),                 // cuisse
-          P(x, 0.600, 0.004, 0.069, 0.076, h),
-          P(x, 0.452, 0.012, 0.062, 0.066, g),                 // genou
-          P(x, 0.330, -0.004, 0.061, 0.064, g),                 // mollet
-          P(x, 0.190, 0.002, 0.056, 0.057, g),
-          P(x, 0.137, 0.006, 0.055, 0.056, c),
-          P(x, 0.108, 0.012, 0.055, 0.057, c)].map(p => ({ ...p, exp: 0.82 }));                // cheville
-}
-
-// Bassin : un volume de pantalon d'où sortent les cuisses. Sans lui, le
-// tube de chemise descendait jusqu'à l'entrejambe et les jambes
-// semblaient collées sous le torse.
-const CHAINE_BASSIN = [
-  P(0, 0.770, 0.000, 0.148, 0.100, 'racine'),   // entrejambe
-  P(0, 0.850, 0.000, 0.168, 0.109, 'racine'),   // hanches, point le plus large
-  P(0, 0.905, 0.002, 0.170, 0.110, 'racine'),
-  P(0, 0.945, 0.002, 0.164, 0.107, 'racine'),
-  P(0, 0.985, 0.002, 0.157, 0.103, 'racine'),   // ceinture
-];
-
-// Torse de chemise : section elliptique, épaules larges, taille marquée.
-// Il s'arrête sous la ceinture (le bassin prend le relais) et se
-// referme à plat autour du cou, sous le col.
-const CHAINE_TORSE = [
-  P(0, 0.930, 0.000, 0.146, 0.094, 'racine'),
-  P(0, 0.975, 0.002, 0.148, 0.096, 'racine'),   // ceinture
-  P(0, 1.040, 0.004, 0.141, 0.093, 'buste'),
-  P(0, 1.120, 0.006, 0.136, 0.091, 'buste'),    // taille marquée
-  P(0, 1.240, 0.004, 0.154, 0.101, 'buste'),    // cage thoracique
-  P(0, 1.350, 0.001, 0.172, 0.107, 'buste'),    // poitrine
-  P(0, 1.425, -0.003, 0.172, 0.105, 'buste'),   // largeur d'épaules maintenue
-  P(0, 1.468, -0.005, 0.143, 0.096, 'buste'),   // trapèzes en pente
-  P(0, 1.505, -0.007, 0.070, 0.064, 'buste'),   // encolure, juste autour du cou
+// Tronc, veste et bassin : sections MESURÉES sur le corps sculpté (assets/corps-v01.js,
+// tools/blender/sculpter_corps.py), plus les anneaux d'encolure autour du cou. Elles ne
+// dessinent plus rien : elles portent les os et servent de repli quand un rayon manque
+// la surface. Rayon avant et arrière distincts : une poitrine n'est pas une ellipse.
+const sectionsMesurees = (lignes, encolure) => [
+  ...lignes.map(([y, rx, rz, rzB]) => ({ p: [0, y, 0], r: [rx, rz], rzB, os: y < 1.0 ? 'racine' : 'buste' })),
+  ...encolure,
 ].map(p => ({ ...p, exp: p.p[1] > 1.46 ? 0.94 : 0.84 }));
+const CHAINE_BASSIN = sectionsMesurees(CORPS.chaines.bassin, []);
+const CHAINE_TORSE = sectionsMesurees(CORPS.chaines.torse, [P(0, 1.505, -0.007, 0.070, 0.064, 'buste')]);
 
 // Tête : une seule surface continue, du sommet du crâne au raccord du
 // cou. Le visage est plat (rzAvant < rzArriere), les pommettes sont
@@ -590,23 +535,10 @@ const CHAINE_COU = [
   P(0, 1.610, 0.004, 0.045, 0.046, 'tete'),
 ];
 
-// Veste : même axe que le torse, un centimètre et demi plus large.
-// Fermée sous le bouton (1,10 m), ouverte en V au-dessus : c'est la
-// forme d'une veste, pas d'un gilet fendu.
-const CHAINE_VESTE = [
-  // Silhouette 1.17 : taille cintrée (15,1 cm), basque évasée qui couvre les cuisses.
-  P(0, 0.800, 0.002, 0.179, 0.119, 'racine'),   // basque, à peine évasée
-  P(0, 0.880, 0.002, 0.177, 0.118, 'racine'),
-  P(0, 0.990, 0.004, 0.164, 0.112, 'racine'),
-  P(0, 1.060, 0.005, 0.155, 0.108, 'buste'),
-  P(0, 1.125, 0.006, 0.151, 0.106, 'buste'),
-  P(0, 1.245, 0.004, 0.169, 0.116, 'buste'),
-  P(0, 1.355, 0.001, 0.187, 0.122, 'buste'),
-  P(0, 1.428, -0.003, 0.187, 0.120, 'buste'),
-  P(0, 1.470, -0.005, 0.157, 0.109, 'buste'),
-  P(0, 1.488, -0.006, 0.121, 0.095, 'buste'),
-  P(0, 1.507, -0.006, 0.077, 0.070, 'buste'),
-].map(p => ({ ...p, exp: p.p[1] > 1.46 ? 0.94 : 0.84 }));
+// Veste : fermée sous le bouton (1,10 m), ouverte en V au-dessus. Le V est découpé
+// dans la coque par sculpter_corps.py, avec la même loi que ouvertureVeste().
+const CHAINE_VESTE = sectionsMesurees(CORPS.chaines.veste,
+  [P(0, 1.488, -0.006, 0.121, 0.095, 'buste'), P(0, 1.507, -0.006, 0.077, 0.070, 'buste')]);
 const BOUTON_VESTE = 1.10;
 // Sous le bouton la veste est FERMÉE : 0,05 rad laissait une fente de
 // 1,6 cm par laquelle la chemise apparaissait en une ligne claire, qui
@@ -640,7 +572,7 @@ function revers(cote) {
 // et sur les côtés, jusqu'à l'encoche des revers.
 function colVeste() {
   return tube([
-    P(0, 1.480, -.006, .128, .097, 'buste'),
+    (s => P(0, 1.474, 0, s.r[0] + .004, Math.max(s.r[1], s.rzB) + .004, 'buste'))(profil(CHAINE_VESTE, 1.474)),
     P(0, 1.499, -.006, .079, .073, 'buste'),
     P(0, 1.508, -.005, .067, .062, 'buste'),
   ], { segments: 24, sousDiv: 2, ferme: false, arcDeb: .72, arcFin: Math.PI * 2 - .72 });
@@ -727,7 +659,7 @@ function ceintureRuban() {
 
 // Sangles de sac : elles passent sur l'épaule, devant et derrière, en
 // suivant la surface du vêtement du dessus (chemise ou veste).
-function sangles(chaine, epaule) {
+function sangles(chaine) {
   const morceaux = [];
   for (const cote of [-1, 1]) {
     const x = 0.120 * cote;
@@ -742,6 +674,8 @@ function sangles(chaine, epaule) {
     // horizontal (son bouchon rentre vers l'intérieur), la sangle passe
     // donc à plat quelques millimètres au-dessus.
     for (const z of [.073, .052, .027, 0, -.027, -.052, -.073]) {
+      const dessus = toucher(coucheDe(chaine), [x, 1.7, z], [0, -1, 0]);
+      if (dessus) { sections.push({ c: [x, dessus.p[1] + .006, z], n: dessus.n, os: ['buste', 'buste', 0] }); continue; }
       let lo = 1.42, hi = 1.515;
       for (let k = 0; k < 24; k++) {
         const y = (lo + hi) / 2;
@@ -791,69 +725,6 @@ function cordon(chaine, decal) {
   return morceaux;
 }
 
-// Emmanchure cousue : on ouvre le flanc du torse et on le relie au
-// premier anneau de manche. Aucun cylindre ne traverse l'épaule.
-// Les sommets du raccord partagent exactement positions et poids aux bords.
-function habit(chaine, manche, veste = false) {
-  const N = 32, SD = 3;
-  const options = { segments: N, sousDiv: SD, bombe: 0, ferme: !veste };
-  if (veste) options.arc = y => [ouvertureVeste(y), Math.PI * 2 - ouvertureVeste(y)];
-  const torse = tube(chaine, options), ech = echantillonner(chaine, SD);
-  const proche = y => ech.reduce((best, s, i) => Math.abs(s.p[1]-y)<Math.abs(ech[best].p[1]-y)?i:best,0);
-  const bas=proche(1.30), haut=proche(1.468), morceaux=[torse];
-  const trous=[];
-  for (const cote of [-1,1]) {
-    // Cherche le flanc dans les angles réels (l'ouverture du V décale les colonnes).
-    const ligne = proche(1.40);
-    let centre=0;
-    for(let j=1;j<N;j++) if(cote*torse.pos[(ligne*(N+1)+j)*3] > cote*torse.pos[(ligne*(N+1)+centre)*3]) centre=j;
-    const j0=centre-2,j1=centre+2;
-    trous.push({j0,j1});
-    const contour=[];
-    for(let i=bas;i<=haut;i++) for(let j=j0;j<=j1;j++)
-      if(i===bas || i===haut || j===j0 || j===j1) {
-        const index=i*(N+1)+j,p=torse.pos.slice(index*3,index*3+3);
-        contour.push({p,angle:Math.atan2(cote*(p[1]-(ech[bas].p[1]+ech[haut].p[1])/2)/.085,p[2]/.067)});
-      }
-    contour.sort((a,b)=>a.angle-b.angle);
-    const K=contour.length;contour.push(contour[0]);
-    const angles=contour.map((q,i)=>q.angle+(i===K?Math.PI*2:0));
-    const pts=manche(cote).filter(p=>p.p[1]<=1.34);
-    const bras=tube(pts,{segments:K,sousDiv:3,capBas:false,capHaut:false,angles,plis:pliManche});
-    const pont={pos:[],uv:[],idx:[],si:[],sw:[]};
-    for(let i=0;i<=6;i++) {
-      const t=i/6;
-      for(let j=0;j<=K;j++) {
-        const a=contour[j].p,b=bras.pos.slice(j*3,j*3+3);
-        pont.pos.push(a[0]+(b[0]-a[0])*Math.sin(t*Math.PI/2),
-          a[1]+(b[1]-a[1])*(1-Math.cos(t*Math.PI/2)),a[2]+(b[2]-a[2])*lisse(t));
-        pont.uv.push(j/K*.38,t*.14);
-        pont.si.push(INDEX.get('buste'),INDEX.get(cote<0?'epauleL':'epauleR'),0,0);
-        pont.sw.push(1-lisse(t),lisse(t),0,0);
-        if(i<6 && j<K){const q=i*(K+1)+j;pont.idx.push(q,q+K+1,q+1,q+1,q+K+1,q+K+2);}
-      }
-    }
-    morceaux.push(pont,bras);
-  }
-  const faces=[];
-  for(let k=0;k<torse.idx.length;k+=6) {
-    // Le tube range ses deux triangles par cellule, puis ses bouchons.
-    const cellule=k/6,i=Math.floor(cellule/N),j=cellule%N;
-    if(i>=bas && i<haut && trous.some(t=>j>=t.j0 && j<t.j1)) continue;
-    faces.push(...torse.idx.slice(k,k+6));
-  }
-  torse.idx=faces;
-  return morceaux;
-}
-
-// Plis de coupe : arête repassée sur les jambes, cassure sur le soulier,
-// compression au coude. 2 à 4 mm, visibles dans la silhouette, pas du bruit.
-const pliManche = (a, y) => 1 + .045 * Math.exp(-(((y - 1.125) / .085) ** 2))
-  * Math.sin((y - 1.11) * 95 + Math.cos(a) * 2) + .018 * Math.cos(a * 4);
-const pliPantalon = (a, y) => 1 + .065 * Math.pow(Math.abs(Math.cos(a)), 18)
-  + .055 * Math.exp(-(((y - .155) / .04) ** 2)) * Math.sin(y * 130 + Math.sin(a) * 2)
-  + .026 * Math.exp(-(((y - .455) / .065) ** 2)) * Math.sin(y * 95 + a);
-
 // Coupe continue à raie latérale : le volume coiffé se fond dans les
 // tempes. Les sillons sont sculptés dans la surface, sans rubans flottants.
 function chevelure() {
@@ -892,16 +763,11 @@ let CACHE = null;
 export function geometriesCorps() {
   if (CACHE) return CACHE;
   CACHE = {
-    haut: assembler([
-      ...habit(CHAINE_TORSE, chaineBras),
-      ...colChemise(),
-      patteChemise(),
-    ]),
-    bas: assembler([
-      tube(CHAINE_BASSIN, { segments: 20, sousDiv: 3, capHaut: false, bombe: 0.35 }),
-      tube(chaineJambe(-1), { segments: 20, sousDiv: 3, plis: pliPantalon }),
-      tube(chaineJambe(1), { segments: 20, sousDiv: 3, plis: pliPantalon }),
-    ]),
+    // Chemise, pantalon et veste : corps sculpté, déjà reposé et pondéré sur ces os.
+    haut: assembler([CORPS.haut, ...colChemise(), patteChemise()]),
+    // Sous la veste, seuls le plastron, le col et les manchettes sont utiles.
+    hautHabille: assembler([CORPS.hautHabille, ...colChemise(), patteChemise()]),
+    bas: assembler([CORPS.bas]),
     // La tête fait partie de la surface de peau : le cou et le visage
     // sont continus, il n'y a plus de raccord visible.
     peau: assembler([
@@ -913,7 +779,7 @@ export function geometriesCorps() {
     ]),
 
     veste: assembler([
-      ...habit(CHAINE_VESTE, chaineManche, true),
+      CORPS.veste,
       revers(-1), revers(1),
       colVeste(),
     ]),
@@ -923,19 +789,6 @@ export function geometriesCorps() {
     cheveux: assembler([chevelure()]),
 
   };
-  // Sous la veste, seuls le plastron, le col et les manchettes sont utiles.
-  // Retirer les manches internes évite leur traversée aux fortes flexions et
-  // réduit les triangles dessinés, sans ajouter de maillage ni de matériau.
-  CACHE.hautHabille = CACHE.haut.clone();
-  const hp = CACHE.haut.attributes.position, hi = CACHE.haut.index.array, visibles = [];
-  for (let i=0;i<hi.length;i+=3) {
-    const ids=[hi[i],hi[i+1],hi[i+2]];
-    const x=ids.reduce((v,k)=>v+hp.getX(k),0)/3;
-    const y=ids.reduce((v,k)=>v+hp.getY(k),0)/3;
-    const z=ids.reduce((v,k)=>v+hp.getZ(k),0)/3;
-    if ((Math.abs(x)>.17 && y<.901) || y>1.480 || (Math.abs(x)<.110 && y>1.105 && z>0)) visibles.push(...ids);
-  }
-  CACHE.hautHabille.setIndex(visibles);
   const peau = CACHE.peau, positions = peau.attributes.position;
   const couleurs = [];
   for (let i = 0; i < positions.count; i++) {
@@ -971,9 +824,7 @@ export function geometrieAccessoire(nom, veste) {
   if (nom === 'cravate') {
     g = assembler([cravate()]);
   } else if (nom === 'sangles') {
-    // le dôme qui ferme le haut de la manche : c'est ce que la sangle enjambe
-    const ring = veste ? chaineManche(1)[0] : chaineBras(1)[0];
-    g = assembler(sangles(chaine, { cx: ring.p[0], cy: ring.p[1], r: ring.r[0] }));
+    g = assembler(sangles(chaine));
   } else if (nom === 'cordon') {
     g = assembler(cordon(chaine, 0.009));
   } else if (nom === 'ceinture') {

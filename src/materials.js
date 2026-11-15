@@ -4,7 +4,7 @@ import * as THREE from 'three';
 // ============================================================
 //  Matériaux PBR procéduraux.
 //
-//  Décor : cartes PBR cuites dans Blender, partagées entre les variantes.
+//  Décor : cartes PBR v02 (tools/textures/generer.mjs), partagées entre les variantes.
 //  Personnages et graphismes : textures canvas. Les générateurs historiques
 //  du décor servent aux tests de référence sans préchargement Blender.
 // ============================================================
@@ -271,7 +271,8 @@ function hairTex(repeat) {
     R[i] = H[i];
   }
   const map = colorTex(S, (u, v, x, y) => {
-    const k = 0.74 + H[y * S + x] * 0.30;
+    // Contraste de mèche doublé (0,30 → 0,62) : à 0,30 la coiffure se lisait en casque.
+    const k = 0.58 + H[y * S + x] * 0.62;
     return rgb(Math.min(1, k), Math.min(1, k * 0.985), Math.min(1, k * 0.96));
   }, repeat);
   return {
@@ -681,8 +682,8 @@ export function buildCharacterMaterials() {
     // (sheen) est ce qui distingue des cheveux d'un casque noir.
     cheveux: phys({
       ...cheveuxT, color: 0x1a1512, roughness: 1, metalness: 0, envMapIntensity: 1.05,
-      normalScale: new THREE.Vector2(0.18, 0.18), side: THREE.DoubleSide,
-      sheen: 0.18, sheenColor: new THREE.Color(0x8a6448), sheenRoughness: 0.7,
+      normalScale: new THREE.Vector2(0.45, 0.45), side: THREE.DoubleSide,
+      sheen: 0.3, sheenColor: new THREE.Color(0x8a6448), sheenRoughness: 0.6,
       clearcoat: 0,
     }),
     // Popeline : lisse, légèrement satinée, plis courts.
@@ -715,7 +716,7 @@ export function buildCharacterMaterials() {
       side: THREE.DoubleSide,
     }),
     sac: std({
-      ...sacT, color: 0x23252b, roughness: 0.70, metalness: 0,
+      ...sacT, color: 0xb9852f, roughness: 0.82, metalness: 0,
       normalScale: new THREE.Vector2(0.20, 0.20), envMapIntensity: 0.85,
     }),
     // Cuir : pores fins cuits dans Blender, sans armure de tissu sur les souliers.
@@ -777,9 +778,9 @@ export function buildMaterials(renderer) {
   const fabricChairT = felt || fabric([2, 2], [0.13, 0.14, 0.16]);
   const fabricSofaT = felt || fabric([2, 2], [0.64, 0.32, 0.22]);
   const brushedT = texturesBlender('metal') || brushed([2, 2]);
-  const paintT = paint([3, 3]);
+  const paintT = texturesBlender('enduit') || paint([3, 3]);
   const concreteT = texturesBlender('beton');
-  const ceilT = ceilingTile([1/.6, 1/.6]);
+  const ceilT = texturesBlender('plafond') || ceilingTile([1/.6, 1/.6]);
 
   const std = (o) => new THREE.MeshStandardMaterial(o);
   const phys = (o) => new THREE.MeshPhysicalMaterial(o);
@@ -787,50 +788,58 @@ export function buildMaterials(renderer) {
   return {
     textures: { carpetT, stoneT, woodT, ceilT, paintT },
 
-    moquette: std({ ...carpetT, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(0.45, 0.45), envMapIntensity: 0.32 }),
+    // Carte neutre : la teinte vient de material.color (celle du service).
+    moquette: std({ ...carpetT, color: 0x7f9a96, roughness: 0.96, metalness: 0,
+      normalScale: new THREE.Vector2(0.55, 0.55), envMapIntensity: 0.32 }),
 
     pierre: std({ ...stoneT, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(0.18, 0.18), envMapIntensity: 0.65 }),
+      normalScale: new THREE.Vector2(0.35, 0.35), envMapIntensity: 0.8 }),
 
     beton: std({ color: concreteT ? 0xffffff : 0xb3b1a4, ...(concreteT || paintT), roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(.16,.16), envMapIntensity: .5 }),
+      normalScale: new THREE.Vector2(.7,.7), envMapIntensity: .5 }),
     eau: std({ color:0x71a7b9, transparent:true, opacity:.42, depthWrite:false,
       roughness:.19, metalness:0, envMapIntensity:.6 }),
     diffuseur: new THREE.MeshBasicMaterial({ color: 0xffedd0 }),
 
     bois: std({ ...woodT, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(0.45, 0.45), envMapIntensity: 0.9 }),
+      normalScale: new THREE.Vector2(0.6, 0.6), envMapIntensity: 0.9 }),
 
     boisFonce: std({ ...woodDarkT, color: oak ? 0x9e7657 : 0xffffff, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(0.45, 0.45), envMapIntensity: 0.95 }),
+      normalScale: new THREE.Vector2(0.6, 0.6), envMapIntensity: 0.95 }),
 
-    mur: std({ color: 0xe2e5db, ...paintT, roughness: 0.92, metalness: 0,
-      normalScale: new THREE.Vector2(0.25, 0.25), envMapIntensity: 0.7 }),
+    mur: std({ color: 0xe2e5db, ...paintT, roughness: 0.9, metalness: 0,
+      normalScale: new THREE.Vector2(0.3, 0.3), envMapIntensity: 0.7 }),
 
-    murAccent: std({ color: 0x3c6561, ...paintT, roughness: 0.9, metalness: 0,
-      normalScale: new THREE.Vector2(0.25, 0.25), envMapIntensity: 0.7 }),
+    murAccent: std({ color: 0x3c6561, ...paintT, roughness: 0.88, metalness: 0,
+      normalScale: new THREE.Vector2(0.3, 0.3), envMapIntensity: 0.7 }),
 
-    plafond: std({ ...ceilT, roughness: 0.97, metalness: 0,
-      normalScale: new THREE.Vector2(0.07, 0.07), envMapIntensity: 0.45 }),
+    // Un plafond n'est éclairé que par rebond : sans part émissive il ne voit que
+    // le sol de l'IBL et vire au brun. La dalle garde son dessin (emissiveMap).
+    plafond: std({ ...ceilT, roughness: 0.95, metalness: 0, emissive: 0xfff4e4, emissiveMap: ceilT.map,
+      emissiveIntensity: 0.4, normalScale: new THREE.Vector2(0.5, 0.5), envMapIntensity: 0.45 }),
 
     cloison: phys({ sheen: .18, sheenColor: new THREE.Color(0xa6b7ab), sheenRoughness: 1, ...fabricGreyT, color: felt ? 0x819c90 : 0xffffff, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(0.28, 0.28), envMapIntensity: 0.5 }),
+      normalScale: new THREE.Vector2(0.6, 0.6), envMapIntensity: 0.5 }),
+
+    // Sous-face des îlots acoustiques : le même feutre, qui porte sa propre lumière.
+    ilot: std({ ...fabricGreyT, color: felt ? 0x819c90 : 0xffffff, emissive: felt ? 0x819c90 : 0x5a7068, emissiveMap: fabricGreyT.map,
+      emissiveIntensity: 0.3, roughness: 1, metalness: 0, normalScale: new THREE.Vector2(0.6, 0.6), envMapIntensity: 0.4 }),
 
     tissuChaise: phys({ sheen: .32, sheenColor: new THREE.Color(0x849c8c), sheenRoughness: .9, ...fabricChairT, color: felt ? 0x444e49 : 0xffffff, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(.5, .5), envMapIntensity: 0.45 }),
+      normalScale: new THREE.Vector2(.7, .7), envMapIntensity: 0.45 }),
 
     tissuCanape: phys({ sheen: .25, sheenColor: new THREE.Color(0xd5b29d), sheenRoughness: .9, ...fabricSofaT, color: felt ? 0xbb7658 : 0xffffff, roughness: 1, metalness: 0,
-      normalScale: new THREE.Vector2(.5, .5), envMapIntensity: 0.5 }),
+      normalScale: new THREE.Vector2(.7, .7), envMapIntensity: 0.5 }),
 
     alu: std({ color: 0xb9bec0, ...brushedT, metalness: 1, roughness: 1,
-      normalScale: new THREE.Vector2(0.045, 0.045), envMapIntensity: 0.8 }),
+      normalScale: new THREE.Vector2(0.5, 0.5), envMapIntensity: 0.8 }),
 
     aluSombre: std({ color: 0x434d49, ...brushedT, metalness: .65, roughness: 1,
-      normalScale: new THREE.Vector2(0.15, 0.15), envMapIntensity: .8 }),
+      normalScale: new THREE.Vector2(0.5, 0.5), envMapIntensity: .8 }),
 
-    laiton: std({ color: 0xa79d7f, metalness: 0.85, roughness: 0.40,
-      envMapIntensity: 0.9 }),
+    // Laiton brossé : mêmes stries que l'aluminium, un peu plus poli.
+    laiton: std({ color: 0xa79d7f, ...brushedT, metalness: 0.85, roughness: 0.82,
+      normalScale: new THREE.Vector2(0.5, 0.5), envMapIntensity: 0.9 }),
 
     plastiqueNoir: phys({ color: 0x1b1d21, roughness: 0.48, metalness: 0,
       clearcoat: 0.12, clearcoatRoughness: 0.45, envMapIntensity: 0.9 }),

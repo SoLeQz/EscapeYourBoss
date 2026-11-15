@@ -29,14 +29,23 @@ for(const nom of Object.keys(MATIERES_BLENDER)){
     inside+=Math.abs(rgb[(y*w+Math.floor(w/2))*3+c]-rgb[(y*w+Math.floor(w/2)-1)*3+c]);
   }
   assert(edge<=inside*4+h*.012,'Couture excessive : '+t.name);
+  // Même contrôle dans l'autre sens : les cartes v02 se répètent en U comme en V.
+  edge=0;inside=0;const m=Math.floor(h/2);
+  for(let x=0;x<w;x++)for(let c=0;c<3;c++){
+    edge+=Math.abs(rgb[((h-1)*w+x)*3+c]-rgb[x*3+c]);
+    inside+=Math.abs(rgb[(m*w+x)*3+c]-rgb[((m-1)*w+x)*3+c]);
+  }
+  assert(edge<=inside*4+w*.012,'Couture verticale excessive : '+t.name);
  }
 }
-assert.equal(count,19);assert(memory<40*1024*1024);
+// v02 : 9 familles, 22 cartes. Budget relevé de 40 à 70 Mio (moquette et pierre en 1024²).
+assert.equal(count,22);assert(memory<70*1024*1024);
 const M=buildMaterials(),C=buildCharacterMaterials();
 assert.equal(M.cloison.map,M.tissuChaise.map);assert.equal(M.tissuCanape.map,M.tissuChaise.map);
-assert.equal(M.bois.map,M.boisFonce.map);assert.equal(C.chaussure.normalMap,texturesBlender('cuir').normalMap);
+assert.equal(M.bois.map,M.boisFonce.map);assert.equal(M.mur.normalMap,texturesBlender('enduit').normalMap);
+assert.equal(M.plafond.emissiveMap,texturesBlender('plafond').map);assert.equal(M.laiton.roughnessMap,M.alu.roughnessMap);assert.equal(C.chaussure.normalMap,texturesBlender('cuir').normalMap);
 for(const k of ['bois','boisFonce','alu','aluSombre'])assert.equal(M[k].roughness,1,'Carte de rugosité multipliée une seconde fois : '+k);
 await prechargerDecorBlender(lire);
 await import('../environnement/verifier.mjs');
 await import('../transitions/ressources.mjs');
-console.log(`7 matières Blender, ${count} cartes partagées, ${(memory/1024/1024).toFixed(1)} Mio estimés avec mipmaps. Normales, rugosité, raccords et transitions OK.`);
+console.log(`${Object.keys(MATIERES_BLENDER).length} matières v02, ${count} cartes partagées, ${(memory/1024/1024).toFixed(1)} Mio estimés avec mipmaps. Normales, rugosité, raccords et transitions OK.`);

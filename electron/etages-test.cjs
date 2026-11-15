@@ -26,6 +26,16 @@ module.exports = async ({js,shot,step,wait}) => {
     return {secrets:g.etat.secrets,canards:g.etat.canards,lumieres:g.lampes.map(l=>l.intensity)};})()`);
   await wait(900); await shot('salle-secrete.jpg');
   await step('persistance',`(async()=>{${outil}await new Promise(r=>setTimeout(r,300));const s=await jeuStore.charger();ok(s.secrets.includes('salle-secrete'),'Secret non sauvegardé');ok(s.canards['7'].includes(0),'Canard non sauvegardé');g.rejouerNiveau();ok(g.level.canards[0].pris,'Canard réapparu');ok(!g.interactifs.liste.find(a=>a.type==='passage').ouvert,'Porte non refermée');return true})()`);
+  await step('sieste-hamac',`(async()=>{${outil}g.state='menu';await g.demarrerNiveau(6);g.preparation=false;g.apprentissage=null;g.ui.setGuide('','','');
+    const I=g.interactifs,R=g.level.repere,porte=I.liste.find(a=>a.type==='passage'),h=I.liste.find(a=>a.type==='sieste');
+    I.interagir(porte);g.player.pos.set(h.x,0,h.z);g.basculerSieste(h);for(let i=0;i<150;i++)g.step(1/30);
+    ok(g.player.sieste&&Math.abs(g.player.mesh.rotation.x+Math.PI/2)<.02,'Pas allongé dans le hamac');ok(!document.getElementById('sieste').hidden,'Statut Ne pas déranger absent');
+    g.camYaw=R.yaw(0);g.camPitch=.35;g.camDist=3.2;for(let i=0;i<40;i++)g.updateCamera(1/30,true);g.state='pause';return {sieste:g.player.sieste.t}})()`);
+  await wait(900); await shot('sieste-hamac.jpg');
+  await step('etagere-refermee',`(async()=>{${outil}g.state='play';const I=g.interactifs,porte=I.liste.find(a=>a.type==='passage');g.finirSieste();
+    for(let i=0;i<40;i++)g.step(1/30);g.player.pos.set(porte.cotes[1].x,0,porte.cotes[1].z);I.interagir(porte);for(let i=0;i<60;i++)g.step(1/30);
+    ok(!porte.ouvert&&!porte.obstacle.noClip,'Étagère non refermée');ok(I.libelle(porte,g.player)==='Pousser l’étagère','Libellé intérieur');
+    I.interagir(porte);ok(porte.ouvert,'Étagère non rouverte depuis la salle');g.state='pause';return true})()`);
   await step('carton',`(async()=>{${outil}g.state='menu';await g.demarrerNiveau(7);g.preparation=false;g.state='pause';g.ui.setGuide('','','');const it=g.interactifs.liste.find(a=>a.type==='carton');g.player.pos.set(it.x,0,it.z);g.interactifs.interagir(it);g.player.animate(0);g.updateCamera(1,true);ok(!g.player.mesh.visible&&g.player.deguisement==='carton','Carton absent');return true})()`);
   await wait(900); await shot('carton.jpg');
   for(const [idx,id] of [[6,'toboggan'],[7,'nacelle']]) {

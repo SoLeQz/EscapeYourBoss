@@ -163,7 +163,7 @@ class Game {
   }
   eclairageCoupe(coupe) {
     this.appliquerEclairage(this.niveau.eclairage);
-    if (coupe) for (const l of this.lampes || []) l.intensity *= .16;
+    if (coupe) { for (const l of this.lampes || []) l.intensity *= .16; this.MAT.plafond.emissiveIntensity *= .16; }
     this.scene.environmentIntensity = .8 * (.5 + .5 * this.niveau.eclairage) * (coupe ? .45 : 1);
   }
   discoLumieres(t) {
@@ -421,17 +421,20 @@ class Game {
         [8, -10], [8, -2], [8, 6], [16, -10], [16, 11], [16, 1.5], [8, 12.5],
       ];
       for (const [x, z] of pos) {
-        const l = new THREE.PointLight(0xf0f2eb, 7, 13, 2);
-        l.position.set(x, x === 8 ? 3.20 : 3.02, z);
-        l.userData.base = 7; l.userData.origine = [x, z];
+        // Au-dessus du plan du plafond : sous lui, chaque source y brûlait une
+        // tache blanche. Le plafond reçoit sa lumière par sa part émissive.
+        const l = new THREE.PointLight(0xf0f2eb, 10, 14, 2);
+        l.position.set(x, 3.70, z);
+        l.userData.base = 10; l.userData.origine = [x, z];
         this.scene.add(l);
         this.lampes.push(l);
       }
       // rebond chaud au ras du sol côté baie
       for (const z of [-11, -3, 5, 12]) {
-        const l = new THREE.PointLight(0xffbf84, 2.4, 16, 2);
-        l.position.set(-17.5, 0.55, z);
-        l.userData.base = 2.4; l.userData.origine = [-17.5, z];
+        // À 55 cm du sol, chaque source dessinait un rond chaud sur la moquette.
+        const l = new THREE.PointLight(0xffbf84, 3.2, 16, 2);
+        l.position.set(-17.5, 1.2, z);
+        l.userData.base = 3.2; l.userData.origine = [-17.5, z];
         this.scene.add(l);
         this.lampes.push(l);
       }
@@ -445,6 +448,7 @@ class Game {
       const eteint = facteur < 0.75 && i % 2 === 1;
       l.intensity = eteint ? 0 : l.userData.base * Math.max(facteur, 0.35);
     });
+    this.MAT.plafond.emissiveIntensity = 0.4 * Math.max(facteur, 0.35);
   }
 
   majLumieresObjets() {
@@ -767,6 +771,72 @@ class Game {
     const k = v.cam ? 1 - Math.exp(-6 * dt) : 1;
     v.cam = (v.cam || cam.clone()).lerp(cam, k); v.vise = (v.vise || vise.clone()).lerp(vise, k);
     this.camera.position.copy(v.cam); this.camera.lookAt(v.vise);
+  }
+
+  // ---------------------------------------------------------- plan d'accueil
+  //
+  // Derrière le portail, Lao D attend devant la baie, la ville au couchant dans
+  // le dos. L'ancienne caméra de jeu en orbite le montrait de dos, à moitié caché
+  // par les panneaux. Cadrage américain, décalé vers la droite du centre : c'est
+  // là que s'ouvre le jour entre l'index et les notifications.
+  animerAccueil(dt) {
+    const p = this.player, rep = this.level.repere;
+    if (this.accueil?.level !== this.level || this.accueil.apparence !== p.apparence) {
+      // Première place où rien ne s'interpose entre la caméra et lui (meubles, fauteuils
+      // des postes, collègues figés), à mi-trame entre deux poteaux de façade
+      // (ossatureBureau : z = 0,4 ± 8 m) : derrière lui, seulement la baie et la ville.
+      const X = -18.1, libre = z => {
+        const a = rep.p(X - .7, z - 1.4), b = rep.p(X + 3.6, z + 1.4);
+        const x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x), z1 = Math.min(a.z, b.z), z2 = Math.max(a.z, b.z);
+        return !this.level.obstacles.some(o => o.x2 > x1 && o.x1 < x2 && o.z2 > z1 && o.z1 < z2)
+          && !this.npcs.some(n => n.pos.x > x1 && n.pos.x < x2 && n.pos.z > z1 && n.pos.z < z2);
+      };
+      const zs = [4.4, -3.6, 12.4, -11.6].flatMap(m => [0, .5, -.5, 1, -1, 1.5, -1.5, 2, -2].map(d => m + d));
+      const place = rep.p(X, zs.find(libre) ?? 4.4);
+      this.accueil = { level: this.level, apparence: p.apparence, t: 0, yaw: rep.yaw(Math.PI / 2), photo: false, signe: 5 };
+      p.pos.set(place.x, 0, place.z); p.yaw = this.accueil.yaw - .42;
+      p.mesh.visible = true; p.exitPose = null; p.working = null; p.emote = null; p.crouch = 0; p.speed = 0; p.moving = false;
+    }
+    const a = this.accueil, calme = this.etat?.options?.mouvementReduit ? 0 : 1;
+    a.t += dt;
+    // Toutes les vingt secondes il fait signe : « on y va ? »
+    if (calme && !p.emote && a.t > a.signe) {
+      a.signe = a.t + 20; const def = EMOTES.find(e => e.id === 'tchao');
+      if (def) p.emote = { def, t: 0, coupee: false, poids: 0 };
+    }
+    p.animate(dt);
+    const devant = new THREE.Vector3(Math.sin(a.yaw), 0, Math.cos(a.yaw)), cote = new THREE.Vector3(devant.z, 0, -devant.x);
+    const dist = 2.7 + .12 * Math.sin(a.t * .17) * calme;
+    const vise = p.pos.clone().addScaledVector(cote, -.04 * dist).setY(1.2);
+    this.camera.position.copy(vise).addScaledVector(devant, dist).addScaledVector(cote, .24 * Math.sin(a.t * .23) * calme)
+      .setY(1.3 + .03 * Math.sin(a.t * .19) * calme);
+    this.camera.lookAt(vise);
+    if (Math.abs(this.camera.fov - 40) > .02) { this.camera.fov = 40; this.camera.updateProjectionMatrix(); }
+    if (!a.photo && a.t > .4) { a.photo = true; this.photoBadge(); }
+  }
+  // Photo d'identité du badge : le vrai Lao D, tenue du vestiaire comprise.
+  photoBadge() {
+    const cible = document.getElementById('badge-photo'), p = this.player, W = 124, H = 144;
+    if (!cible?.classList || !this.renderer.readRenderTargetPixels) return;
+    const rt = new THREE.WebGLRenderTarget(W, H, { samples: 4 }); rt.texture.colorSpace = THREE.SRGBColorSpace;
+    const devant = new THREE.Vector3(Math.sin(p.yaw), 0, Math.cos(p.yaw)), tete = p.pos.clone().setY(1.62);
+    const cam = new THREE.PerspectiveCamera(19, W / H, .1, 6);
+    cam.position.copy(tete).addScaledVector(devant, 1.3).setY(1.65); cam.lookAt(tete);
+    const fond = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ color: 0x8fa6a8, fog: false }));
+    fond.position.copy(tete).addScaledVector(devant, -.4); fond.lookAt(cam.position); this.scene.add(fond);
+    const pixels = new Uint8Array(W * H * 4);
+    try {
+      this.renderer.setRenderTarget(rt); this.renderer.render(this.scene, cam);
+      this.renderer.readRenderTargetPixels(rt, 0, 0, W, H, pixels);
+    } finally {
+      this.renderer.setRenderTarget(null); this.scene.remove(fond); fond.geometry.dispose(); fond.material.dispose(); rt.dispose();
+    }
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'), img = g.createImageData(W, H);
+    // WebGL lit du bas vers le haut
+    for (let y = 0; y < H; y++) img.data.set(pixels.subarray((H - 1 - y) * W * 4, (H - y) * W * 4), y * W * 4);
+    g.putImageData(img, 0, 0);
+    cible.style.backgroundImage = `url(${cv.toDataURL('image/jpeg', .9)})`; cible.classList.add('photo');
   }
 
   // ---------------------------------------------------------- roue d'emotes
@@ -1184,15 +1254,14 @@ class Game {
       this.setQualite(R.QUALITES[Math.min(i + 1, R.QUALITES.length - 1)]);
     }
 
-    // léger travelling derrière les menus : la scène reste vivante
-    if (this.state === 'menu') this.camYaw += dt * 0.055;
     if (this.state === 'play') {
       const pas = Math.max(1, Math.ceil(dt / (1 / 60)));
       for (let i = 0; i < pas && this.state === 'play'; i++) this.step(dt / pas);
     }
     this.ui.update(dt);
     if (this.vestiaire) this.animerVestiaire(dt);
-    else this.updateCamera(dt, this.state === 'play');
+    else if (this.state === 'menu') this.animerAccueil(dt);
+    else { this.accueil = null; this.updateCamera(dt, this.state === 'play'); }
     this.ui.setObjectives(this.state === 'play' && !this.roueOuverte ? this.level.ramassables : [], this.player, this.camera);
     this.ui.setThreats(this.state === 'play' && !this.preparation ? this.npcs : [], this.player, this.camera, this.camYaw);
     // 20 Hz suffisent pour une carte de 214 px : la redessiner à chaque

@@ -1174,8 +1174,14 @@ function construire(scene, MAT, plan, niveau, repere) {
 
   function tapis(x, z, w, d, couleur) {
     // une matière par couleur, partagée : les tapis d'un étage fusionnent
-    if (!tapisCache.has(couleur)) tapisCache.set(couleur, partager(new THREE.MeshStandardMaterial({ color: couleur, roughness: 0.98 })));
+    // Tissés dans la toile du mobilier ; la teinte compense la carte (moyenne 0,55).
+    if (!tapisCache.has(couleur)) {
+      const { map, normalMap, roughnessMap, normalScale } = MAT.tissuCanape;
+      tapisCache.set(couleur, partager(new THREE.MeshStandardMaterial({ map, normalMap, roughnessMap, normalScale,
+        color: new THREE.Color(couleur).multiplyScalar(map ? 1.5 : 1), roughness: 0.98 })));
+    }
     const t = mesh(new THREE.PlaneGeometry(w, d), tapisCache.get(couleur), x, 0.006, z, { cast: false });
+    uvMetriques(t.geometry, w, d);
     t.rotation.x = -Math.PI / 2;
   }
 

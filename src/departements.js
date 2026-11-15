@@ -71,19 +71,14 @@ export function materiauxDepartement(base, niveau) {
   const m={...base};
   for(const [cle,couleur] of Object.entries({mur:d.fond,murAccent:d.accent,cloison:d.accent,tissuChaise:d.accent,tissuCanape:d.secondaire,moquette:d.sol,bois:d.bois})){
     m[cle]=partager(base[cle].clone());m[cle].color.setHex(couleur);m[cle].name='Département:'+d.id+':'+cle;
+    // Un feutre teint n'est jamais aussi dense qu'un aplat d'encre : sans cet
+    // éclaircissement, cloisons et fauteuils des services sombres viraient au noir.
+    if(cle==='cloison'||cle==='tissuChaise')m[cle].color.offsetHSL(0,0,.08);
   }
-  // La moquette Blender contient sa teinte verte d'origine. On en conserve le
-  // grain et les normales, mais seule sa luminance module la couleur du service.
-  // Un seul programme partagé, aucune nouvelle image par palette.
-  m.moquette.onBeforeCompile=shader=>{
-    shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
-#ifdef USE_MAP
-  float grainMoquette = dot(sampledDiffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-  diffuseColor.rgb = diffuse * clamp(0.35 + 2.0 * grainMoquette, 0.35, 0.9);
-#endif`);
-  };
-  m.moquette.customProgramCacheKey=()=> 'meridien-moquette-neutre-v1';
-  m.deptAccent=partager(new THREE.MeshStandardMaterial({color:d.accent,roughness:.85}));
-  m.deptSecondaire=partager(new THREE.MeshStandardMaterial({color:d.secondaire,roughness:.7}));
+  // Soubassements et aplats du service : même grain d'enduit que les murs.
+  const grain={normalMap:base.mur.normalMap,normalScale:base.mur.normalScale};
+  m.ilot=partager(base.ilot.clone());m.ilot.color.copy(m.cloison.color);m.ilot.emissive.copy(m.cloison.color);m.ilot.name='Département:'+d.id+':ilot';
+  m.deptAccent=partager(new THREE.MeshStandardMaterial({color:d.accent,roughness:.85,...grain}));
+  m.deptSecondaire=partager(new THREE.MeshStandardMaterial({color:d.secondaire,roughness:.7,...grain}));
   themes.set(d.id,m);return m;
 }

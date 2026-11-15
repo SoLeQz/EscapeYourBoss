@@ -368,18 +368,47 @@ export function feuilleFicus() {
   return feuilleGeo;
 }
 
+// Façade répétable de 8 travées × 8 niveaux, vue à contre-jour : murs dans
+// l'ombre, vitrages qui reflètent le ciel d'est, quelques bureaux encore allumés
+// (à 18 h, on n'est pas les seuls à rester). Tirage à graine fixe.
+const TRAVEE = 3.3, NIVEAU = 3.6;
+function texFacade(rideau) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 512;
+  const c = cv.getContext('2d'); let g = rideau ? 7 : 3;
+  const alea = () => (g = (g * 16807) % 2147483647) / 2147483647;
+  c.fillStyle = rideau ? '#46525f' : '#6b6d76'; c.fillRect(0, 0, 512, 512);
+  for (let n = 0; n < 8; n++) for (let t = 0; t < 8; t++) {
+    const x = t * 64 + (rideau ? 2 : 10), y = n * 64 + (rideau ? 8 : 15), w = rideau ? 60 : 44, h = rideau ? 50 : 38;
+    const tirage = alea(), allume = tirage < 0.2, froid = tirage < 0.035;
+    const v = c.createLinearGradient(0, y, 0, y + h);
+    if (allume) {
+      v.addColorStop(0, froid ? '#eef4f8' : '#ffe6b4'); v.addColorStop(0.3, froid ? '#b9c9d6' : '#eebd78');
+      v.addColorStop(1, froid ? '#7e8f9e' : '#9d7248');
+    } else { v.addColorStop(0, '#62788b'); v.addColorStop(1, '#313f4b'); }
+    c.fillStyle = v; c.fillRect(x, y, w, h);
+    if (allume && alea() < 0.6) { c.fillStyle = 'rgba(46,36,30,.6)'; c.fillRect(x + 3 + alea() * (w - 24), y + h - 13, 9 + alea() * 9, 13); }  // mobilier
+    if (alea() < 0.3) { c.fillStyle = allume ? 'rgba(255,244,214,.5)' : 'rgba(196,203,205,.2)'; c.fillRect(x, y, w, h * (0.2 + alea() * 0.5)); }  // store
+    c.fillStyle = rideau ? '#2c3540' : '#3f424b';
+    c.fillRect(x + w / 2 - 1, y, 2, h); if (rideau) c.fillRect(x, y + h * 0.3, w, 1);                                                       // menuiserie
+    if (!rideau) { c.fillStyle = 'rgba(255,255,255,.14)'; c.fillRect(x - 2, y + h, w + 4, 3); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(x, y - 3, w, 3); }  // appui, linteau
+  }
+  for (let n = 0; n < 8; n++) {                                // nez de dalle et son ombre
+    c.fillStyle = 'rgba(255,255,255,.10)'; c.fillRect(0, n * 64, 512, 3);
+    c.fillStyle = 'rgba(0,0,0,.20)'; c.fillRect(0, n * 64 + 3, 512, 3);
+  }
+  const map = new THREE.CanvasTexture(cv);
+  map.colorSpace = THREE.SRGBColorSpace; map.wrapS = map.wrapT = THREE.RepeatWrapping;
+  map.repeat.set(1 / (8 * TRAVEE), 1 / (8 * NIVEAU)); map.anisotropy = 8;
+  return map;
+}
+
 let villeMats;
 export function construireVille(root) {
   if (!villeMats) {
-    const cv = document.createElement('canvas'); cv.width = 128; cv.height = 256;
-    const c = cv.getContext('2d'); c.fillStyle = '#68747b'; c.fillRect(0, 0, 128, 256);
-    for (let y = 0; y < 16; y++) for (let x = 0; x < 6; x++) {
-      c.fillStyle = (x * 7 + y * 11) % 19 < 3 ? '#c5aa78' : '#465964';
-      c.fillRect(6 + x * 21, 3 + y * 16, 12, 10);
-    }
-    const map = new THREE.CanvasTexture(cv); map.colorSpace = THREE.SRGBColorSpace;
-    villeMats = ['#99a5a4', '#a8aa9e', '#777f89'].map(color => new THREE.MeshBasicMaterial({ map, color, fog: true }));
-    villeMats.push(new THREE.MeshBasicMaterial({ color: '#6d777c', fog: true }));
+    const pierre = texFacade(false), verre = texFacade(true);
+    villeMats = [[pierre, '#b9b4b0'], [verre, '#b4c0cc'], [pierre, '#97969e']]
+      .map(([map, color]) => new THREE.MeshBasicMaterial({ map, color, fog: true }));
+    villeMats.push(new THREE.MeshBasicMaterial({ color: '#4f555e', fog: true }));
     villeMats.forEach(partager);
   }
   const ville = new THREE.Group(); ville.name = 'quartier-meridien'; root.add(ville);
@@ -389,10 +418,15 @@ export function construireVille(root) {
     [-51, 24, 17, 62, 16], [-42, 47, 13, 48, 12], [-73, -54, 19, 67, 18],
     [-78, -28, 17, 46, 17], [-83, 0, 18, 72, 20], [-74, 48, 19, 57, 18],
     [-107, -58, 19, 73, 22], [-115, 23, 21, 65, 20], [-105, 66, 21, 76, 23]];
+  const boite = (w, h, d, mat, x, y, z) => {
+    const m = new THREE.Mesh(uvBoiteMetrique(new THREE.BoxGeometry(w, h, d)), mat); m.position.set(x, y, z); ville.add(m); return m;
+  };
   immeubles.forEach(([x, z, w, h, d], i) => {
-    const bat = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), villeMats[i % 3]);
-    bat.position.set(x, -45 + h / 2, z); ville.add(bat);
-    const toit = new THREE.Mesh(new THREE.BoxGeometry(w * 0.6, 2, d * 0.65), villeMats[3]);
-    toit.position.set(x, -44 + h, z); ville.add(toit);
+    // UV en mètres, calés sur le sommet et décalés d'un nombre entier de travées :
+    // deux immeubles voisins n'allument pas les mêmes fenêtres.
+    const uv = boite(w, h, d, villeMats[i % 3], x, -45 + h / 2, z).geometry.attributes.uv;
+    for (let k = 0; k < uv.count; k++) uv.setXY(k, uv.getX(k) + i * 3 * TRAVEE, uv.getY(k) - h / 2 + i * 5 * NIVEAU);
+    boite(w + 0.8, 1.1, d + 0.8, villeMats[3], x, -45 + h + 0.55, z);            // acrotère
+    boite(w * 0.6, 3, d * 0.65, villeMats[3], x, -43.5 + h, z);                    // édicule technique
   });
 }

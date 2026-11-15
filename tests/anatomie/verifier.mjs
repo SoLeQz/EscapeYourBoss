@@ -27,7 +27,7 @@ await prechargerAnatomieBlender(lire);assert.equal(Object.keys(etatAnatomieBlend
 
 for(const profilVisage of ['employe','direction','chignon','securite']){
   const {group,parts}=makeCharacter({profilVisage,lunettes:true});group.updateMatrixWorld(true);
-  assert.equal(group.userData.anatomieBlender.tete,`tete-${profilVisage}-v02.glb`);
+  assert.equal(group.userData.anatomieBlender.tete,`tete-${profilVisage}-v03.glb`);
   let poignet=false;group.traverse(m=>{if(m.isMesh&&m.name==='Blender:mainL:peau'){m.geometry.computeBoundingBox();poignet=m.geometry.boundingBox.max.y>=.065}});assert(poignet,'Le poignet doit se prolonger sous la manchette');
   assert.equal(parts.clignement.geometry.morphTargetsRelative,true,'Déplacements glTF conservés après fusion');
   for(const s of [-1,1]){

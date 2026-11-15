@@ -2,7 +2,7 @@
 
 > Document de reprise. Il décrit ce qui existe, **pourquoi** c'est fait comme ça,
 > ce qui a déjà été essayé et raté, et ce qui reste ouvert.
-> Dernière mise à jour : 30 septembre 2026 (identité des dix départements, §43).
+> Dernière mise à jour : 15 novembre 2026 (matières v02, §47 ; personnages, coiffures et accueil, §48).
 > Les mesures du 20 septembre restent des références historiques ; voir §9 pour la nouvelle passe.
 
 ---
@@ -2651,3 +2651,204 @@ fermantes. 19 suites Node validées. Autotest Windows : nouvelle étape
 **Livraison.** 1.14.1 Windows ; notes `docs/releases/v1.14.1.md`. ZIP et notes dans
 les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.14.1`, dossier
 habituel remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.14.0-20260930-135614`).
+
+## 46. Vraie sieste et étagère refermable — 1.15.0, 30 septembre 2026
+
+**Demande.** Pouvoir réellement faire la sieste dans le hamac de la salle
+clandestine (se coucher dedans) et refermer la porte de la salle.
+
+**Avant.** Le hamac était un bouton unique : « Zzz », 20 s retirées au chrono de la
+réunion, puis « Déjà reposé ». L'étagère pivotante ne s'ouvrait qu'une fois et
+n'était plus manipulable ensuite.
+
+**Sieste** (`src/sieste.js`, pose dans `src/player.js`). E devant le hamac :
+`player.sieste`, sur le modèle du poste de travail (E ou une direction pour se
+lever, même touche via `nearestInteractable`). Pose : `siesteBlend` amorti, corps
+basculé de −90° autour de l'axe latéral (ordre d'Euler `YXZ` sur le modèle), bassin
+logé au creux de la toile (0,54 m, `creer_accessoires.py`), tête sur l'oreiller
+(côté −x du hamac), buste et jambes relevés comme la toile, mains derrière la tête ;
+`ajusterAppui` suspendu. Données `lit` sur l'accessoire, converties par le repère
+(étages en miroir). Effets : stress −0,35/s, endurance +0,5/s ; en solo la réunion
+file 3× ; réveil en sursaut à la fin de la réunion ; découverte « Micro-sieste »
+après 5 s de vrai sommeil ; ronflement toutes les 3,4 s. HUD : voile « paupières »
+(`--sommeil`), carte « Statut : Ne pas déranger » sous la jauge de risque, « Zzz »
+en sprite au-dessus de la tête, caméra qui vise le creux du hamac. Refus pendant
+la traque et dans le carton. Coopération : posture locale envoyée à 20 Hz (`sz`),
+le coéquipier s'allonge dans le même hamac.
+
+**Étagère** (`src/interactifs.js`). Deux côtés de manœuvre (`cotes`) : « Tirer le
+livre rouge » dehors, « Pousser l'étagère » dedans, « Refermer l'étagère » une fois
+ouverte. Collision et vue suivent immédiatement (navigation et plan recalculés),
+animation dans les deux sens. Refus si un joueur, un coéquipier ou un collègue est
+dans l'encadrement. Traque : `cibleTraque` envoie le directeur devant l'étagère
+quand la proie s'est enfermée, et il l'ouvre à 1,3 m. État partagé en coopération
+dans les deux sens.
+
+**Vérification.** `tests/etages/interactions.mjs` : côtés, refus sur l'encadrement,
+fermeture étanche en marchant, partage hôte → invité, directeur qui ouvre ;
+sieste réellement couchée (bascule, tête à moins de 0,35 m de l'oreiller, hauteurs
+dans la toile, pieds dans le hamac), effets, réveil par une direction, retour
+debout. Banc d'aperçu : scénarios `hamac` (`?lacet=0&tangage=0.35` pour la vue de
+côté) et `salle-fermee`. 19 suites Node validées.
+
+**Livraison.** 1.15.0 Windows ; notes `docs/releases/v1.15.0.md`. ZIP et notes dans
+les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.15.0`, dossier
+habituel remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.14.1-20260930-150642`).
+Autotest Windows : étapes `sieste-hamac` et `etagere-refermee` dans
+`--selftest --etages`.
+
+## 47. Matières v02 et finitions du décor — 1.16.0, 15 novembre 2026
+
+**Demande.** Retravailler toutes les textures et rendre le jeu « beaucoup mieux
+fini », avec carte blanche.
+
+**Diagnostic, mesuré avant de toucher.** Les cartes v01 (§22) étaient des aplats :
+écart type de couleur de 0,8 à 2,6 %, normales à 0,2 %. La passe 1.2.0 avait calmé
+les matières jusqu'à ce qu'elles ne portent plus rien — le piège de §5.13, à
+l'échelle du décor. Trois autres causes du rendu « pas fini », aucune dans les
+textures elles-mêmes :
+
+- **Plafond.** Treize `PointLight` à 3,02 m sous un plan à 3,62 m : une tache
+  brûlée par néon, et entre elles un plafond brun, puisqu'une face tournée vers le
+  bas ne voit que le sol de l'IBL.
+- **Ville.** Une image de 128 × 256 étirée sur chaque face : des fenêtres de 6 m.
+- **Cloisons et fauteuils.** Accent du service × carte de tissu : 3 % d'albédo
+  pour la Finance, donc du noir.
+
+**Matières v02** (`tools/textures/generer.mjs`, `npm run textures`, 15 s). Neuf
+familles, 22 cartes PNG calculées en Node, sans Blender ni image source. Chaque
+motif est construit à son échelle réelle et se raccorde par construction (bruits
+périodiques, motifs en nombre entier) ; les hauteurs sont en pixels, donc la pente
+des normales est physique, bornée à 0,6.
+
+| Famille | Tuile | Motif |
+| --- | --- | --- |
+| moquette | 1024² / 1 m | 2 × 2 dalles en quart de tour, boucles en rangs de 4 mm, bandes de fils ; carte neutre |
+| pierre | 1024² / 2 m | terrazzo, trois calibres d'éclats (cellules de Worley), palette de la signalétique |
+| bois | 1024² / 1 m | chêne : 96 cernes, pores du bois de printemps, mailles, dérive du fil (sens U) |
+| textile | 512² / 0,4 m | toile deux tons, fil de 3 mm, fils flammés |
+| beton | 512² / 1,5 m | laitance, bullage, joint de banche et quatre trous d'entretoise |
+| metal, cuir | 512² | brossage en U ; grain en dômes — normale et rugosité seules |
+| enduit | 512² / 1 m | peau d'orange et passes de rouleau — murs et soubassements |
+| plafond | 512² / 1,2 m | 2 × 2 dalles fissurées de 60 cm dans une ossature en T |
+
+Écart type après : couleur 3,5 à 19 %, normales 3 à 15 %. `src/textures-blender.js`
+charge les `mat-*-v02-*.png` ; ses noms d'API gardent « Blender » pour ne pas
+toucher quinze fichiers. Les v01 sont retirées de `assets/` (les maîtres restent
+dans `art/matieres/meridien-v01`). Poids : 14 Mo de PNG au lieu de 2,65 ; mémoire
+estimée 61,3 Mio au lieu de 37,3 (budget du test relevé de 40 à 70).
+
+**Branchement** (`src/materials.js`, `src/departements.js`, `src/level.js`).
+
+- La moquette est neutre : la teinte du service est `material.color`. Le
+  `onBeforeCompile` qui retirait le vert de la carte v01 est supprimé.
+- `mur`, `murAccent`, `deptAccent`, `deptSecondaire` partagent la normale d'enduit.
+- `laiton` reprend le brossage du métal ; les tapis sont tissés dans la toile.
+- `cloison` et `tissuChaise` : +8 % de luminosité HSL sur l'accent du service.
+- Cheveux : contraste de mèche 0,30 → 0,62, `normalScale` 0,18 → 0,45.
+
+**Éclairage** (`src/main.js`). Néons à 3,70 m, donc au-dessus du plan du plafond :
+il ne reçoit plus rien d'eux. Leur base passe de 7 à 10 pour garder le même
+éclairement des plateaux. Le plafond porte sa lumière en émissif (`emissiveMap` =
+sa carte, 0,4 × facteur d'éclairage, × 0,16 lumières coupées). Rebonds chauds le
+long de la baie : 0,55 → 1,2 m, base 2,4 → 3,2.
+
+**Ville** (`src/environment.js`). Deux façades 512² (maçonnerie, mur-rideau) de
+8 travées × 8 niveaux, UV en mètres (travée 3,3 m, niveau 3,6 m), décalées d'un
+nombre entier de travées par immeuble, tirage à graine fixe. Acrotère et édicule
+en boîtes séparées.
+
+**Pièges rencontrés.**
+
+- Un tableau de matériaux sur un maillage casse `fusionnerStatiques` (clé
+  `material.uuid`) : le toit des immeubles est une boîte à part, pas un groupe.
+- Un bruit « par segments » n'est pas périodique : le brossage du métal avait une
+  couture, attrapée par `test:textures`.
+- Le premier terrazzo (50 % de grands éclats) faisait confetti, la première
+  moquette faisait tapis rayé, le premier chêne faisait strates d'argile. Les
+  densités actuelles sont le deuxième réglage, jugé dans la scène et non sur la carte.
+
+**Vérification.** 19 suites Node validées. `test:textures` contrôle maintenant le
+raccord vertical, 22 cartes, et le partage enduit / plafond / laiton. Revue
+visuelle avant/après à cadrages constants avec `tools/apercu/capturer-linux.mjs`
+(nouveau : Chromium sans fenêtre sous Linux, piloté en CDP, caméra libre `vue()`),
+étages 22, 18, 11, 9 et 4, qualité « bas » plus une vue en « haut ».
+
+**Non vérifié.** Rien n'a tourné sur un vrai GPU : ni l'exécutable Windows, ni les
+autotests Electron (`--selftest --textures --textures-final` attend désormais
+9 familles et 22 cartes), ni la fréquence d'images, ni « ultra ». Le rendu logiciel
+ne permet pas de juger le bloom ni l'occlusion ambiante sur les nouvelles matières.
+Les captures de `docs/captures/` (README) montrent encore l'ancien décor.
+
+**Livraison.** Version 1.16.0, notes `docs/releases/v1.16.0.md`. Jamais installée
+seule : livrée avec la 1.17.0 (§48).
+
+## 48. Personnages, coiffures et accueil refaits — 1.17.0, 15 novembre 2026
+
+**Demande.** « Remodélise tout le jeu, y compris les personnages, le menu », puis
+l'exécutable comme d'habitude. Périmètre réellement traité : silhouette de tous les
+personnages, coiffures des quatre têtes, sac à dos, plan d'accueil du menu, îlots
+acoustiques. Le mobilier Blender v02 (§41), les mains v03 et les visages v02 sont
+conservés : relus sur leurs planches, ils n'étaient pas le point faible.
+
+**Silhouette** (`src/body.js`, chaînes de points seulement, squelette intact).
+Mesuré avant : cuisses de 9,8 cm de rayon, soit 40,6 cm de large pour une basque de
+veste de 35,6 cm — deux lobes sortaient sous la veste, surtout de dos. Après :
+pantalon droit (7,2 à 5,5 cm), bassin 34 cm, veste cintrée à 15,1 cm à la taille,
+basque à 0,80 m, bras et manches affinés de 4 à 5 mm. Les pièces posées par
+`surfaceBuste` / `surfaceBassin` suivent d'elles-mêmes. Les pièces de torse de la
+garde-robe Blender (gilet, cape, jetpack), modelées sur l'ancien torse, tiennent
+à moins d'un centimètre près ; elles n'ont pas été régénérées.
+
+**Coiffures v03** (`tools/blender/recoiffer.py`, sources dans
+`art/personnages/coiffures-v03/`). Le script ouvre une tête v02, supprime ses
+cheveux, relève le crâne par lancer de rayon et construit une coque à épaisseur
+variable : ligne d'implantation calée sur l'oreille mesurée (contour de l'oreille,
+patte, nuque), dégradé sur les côtés, mèches sculptées dans le sens du coiffage et
+assombries dans leurs creux (`Pigment`). Quatre coupes : raie et mèche relevée,
+plaqué à golfes dégarnis, raie au milieu avec chignon, brosse. 2 944 triangles de
+cheveux par tête ; Lao D complet : 36 211 triangles (plafond 38 000). Clé de forme
+`Chapeau` (5 mm), activée par `poserAnatomieBlender` quand `garde.tete` n'est pas
+`aucun` : la mèche ne traverse pas les couvre-chefs modelés sur la calotte v02.
+`assets/tete-*-v02.glb` retirés ; `creer_garde_robe.py` les cite encore comme
+gabarit et devra pointer sur les v03 s'il est relancé.
+
+**Sac** (`src/characters.js`, `M.sac`). Toile ocre au lieu de noir sur costume
+sombre, poche avant, deux fermetures, poches latérales, gourde ; mêmes trois
+matières, donc aucun appel de dessin de plus. Dos plat plaqué au vêtement.
+
+**Accueil** (`Game.animerAccueil`, `Game.photoBadge`, `interface.css`). En état
+`menu`, la caméra de jeu en orbite est remplacée par un plan fixe : Lao D devant
+la baie, de trois quarts, cadré entre l'index et les notifications, léger
+travelling (coupé par « mouvement réduit »), signe de la main toutes les 20 s.
+La place est la première où aucun obstacle ni collègue ne se trouve dans le
+couloir caméra-personnage, à mi-trame entre deux poteaux de façade. Le badge
+reçoit un rendu 124 × 144 du visage (cible de rendu, fond uni), refait quand
+l'apparence change. Le voile de l'accueil devient un dégradé ouvert au centre ;
+les sous-menus gardent le voile plein. La charte `docs/art/INTERFACE.md` est
+respectée : aucune couleur ni composant nouveau.
+
+**Îlots acoustiques** (`src/architecture.js`, `MAT.ilot`). Feutre à part émissive
+et deux lignes de LED : la sous-face, éclairée par rien, se lisait en trou noir.
+
+**Pièges rencontrés.** Les poteaux de façade ne sont pas des obstacles (ils sont
+dans le mur) : les éviter au menu passe par leur trame, pas par les collisions. Les
+fauteuils non plus : c'est le couloir entier qu'il faut tester, pas la place seule.
+`remove_doubles` renumérote les sommets et casse l'alignement d'une clé de forme :
+la coiffure garde ses doublons au pôle. Le scénario `menu` du banc d'aperçu laisse
+tourner la boucle : compter 60 à 90 s avant la capture.
+
+**Vérification.** 19 suites Node validées. Planches Blender des quatre coiffures,
+captures du personnage sous cinq angles avant/après, du vestiaire (casquette,
+gilet, melon, cape, jetpack), du menu et d'une vue de jeu. Tout en rendu logiciel.
+
+**Non vérifié.** L'exécutable n'a pas été lancé (jamais depuis WSL) : rien n'a été
+vu sur le vrai GPU, ni la photo du badge (lecture de cible de rendu), ni le menu
+en « haut » / « ultra », ni les neuf emotes sur la nouvelle silhouette, ni la
+coopération. Les autotests Electron ne sont pas relancés ; ceux qui photographient
+le menu ou comparent des portraits montreront des différences attendues. Les
+captures du README montrent l'ancien jeu.
+
+**Livraison.** 1.17.0 Windows ; notes `docs/releases/v1.17.0.md`. ZIP et notes dans
+les Téléchargements, dossier `C:\Users\nicol\EscapeYourBoss-1.17.0`, dossier
+habituel remplacé après sauvegarde (`EscapeYourBoss-sauvegarde-1.15.0-20261115-152246`).

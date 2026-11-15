@@ -6,7 +6,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {verifierConteneurGLB} from './personnage-glb.js';
 import {partager,libererArbre} from './resources.js';
 export const FICHIERS_ANATOMIE=Object.freeze(Object.fromEntries(
-  ['tete-employe','tete-direction','tete-chignon','tete-securite','mains'].map(n=>[n,n+(n==='mains'?'-v03.glb':'-v02.glb')])));
+  ['tete-employe','tete-direction','tete-chignon','tete-securite','mains'].map(n=>[n,n+'-v03.glb'])));
 const controles=new Set(['head','regard','paupiere','bouche','mainL','mainR','doigtsL','doigtsR','pouceL','pouceR']);
 const matieres=new Set(['peau','cheveux','blancOeil','iris','pupille','reflet','monture']);
 const cache=new Map();let chargement;
@@ -99,6 +99,8 @@ export function poserAnatomieBlender(parts,options,materiaux){
     const m=new THREE.Mesh(p.geometry,materiaux[p.material]);m.name='Blender:'+p.controle+':'+p.material;
     m.castShadow=p.material==='peau'||p.material==='cheveux';m.receiveShadow=m.castShadow;
     if(Object.keys(p.morphs).length){m.morphTargetDictionary={...p.morphs};m.morphTargetInfluences.fill(0);}
+    // Coiffures v03 (tools/blender/recoiffer.py) : aplaties sous un couvre-chef du vestiaire.
+    if(p.morphs.Chapeau!==undefined&&options.garde?.tete&&options.garde.tete!=='aucun')m.morphTargetInfluences[p.morphs.Chapeau]=1;
     pivots[p.controle].add(m);
     if(p.controle==='paupiere')parts.clignement=m;
     // Mains v02 : le pouce porte aussi les poses Poing/Index/Ouvert (vrai poing fermé).

@@ -458,24 +458,34 @@ export function makeCharacter(o = {}) {
 
   // ---------------- sac à dos ----------------
   if (c.sac) {
+    // Sac 1.17 : toile cirée ocre, plus bas et plaqué au dos. L'ancien, noir sur
+    // costume sombre et décollé de 3 cm, se lisait de dos comme une bosse.
     const sac = new THREE.Group();
-    sac.position.set(0, 0.37, veste ? -0.179 : -0.165);
+    sac.position.set(0, 0.345, veste ? -0.186 : -0.171);
     buste.add(sac);
     parts.sac = sac;
-    const forme = rb(0.260, 0.345, 0.120, 0.054, 4).clone();
+    const H = 0.40, forme = rb(0.272, H, 0.118, 0.05, 4).clone();
     const v = forme.attributes.position;
     for (let i = 0; i < v.count; i++) {
-      const t = (v.getY(i) + 0.1725) / 0.345;
-      v.setX(i, v.getX(i) * (1 - 0.16 * t));
-      v.setZ(i, v.getZ(i) * (0.88 + 0.12 * Math.sin(t * Math.PI)));
+      const t = v.getY(i) / H + 0.5;                       // 0 au fond, 1 au sommet
+      v.setX(i, v.getX(i) * (1 - 0.15 * t));
+      // ventre vers l'extérieur seulement : le dos reste plat contre la veste
+      if (v.getZ(i) < 0) v.setZ(i, v.getZ(i) * (0.84 + 0.22 * Math.sin((0.15 + 0.7 * t) * Math.PI)));
     }
     forme.computeVertexNormals();
     add(sac, forme, M.sac, 0, 0, 0);
-    add(sac, rb(0.202, 0.126, 0.028, 0.012, 2), M.sac, 0, -0.075, -0.077);
-    add(sac, rb(0.200, 0.004, 0.006, 0.002, 1), M.boucle, 0, -0.018, -0.098);
-    add(sac, courbeGeo([[-.026,.153,.010],[-.022,.187,.010],[.022,.187,.010],[.026,.153,.010]],.004,16), M.sangle,0,0,0);
-    for(const cote of [-1,1]) add(sac,courbeGeo([[cote*.095,-.13,-.048],
-      [cote*.110,.045,-.050],[cote*.083,.143,-.038]],.0017,18),M.sangle,0,0,0);
+    add(sac, rb(0.205, 0.150, 0.036, 0.016, 2), M.sac, 0, -0.088, -0.066);          // poche avant
+    add(sac, rb(0.178, 0.005, 0.007, 0.002, 1), M.boucle, 0, -0.026, -0.082);       // sa fermeture
+    add(sac, rb(0.006, 0.022, 0.005, 0.002, 1), M.boucle, 0.078, -0.038, -0.085);   // tirette
+    add(sac, rb(0.200, 0.005, 0.007, 0.002, 1), M.boucle, 0, 0.098, -0.060);        // fermeture principale
+    add(sac, rb(0.006, 0.024, 0.005, 0.002, 1), M.boucle, -0.090, 0.085, -0.063);
+    add(sac, rb(0.090, 0.012, 0.004, 0.002, 1), M.sangle, 0, -0.150, -0.086);       // passant
+    for (const cote of [-1, 1]) add(sac, rb(0.026, 0.135, 0.084, 0.011, 1), M.sac, cote * 0.126, -0.112, -0.004);
+    // gourde dans la poche droite : le seul reflet métallique du dos
+    const gourde = add(sac, new THREE.CylinderGeometry(0.026, 0.026, 0.175, 14), M.boucle, 0.128, -0.050, -0.004);
+    gourde.castShadow = false;
+    add(sac, new THREE.CylinderGeometry(0.017, 0.019, 0.028, 12), M.sangle, 0.128, 0.050, -0.004);
+    add(sac, courbeGeo([[-.030,.190,.012],[-.024,.228,.012],[.024,.228,.012],[.030,.190,.012]],.0045,16), M.sangle,0,0,0);
     // sangles : rubans skinnés qui épousent l'épaule et le vêtement
     parts.sangles = add(buste, geometrieAccessoire('sangles', veste), M.sangle, 0, 0, 0);
     for (const s of [-1, 1])

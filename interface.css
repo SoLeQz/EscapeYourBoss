@@ -101,6 +101,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
    PORTAIL MÉRIDIEN CONNECT (écran d'accueil et menus)
    ===================================================================== */
 #screen-start{display:block;padding:0;overflow:hidden;background:rgba(9,11,12,.58)}
+/* Accueil : le plan sur Lao D devant la baie reste lisible entre les deux colonnes. */
+#screen-start:has(#menu-principal:not([hidden])){background:radial-gradient(ellipse 46% 78% at 54% 52%,rgba(9,11,12,0) 55%,rgba(9,11,12,.5))}
 .portail{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto}
 
 .portail-barre{display:flex;align-items:center;gap:22px;height:38px;padding:0 18px;
@@ -123,7 +125,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 /* ---------------- accueil ---------------- */
 #menu-principal{display:grid;grid-template-columns:minmax(440px,560px) 1fr;min-height:0}
 .accueil-gauche{display:flex;flex-direction:column;gap:6px;padding:34px 34px 20px 46px;overflow-y:auto;
-  background:rgba(12,15,16,.84);border-right:1px solid rgba(238,233,219,.08);scrollbar-width:thin}
+  background:linear-gradient(90deg,rgba(12,15,16,.92) 0 78%,rgba(12,15,16,0));scrollbar-width:thin}
 .accueil-droite{display:flex;flex-direction:column;align-items:flex-end;gap:18px;padding:28px 40px 20px 20px;
   overflow-y:auto;scrollbar-width:thin}
 
@@ -186,6 +188,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 .badge-corps{display:flex;gap:12px;padding:12px 14px 6px}
 .badge-photo{display:grid;place-items:center;width:62px;height:72px;flex:none;background:#dfe6e5;border:1px solid #9aa7a4;
   font-size:38px;border-radius:2px}
+.badge-photo.photo{color:transparent;background-size:cover;background-position:center}
 .badge-infos{display:flex;flex-direction:column;gap:2px;min-width:0}
 .badge-infos b{font:700 24px/1 var(--f-signal);font-stretch:85%;text-transform:uppercase}
 .badge-infos>span{font-size:13px;line-height:1.3;color:var(--encre-2)}

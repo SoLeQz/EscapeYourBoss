@@ -243,6 +243,10 @@ sans rien toucher.
   de la fin.
 - **Fouille.** Les canards de débogage, les rumeurs et les passages secrets
   restent acquis même si le directeur te rattrape. Bellek !
+- **Une vraie sieste.** Dans la salle clandestine, allonge-toi dans le hamac :
+  stress à zéro et endurance au maximum, mais la réunion file trois fois plus vite
+  tant que tu dors. Referme l'étagère derrière toi et plus personne ne te voit…
+  sauf le directeur en traque, qui connaît le coup du livre rouge.
 
 Tes progrès, tes records, tes touches et tes options sont sauvegardés dans
 `%APPDATA%\EscapeYourBoss\progression.json`.
@@ -253,8 +257,8 @@ Tes progrès, tes records, tes touches et tes options sont sauvegardés dans
 
 Le jeu est écrit en JavaScript avec **Three.js** (sans moteur de jeu ni moteur
 physique) et distribué avec **Electron**. Les personnages, le mobilier, les
-accessoires et les emotes sont modélisés et animés dans **Blender** ; une grande
-partie des textures est générée au lancement.
+accessoires et les emotes sont modélisés et animés dans **Blender** ; les matières
+du décor sont calculées par `npm run textures`, les autres générées au lancement.
 
 Pour le lancer depuis les sources (Node.js 20 ou plus récent) :
 

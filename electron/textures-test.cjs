@@ -26,8 +26,8 @@ module.exports=async({js,shot,step,wait})=>{
   const audit=await js('__auditMatieres');fs.writeFileSync(path.join(out,'diagnostic.json'),JSON.stringify(audit,null,2));
   if(process.argv.includes('--textures-final'))await step('cartes-blender-chargees',`(async()=>{
     const {etatTexturesBlender}=await import('./src/textures-blender.js');const etat=etatTexturesBlender();
-    if(Object.keys(etat).length!==7)throw Error('Bibliothèque Blender incomplète');
-    const cartes=Object.values(etat).flatMap(c=>Object.values(c));if(cartes.length!==19)throw Error('Cartes manquantes');
+    if(Object.keys(etat).length!==9)throw Error('Bibliothèque Blender incomplète');
+    const cartes=Object.values(etat).flatMap(c=>Object.values(c));if(cartes.length!==22)throw Error('Cartes manquantes');
     for(const row of __auditMatieres.bibliotheque.filter(r=>['bois','boisFonce','alu','aluSombre'].includes(r.nom)))
       if(row.rugositeEffective<.45)throw Error('Matière excessivement brillante : '+row.nom);
     return {matieres:Object.keys(etat),cartes:cartes.length};

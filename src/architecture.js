@@ -278,7 +278,10 @@ export function ossatureBureau(root, MAT, plan) {
     p.rotation.y = rot;
     root.add(p);
     const A = atelier(p);
-    A.box(2.7, 0.06, 1.45, MAT.cloison, 0, 3.28, 0, false);
+    // Feutre rétroéclairé (MAT.ilot) et deux lignes de LED en sous-face : vue d'en
+    // dessous, la dalle n'était éclairée par rien et se lisait comme un trou noir.
+    A.box(2.7, 0.06, 1.45, MAT.ilot || MAT.cloison, 0, 3.28, 0, false);
+    for (const zz of [-0.6, 0.6]) A.box(2.3, 0.012, 0.035, MAT.diffuseur, 0, 3.245, zz, false);
     for (const xx of [-1.1, 1.1])
       for (const zz of [-0.48, 0.48])
         A.box(0.012, 0.27, 0.012, MAT.aluSombre, xx, 3.445, zz, false);

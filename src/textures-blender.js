@@ -1,12 +1,15 @@
 import * as THREE from 'three';
 import { partager } from './resources.js';
 
-// Sources : art/matieres/meridien-v01. Une même carte sert aux variantes teintées.
+// Matières v02, calculées par tools/textures/generer.mjs (npm run textures) ; la v01
+// cuite dans Blender reste dans art/matieres. Une même carte sert aux variantes
+// teintées. `metres` : côté de la tuile, à tenir en accord avec le motif du générateur.
 export const MATIERES_BLENDER = {
-  bois:{taille:1024,metres:1}, textile:{taille:512,metres:.5},
-  moquette:{taille:512,metres:1}, pierre:{taille:512,metres:1},
-  beton:{taille:512,metres:1}, metal:{taille:512,metres:.5,sansCouleur:true},
+  bois:{taille:1024,metres:1}, textile:{taille:512,metres:.4},
+  moquette:{taille:1024,metres:1,sansRugosite:true}, pierre:{taille:1024,metres:2},
+  beton:{taille:512,metres:1.5}, metal:{taille:512,metres:.5,sansCouleur:true},
   cuir:{taille:512,metres:.25,sansCouleur:true},
+  enduit:{taille:512,metres:1,sansRugosite:true}, plafond:{taille:512,metres:1.2,sansRugosite:true},
 };
 const cache=new Map();let chargement;
 export function texturesBlender(nom){return cache.get(nom);}
@@ -26,8 +29,8 @@ export async function prechargerTexturesBlender(lire=nom=>window.jeuAssets.lire(
       for(const [nom,def] of Object.entries(MATIERES_BLENDER)){
         const cartes={};temporaires.set(nom,cartes);
         for(const [suffixe,canal] of [['color','map'],['normal','normalMap'],['rough','roughnessMap']]){
-          if(suffixe==='color'&&def.sansCouleur)continue;
-          const fichier=`mat-${nom}-v01-${suffixe}.png`,bytes=await lire(fichier);
+          if(suffixe==='color'&&def.sansCouleur||suffixe==='rough'&&def.sansRugosite)continue;
+          const fichier=`mat-${nom}-v02-${suffixe}.png`,bytes=await lire(fichier);
           if(!bytes)throw new Error('Texture Blender absente : '+fichier);
           const img=await decoder(bytes);
           if(img.width!==def.taille||img.height!==def.taille){img.close?.();throw new Error('Dimensions de texture incorrectes : '+fichier);}

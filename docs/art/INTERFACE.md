@@ -54,6 +54,7 @@ pas de dégradés décoratifs (la seule lueur est celle des panneaux lumineux).
 
 | Composant | Voix | Description |
 |---|---|---|
+| plan d'accueil (`Game.animerAccueil`) | — | derrière le portail : Lao D devant la baie au couchant, cadré entre l'index et les notifications ; `#badge-photo.photo` porte son vrai portrait |
 | `.logo-sortie` | signalétique | bloc de sortie de secours : boîtier blanc, face verte, personnage à cravate (`#p-fuite`), néon qui grésille deux fois toutes les 11 s |
 | `.menu-btn` | intranet + feutre | ligne d'un index imprimé : numéro, intitulé en capitales, note ; au survol, un coup de surligneur la traverse |
 | `.menu-btn.primaire`, `.bouton-sortie` | signalétique | la porte de sortie : vert, flèche qui avance au survol |

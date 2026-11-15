@@ -451,15 +451,17 @@ function chaineBras(cote) {
   // bras débordait de 11 cm au-delà de la carrure et chevauchait le
   // tronc de 6 cm — d'où deux rouleaux pendus de part et d'autre, sans
   // ligne d'épaule. Un deltoïde d'adulte fait 5,5 cm de rayon.
-  return [P(x * 0.50, 1.450, -0.005, 0.036, 0.036, 'buste'),   // naissance, noyée dans le trapèze
-          P(x * 0.78, 1.434, -0.002, 0.048, 0.047, 'buste'),   // transition cousue au torse
-          P(x * 0.97, 1.402, 0, 0.057, 0.055, eL),             // deltoïde
-          P(x, 1.340, 0, 0.053, 0.051, eL),
-          P(x, 1.225, 0, 0.047, 0.046, eL),                    // biceps
-          P(x, 1.118, 0, 0.043, 0.042, cL),                    // coude
-          P(x, 1.040, 0, 0.043, 0.041, cL),
-          P(x, 0.960, 0, 0.040, 0.038, cL),                    // avant-bras
-          P(x, 0.905, 0, 0.036, 0.035, cL),
+  // Silhouette 1.17 : bras affinés de 4 à 5 mm de rayon, pour qu'un jour
+  // passe entre le bras et la taille au lieu d'un bloc épaules-hanches.
+  return [P(x * 0.50, 1.450, -0.005, 0.034, 0.034, 'buste'),   // naissance, noyée dans le trapèze
+          P(x * 0.78, 1.434, -0.002, 0.045, 0.044, 'buste'),   // transition cousue au torse
+          P(x * 0.97, 1.402, 0, 0.052, 0.051, eL),             // deltoïde
+          P(x, 1.340, 0, 0.049, 0.048, eL),
+          P(x, 1.225, 0, 0.044, 0.043, eL),                    // biceps
+          P(x, 1.118, 0, 0.040, 0.039, cL),                    // coude
+          P(x, 1.040, 0, 0.040, 0.038, cL),
+          P(x, 0.960, 0, 0.037, 0.036, cL),                    // avant-bras
+          P(x, 0.905, 0, 0.035, 0.034, cL),
           P(x, 0.884, 0, 0.035, 0.033, mL),                    // manchette
           P(x, 0.872, 0, 0.034, 0.032, mL)];
 }
@@ -473,17 +475,17 @@ function chaineManche(cote) {
   const x = MONDE.get(cote < 0 ? 'epauleL' : 'epauleR')[0];
   const eL = cote < 0 ? 'epauleL' : 'epauleR';
   const cL = cote < 0 ? 'coudeL' : 'coudeR';
-  return [P(x * 0.48, 1.456, -0.007, 0.042, 0.042, 'buste'),
-          P(x * 0.76, 1.438, -0.003, 0.057, 0.056, 'buste'),
-          P(x * 0.98, 1.404, 0, 0.066, 0.064, eL),             // épaule de veste, rembourrée
-          P(x, 1.340, 0, 0.062, 0.060, eL),
-          P(x, 1.225, 0.000, 0.057, 0.055, eL),
-          P(x, 1.118, 0.000, 0.052, 0.051, cL),
-          P(x, 1.040, 0.005, 0.050, 0.045, cL),
-          P(x, 0.960, 0, 0.047, 0.045, cL),
+  return [P(x * 0.48, 1.456, -0.007, 0.040, 0.040, 'buste'),
+          P(x * 0.76, 1.438, -0.003, 0.054, 0.053, 'buste'),
+          P(x * 0.98, 1.404, 0, 0.061, 0.060, eL),             // épaule de veste, rembourrée
+          P(x, 1.340, 0, 0.057, 0.056, eL),
+          P(x, 1.225, 0.000, 0.052, 0.051, eL),
+          P(x, 1.118, 0.000, 0.048, 0.047, cL),
+          P(x, 1.040, 0.005, 0.046, 0.043, cL),
+          P(x, 0.960, 0, 0.044, 0.042, cL),
           // la manchette de chemise ne dépasse que de 1,6 cm : à 4,6 cm
           // elle lisait comme un gant blanc
-          P(x, 0.900, 0.000, 0.043, 0.041, cL)];
+          P(x, 0.900, 0.000, 0.041, 0.039, cL)];
 }
 
 // Peau du poignet et de la main : le tube part de SOUS la manchette et
@@ -507,40 +509,43 @@ function chaineJambe(cote) {
   const h = cote < 0 ? 'hancheL' : 'hancheR';
   const g = cote < 0 ? 'genouL' : 'genouR';
   const c = cote < 0 ? 'chevilleL' : 'chevilleR';
-  return [P(x * 0.84, 0.905, 0, 0.088, 0.088, 'racine'),   // naissance, dans le bassin
-          P(x * 0.96, 0.845, 0, 0.097, 0.095, h),
-          P(x, 0.760, 0, 0.098, 0.096, h),                 // cuisse
-          P(x, 0.600, 0, 0.086, 0.084, h),
-          P(x, 0.452, 0.014, 0.068, 0.069, g),                 // genou
-          P(x, 0.330, -0.006, 0.069, 0.068, g),                 // mollet
-          P(x, 0.190, 0.002, 0.057, 0.055, g),
-          P(x, 0.137, 0.006, 0.055, 0.052, c),
-          P(x, 0.113, 0.012, 0.053, 0.049, c)].map(p => ({ ...p, exp: 0.82 }));                // cheville
+  // Silhouette 1.17 : pantalon droit. La cuisse faisait 9,8 cm de rayon : les deux
+  // jambes mesuraient 40,6 cm de large pour une basque de veste de 35,6 cm et
+  // sortaient dessous en deux lobes (« culotte de cheval », surtout de dos).
+  return [P(x * 0.84, 0.905, 0, 0.074, 0.082, 'racine'),   // naissance, dans le bassin
+          P(x * 0.96, 0.845, 0, 0.073, 0.086, h),
+          P(x, 0.760, 0, 0.072, 0.084, h),                 // cuisse
+          P(x, 0.600, 0.004, 0.069, 0.076, h),
+          P(x, 0.452, 0.012, 0.062, 0.066, g),                 // genou
+          P(x, 0.330, -0.004, 0.061, 0.064, g),                 // mollet
+          P(x, 0.190, 0.002, 0.056, 0.057, g),
+          P(x, 0.137, 0.006, 0.055, 0.056, c),
+          P(x, 0.108, 0.012, 0.055, 0.057, c)].map(p => ({ ...p, exp: 0.82 }));                // cheville
 }
 
 // Bassin : un volume de pantalon d'où sortent les cuisses. Sans lui, le
 // tube de chemise descendait jusqu'à l'entrejambe et les jambes
 // semblaient collées sous le torse.
 const CHAINE_BASSIN = [
-  P(0, 0.770, 0.000, 0.152, 0.106, 'racine'),   // entrejambe
-  P(0, 0.850, 0.000, 0.176, 0.116, 'racine'),   // hanches, point le plus large
-  P(0, 0.905, 0.002, 0.178, 0.116, 'racine'),
-  P(0, 0.945, 0.002, 0.170, 0.112, 'racine'),
-  P(0, 0.985, 0.002, 0.162, 0.107, 'racine'),   // ceinture
+  P(0, 0.770, 0.000, 0.148, 0.100, 'racine'),   // entrejambe
+  P(0, 0.850, 0.000, 0.168, 0.109, 'racine'),   // hanches, point le plus large
+  P(0, 0.905, 0.002, 0.170, 0.110, 'racine'),
+  P(0, 0.945, 0.002, 0.164, 0.107, 'racine'),
+  P(0, 0.985, 0.002, 0.157, 0.103, 'racine'),   // ceinture
 ];
 
 // Torse de chemise : section elliptique, épaules larges, taille marquée.
 // Il s'arrête sous la ceinture (le bassin prend le relais) et se
 // referme à plat autour du cou, sous le col.
 const CHAINE_TORSE = [
-  P(0, 0.930, 0.000, 0.150, 0.098, 'racine'),
-  P(0, 0.975, 0.002, 0.153, 0.101, 'racine'),   // ceinture
-  P(0, 1.040, 0.004, 0.146, 0.098, 'buste'),
-  P(0, 1.120, 0.006, 0.140, 0.095, 'buste'),    // taille marquée
-  P(0, 1.240, 0.004, 0.160, 0.106, 'buste'),    // cage thoracique
-  P(0, 1.350, 0.001, 0.180, 0.112, 'buste'),    // poitrine
-  P(0, 1.425, -0.003, 0.178, 0.109, 'buste'),   // largeur d'épaules maintenue
-  P(0, 1.468, -0.005, 0.146, 0.098, 'buste'),   // trapèzes en pente
+  P(0, 0.930, 0.000, 0.146, 0.094, 'racine'),
+  P(0, 0.975, 0.002, 0.148, 0.096, 'racine'),   // ceinture
+  P(0, 1.040, 0.004, 0.141, 0.093, 'buste'),
+  P(0, 1.120, 0.006, 0.136, 0.091, 'buste'),    // taille marquée
+  P(0, 1.240, 0.004, 0.154, 0.101, 'buste'),    // cage thoracique
+  P(0, 1.350, 0.001, 0.172, 0.107, 'buste'),    // poitrine
+  P(0, 1.425, -0.003, 0.172, 0.105, 'buste'),   // largeur d'épaules maintenue
+  P(0, 1.468, -0.005, 0.143, 0.096, 'buste'),   // trapèzes en pente
   P(0, 1.505, -0.007, 0.070, 0.064, 'buste'),   // encolure, juste autour du cou
 ].map(p => ({ ...p, exp: p.p[1] > 1.46 ? 0.94 : 0.84 }));
 
@@ -589,16 +594,17 @@ const CHAINE_COU = [
 // Fermée sous le bouton (1,10 m), ouverte en V au-dessus : c'est la
 // forme d'une veste, pas d'un gilet fendu.
 const CHAINE_VESTE = [
-  P(0, 0.790, 0.002, 0.178, 0.126, 'racine'),   // basque, évasée
-  P(0, 0.880, 0.002, 0.176, 0.124, 'racine'),
-  P(0, 0.990, 0.004, 0.166, 0.117, 'racine'),
-  P(0, 1.060, 0.005, 0.160, 0.114, 'buste'),
-  P(0, 1.125, 0.006, 0.156, 0.112, 'buste'),
-  P(0, 1.245, 0.004, 0.177, 0.122, 'buste'),
-  P(0, 1.355, 0.001, 0.197, 0.128, 'buste'),
-  P(0, 1.428, -0.003, 0.194, 0.125, 'buste'),
-  P(0, 1.470, -0.005, 0.160, 0.112, 'buste'),
-  P(0, 1.488, -0.006, 0.122, 0.096, 'buste'),
+  // Silhouette 1.17 : taille cintrée (15,1 cm), basque évasée qui couvre les cuisses.
+  P(0, 0.800, 0.002, 0.179, 0.119, 'racine'),   // basque, à peine évasée
+  P(0, 0.880, 0.002, 0.177, 0.118, 'racine'),
+  P(0, 0.990, 0.004, 0.164, 0.112, 'racine'),
+  P(0, 1.060, 0.005, 0.155, 0.108, 'buste'),
+  P(0, 1.125, 0.006, 0.151, 0.106, 'buste'),
+  P(0, 1.245, 0.004, 0.169, 0.116, 'buste'),
+  P(0, 1.355, 0.001, 0.187, 0.122, 'buste'),
+  P(0, 1.428, -0.003, 0.187, 0.120, 'buste'),
+  P(0, 1.470, -0.005, 0.157, 0.109, 'buste'),
+  P(0, 1.488, -0.006, 0.121, 0.095, 'buste'),
   P(0, 1.507, -0.006, 0.077, 0.070, 'buste'),
 ].map(p => ({ ...p, exp: p.p[1] > 1.46 ? 0.94 : 0.84 }));
 const BOUTON_VESTE = 1.10;
